@@ -11,5 +11,6 @@ beforeEach(
 )
 
 test("testing the mock route",async ()=>{
-    let res = await request.get("/mock/").expect(200)
+    let res = await request.get("/").expect(200)
+    expect(res).toBe([])
 })
