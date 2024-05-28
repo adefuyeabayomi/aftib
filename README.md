@@ -48,27 +48,15 @@ Response if successful
 response {token: 'tokenString'}
 ```
 
-<<<<<<< HEAD
+
 Response if there is an error. An error could occur for two reasons
 
 1. An unexpected technical error in the server. In this case a 500 Internal Server Error is sent as a response.
 
 2. During if invalid credentials are sent, then a 400 or 401 status is sent as a response.
 
-=======
-Response if there is an error  
->>>>>>> a03d3ab29f1489f612ed43c965660d44cd248bf2
 ```bash
 response {error: 'errorMessage'}
 ```
 
-<<<<<<< HEAD
-## Listing Management 
-
-
-
-
-
-=======
->>>>>>> a03d3ab29f1489f612ed43c965660d44cd248bf2
-
+## Listing Management
