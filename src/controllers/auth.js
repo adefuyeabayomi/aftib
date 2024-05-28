@@ -1,32 +1,44 @@
 const User = require('../models/auth')
-let jwt = require('jsonwebtoken')
-let bcrypt = require('bcryptjs')
-let generateID = require('../utils/generateID')
+const jwt = require('jsonwebtoken')
+const bcrypt = require('bcryptjs')
+const generateID = require('../utils/generateID')
+const validateEmail = require('../utils/validate')
 
 const addUser = (req, res, next) => {
     let {email,password} = req.body
-    // add validation for email and password. if email is not valid, return an error,if password is less than 8 chars, return another error, prevent save.
+    //validate email and password
+    if(!validateEmail(email)){
+        return res.status(400).send({error: 'Email is not valid',status: 400,message: 'Bad Request'})
+    }
+    if(password.length < 7 ){
+        return res.status(400).send({error: 'Password should be more than 8 characters',status: 400,message: 'Bad Request'})
+    }
+    // create user
     let userId = generateID()
     let salt = bcrypt.genSaltSync(10);
     let hash = bcrypt.hashSync(password, salt);
     let UserDoc = new User({email,hash,userId})
-    UserDoc.save().then(data => {
+    // save user
+    UserDoc.save()
+    .then(data => {
+        // save success: generate and send JWT
         let userForToken = {
             email: email,
             id : userId
         }
-        console.log('data',data)
         let token = jwt.sign(userForToken,process.env.SECRET,{ expiresIn: 60*60*6 })
         res.status(200).send({token})
-    }).catch(err=>{
-        res.status(500).send({message: 'An error occured while trying to add new user.'})
+    })
+    .catch(err=>{
+        // save error: send error message
+        res.status(500).send({error: 'Unable to add user'})
     })
 }
 
 const getUser = async (req,res,next) => {
     let {email,password} = req.body
     let user = await User.findOne({email})
-    const passwordCorrect = user === null ? false: await bcrypt.compare(password, user.passwordHash)
+    const passwordCorrect = user === null ? false: await bcrypt.compare(password, user.hash)
     
     if (!(user && passwordCorrect)) {
         return res.status(401).json({
@@ -40,8 +52,7 @@ const getUser = async (req,res,next) => {
     }
     
     const token = jwt.sign(userForToken, process.env.SECRET)
-    res.status(200).send({ token })
-    
+    return res.status(200).send({ token })    
 }
 
 
