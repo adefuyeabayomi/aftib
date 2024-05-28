@@ -33,6 +33,7 @@ app.use("/auth",authRoute)
 // listen
 app.listen(port, () => {
   console.log("server running on localhost, port", port);
-});
+})
 
 module.exports = app;
+
