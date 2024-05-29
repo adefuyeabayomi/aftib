@@ -4,8 +4,8 @@ const bcrypt = require('bcryptjs')
 const generateID = require('../utils/generateID')
 const validateEmail = require('../utils/validate')
 
-const addUser = (req, res, next) => {
-    let {email,password} = req.body
+const signup = (req, res, next) => {
+    let {email,password,mobileNumber,name,signupType} = req.body
     //validate email and password
     if(!validateEmail(email)){
         return res.status(400).send({error: 'Email is not valid',status: 400,message: 'Bad Request'})
@@ -17,7 +17,7 @@ const addUser = (req, res, next) => {
     let userId = generateID()
     let salt = bcrypt.genSaltSync(10);
     let hash = bcrypt.hashSync(password, salt);
-    let UserDoc = new User({email,hash,userId})
+    let UserDoc = new User({email,hash,userId,mobileNumber,name,signupType})
     // save user
     UserDoc.save()
     .then(data => {
@@ -35,7 +35,7 @@ const addUser = (req, res, next) => {
     })
 }
 
-const getUser = async (req,res,next) => {
+const login = async (req,res,next) => {
     let {email,password} = req.body
     let user = await User.findOne({email})
     const passwordCorrect = user === null ? false: await bcrypt.compare(password, user.hash)
@@ -57,6 +57,6 @@ const getUser = async (req,res,next) => {
 
 
 module.exports = {
-    addUser,
-    getUser
+    signup,
+    login
 }

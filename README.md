@@ -34,7 +34,7 @@ Signup
 ```bash
 curl -X POST http://localhost:8080/auth/signup \
 -H "Content-Type: application/json" \
--d '{"email": "your_email_value", "password": "your_password_value"}'
+-d '{"email": "your_email_value", "password": "your_password_value","mobileNumber": "mobileNumberValue","name": "nameValue","signupType": "emailAndPassword"}'
 ```
 
 Login
@@ -60,3 +60,10 @@ response {error: 'errorMessage'}
 ```
 
 ## Listing Management
+
+
+
+
+
+
+

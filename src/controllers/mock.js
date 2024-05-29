@@ -2,8 +2,9 @@ const mockky = require("../models/mock");
 
 const getMocks =  (req, res,next) => {
     mockky.find({}).then(data=>{
-      res.status(200).send(JSON.stringify(data));
+
     })
+    res.status(200).send('data')
 }
 
 const addMock = (req, res, next) => {
