@@ -63,7 +63,6 @@ const createNew = async (request,response) =>{
             await sectionDataModel.updateOne({name: 'main'}, {count: 0, totalSections})
         }
 
-
         let newListing = new Listing({
             description,
             propertyType,
@@ -103,8 +102,8 @@ const createNew = async (request,response) =>{
         await newListing.save()
         .then(res=>{
             console.log('new listing added',res._id)
-            sectionDataModel.updateOne({name: 'main'},{$inc: {totalListings: 1,count: 1}})
-            sectionDataModel.updateOne({name: `section${totalSections}`},{ $inc: { active: 1 },$push: { listings: listingId }})
+            sectionDataModel.updateOne({name: 'main'},{$inc: {totalListings: 1,count: 1}}).then(res=>{console.log("updated main")})
+            sectionDataModel.updateOne({name: `section${totalSections}`},{ $inc: { active: 1 },$push: { listings: listingId }}).then(res=>{console.log("updated section")})
         })
         .then(res=>{
             response.status(201).send({message: "created: listing added successfully"})
