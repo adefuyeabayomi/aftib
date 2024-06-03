@@ -139,10 +139,10 @@ const updateListing = async (req,res) => {
     const updateData = req.body;
     try {
         // Find the listing by ID and update it
-        const updatedListing = await Listing.findByIdAndUpdate(listingId, updateData, {
+        const updatedListing = await Listing.updateOne({listingId}, updateData, {
             new: true, // Return the updated document
             runValidators: true // Ensure the update adheres to the schema's validators
-        });
+        })
 
         if (!updatedListing) {
             return res.status(404).json({ message: 'Listing not found' });
@@ -197,19 +197,18 @@ const getListings = async (request,response) => {
         // Find listings by IDs
         const foundListings = await listingModel.find({ listingId: { $in: sectionListingIds } });
         
-        res.status(200).json({ listingsArray: sectionListingIds, listings: foundListings });
+        response.status(200).json({ listingsArray: sectionListingIds, listings: foundListings });
     }
     catch(error){
-        res.status(500).json({ message: error.message });
+        response.status(500).json({ message: error.message });
     }
 }
 
 const searchListings = async (request,response) => {
-    const { location, priceRange } = req.query;
+    const { location, priceRange } = request.query;
 
     try {
         let query = {};
-
         // Add location filter if provided
         if (location) {
             // Create a regex pattern to match any location containing a word of the location
@@ -226,9 +225,9 @@ const searchListings = async (request,response) => {
         // Find listings matching the query
         const foundListings = await Listing.find(query);
 
-        res.status(200).json(foundListings);
+        response.status(200).json(foundListings);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        response.status(500).json({ message: error.message });
     }
 }
 

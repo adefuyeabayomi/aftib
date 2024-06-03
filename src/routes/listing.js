@@ -14,7 +14,7 @@ router.get("/getListingById/:id",getListingById)
 router.delete("/deleteListingById/:id",deleteListingById)
 
 // [/listing/getListings/:sectionNo]   200 Okay | 400 bad request
-router.get("/getListings/sectionNo",getListings)
+router.get("/getListings/:sectionNo",getListings)
 
 // [/listing/searchListings]   200 Okay | 400 bad request
 router.get("/searchListings", searchListings)

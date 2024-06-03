@@ -6,12 +6,12 @@ const validateEmail = require('../utils/validate')
 
 const signup = async (req, res, next) => {
     let {email,password,mobileNumber,name,signupType} = req.body
+    console.log("request body",req.body)
+    console.log({email,password})
     //validate email and password
-    /*
     if(!validateEmail(email)){
         return res.status(400).send({error: 'Email is not valid',status: 400,message: 'Bad Request'})
     }
-    */
     if(password.length < 8 ){
         return res.status(400).send({error: 'Password should be 8 characters or more',status: 400,message: 'Bad Request'})
     }
