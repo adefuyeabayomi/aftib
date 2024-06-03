@@ -1,0 +1,44 @@
+[
+    {
+        "description": "A beautiful 3-bedroom apartment located in the heart of Lagos.",
+        "propertyType": "Apartment",
+        "location": "Abule Egba, Lagos",
+        "estate": "Sunshine Estate",
+        "price": 150000,
+        "state": "Lagos",
+        "LGA": "Ifako-Ijaiye",
+        "saleType": "Rent",
+        "title": "3-Bedroom Apartment in Abule Egba",
+        "bedrooms": 3,
+        "bathrooms": 2,
+        "size": 120,
+        "yearBuilt": 2015,
+        "amenities": ["Parking", "Gym", "Swimming Pool"],
+        "images": ["http://example.com/image1.jpg", "http://example.com/image2.jpg"],
+        "contact": {
+            "name": "Adeyemi Adebayo",
+            "phone": "08012345678",
+            "email": "adeyemi.adebayo@example.com"
+        },
+        "availableFrom": 1719792000000,  
+        "listingDate": 1717440000000,  
+        "furnished": true,
+        "petsAllowed": false,
+        "energyRating": "A",
+        "nearbySchools": ["Sunshine Primary School", "Bright Future High School"],
+        "transportation": "Near main bus route",
+        "garage": true,
+        "garden": true,
+        "balcony": true,
+        "floorNumber": 2,
+        "propertyStatus": "Available",
+        "neighborhood": "Safe and quiet neighborhood",
+        "virtualTour": "http://example.com/virtualtour",
+        "listingAgent": {
+            "name": "Oluwaseun Johnson",
+            "phone": "08087654321",
+            "email": "oluwaseun.johnson@example.com"
+        }
+    }
+    
+]

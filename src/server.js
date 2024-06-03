@@ -27,14 +27,14 @@ else {
   DB = running_db;
 }
 
-console.log({ port, runningEnvironment, DB });
+console.log({ port, runningEnvironment, DB })
 
 //connect to database
 connectDB(DB)
   .then(async () =>{
     console.log("Success : connected to database")
-    let sectionData =await sectionDataModel.findOne({name: 'main'})
-    console.log({sectionData})
+    let sectionData = await sectionDataModel.findOne({name: 'main'})
+    console.log('section data has initialized', !!sectionData)
     if(!sectionData){
       new sectionDataModel({
         name: 'main',

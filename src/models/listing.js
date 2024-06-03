@@ -49,7 +49,7 @@ const listingModel = mongoose.model("Listing",listingSchema)
 // model section data
 
 let sectionDataObj= {
-    name: 'main', // main or Section1, section2... 
+    name: String, // main or Section1, section2... 
     totalListings: Number, // total number of listings
     totalSections: Number, // total number of sections
     listings: [String], // listings in a section

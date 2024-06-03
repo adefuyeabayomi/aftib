@@ -1,6 +1,7 @@
 let generateID = require('../utils/generateID')
-let {listingModel,sectionDataModel } = require('../models/listing')
+let { listingModel,sectionDataModel } = require('../models/listing')
 let Listing = listingModel;
+const mongoose = require('mongoose')
 // [NOTE: FUNCTION TO SAVE IMAGE SHOULD BE ADDED]
 const createNew = async (request,response) =>{
     const {
@@ -39,12 +40,12 @@ const createNew = async (request,response) =>{
 
     // save to the database.
     let listingId = generateID(30)
-
         // determine last section available
         let sectionData = await sectionDataModel.findOne({name: 'main'})
-        let {totalSections, count} = sectionData.totalSections
+        let {totalSections, count} = sectionData
         if(totalSections === 0 || count === 30){
-            // Initialize new section
+        // Initialize new section
+        console.log("in the new section creation")
             totalSections = totalSections + 1
             await new sectionDataModel({
                 name: `section${totalSections}`,
@@ -59,7 +60,7 @@ const createNew = async (request,response) =>{
                 console.error({error: err.message})
             })
             // reset count to zero
-            await sectionDataModel.updateOne({name: 'main'}, {count: 0})
+            await sectionDataModel.updateOne({name: 'main'}, {count: 0, totalSections})
         }
 
 
@@ -99,7 +100,7 @@ const createNew = async (request,response) =>{
             sid: String(totalSections)
         })
         // you can now update the new section object.
-        newListing.save()
+        await newListing.save()
         .then(res=>{
             console.log('new listing added',res._id)
             sectionDataModel.updateOne({name: 'main'},{$inc: {totalListings: 1,count: 1}})

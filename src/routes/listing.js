@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const {createNew, updateListing,getListingById,deleteListingById,getListings,searchListing} = require('../controllers/listing')
+const {createNew, updateListing,getListingById,deleteListingById,getListings,searchListings} = require('../controllers/listing')
 
 // [/listing/createNew] POST 201 Created | 400 bad request | 500 Internal Server Error
 router.post("/createNew",createNew)
@@ -20,3 +20,6 @@ router.get("/getListings/sectionNo",getListings)
 router.get("/searchListings", searchListings)
 
 // [/listing/]   200 Okay | 400 bad request
+
+//
+module.exports = router
