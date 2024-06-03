@@ -4,14 +4,19 @@ const bcrypt = require('bcryptjs')
 const generateID = require('../utils/generateID')
 const validateEmail = require('../utils/validate')
 
-const signup = (req, res, next) => {
+const signup = async (req, res, next) => {
     let {email,password,mobileNumber,name,signupType} = req.body
     //validate email and password
     if(!validateEmail(email)){
         return res.status(400).send({error: 'Email is not valid',status: 400,message: 'Bad Request'})
     }
-    if(password.length < 7 ){
-        return res.status(400).send({error: 'Password should be more than 8 characters',status: 400,message: 'Bad Request'})
+    if(password.length < 8 ){
+        return res.status(400).send({error: 'Password should be 8 characters or more',status: 400,message: 'Bad Request'})
+    }
+    // check if user with that email does not exist
+    let userExists = await User.find({email})
+    if(userExists.length > 0){
+        return  res.status(409).send({status: 409, message:'Conflict', error: 'User with this email already exists! Login instead.'})
     }
     // create user
     let userId = generateID()
