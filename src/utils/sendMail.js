@@ -1,6 +1,7 @@
 const nodemailer = require('nodemailer')
 const G_USER = process.env.G_USER
 const G_PASSWORD = process.env.G_PASSWORD
+var ElasticEmail = require('@elasticemail/elasticemail-client');
 
 let transporter = nodemailer.createTransport({
     service: 'gmail',
