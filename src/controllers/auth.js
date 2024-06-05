@@ -38,7 +38,7 @@ const signup = async (req, res, next) => {
     })
     .catch(err=>{
         // save error: send error message
-        res.status(500).send({error: 'Unable to add user'})
+        res.status(500).send({error: err.message})
     })
 }
 
@@ -46,10 +46,14 @@ const login = async (req,res,next) => {
     let {email,password} = req.body
     let user = await User.findOne({email})
     const passwordCorrect = user === null ? false: await bcrypt.compare(password, user.hash)
-    
-    if (!(user && passwordCorrect)) {
+    if(!user){
         return res.status(401).json({
-          error: 'invalid username or password'
+            error: 'Email has not been Registered.'
+          })
+    }
+    if (!(passwordCorrect)) {
+        return res.status(401).json({
+          error: 'Password does not match.'
         })
     }
 
