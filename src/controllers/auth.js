@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 const generateID = require('../utils/generateID')
 const validateEmail = require('../utils/validate')
+const {transporter,createMailOption,htmlBodyTemplates} = require('../utils/sendMail')
 
 const signup = async (req, res, next) => {
     let {email,password,mobileNumber,name,signupType} = req.body
@@ -22,9 +23,9 @@ const signup = async (req, res, next) => {
     }
     // create user
     let userId = generateID()
-    let salt = bcrypt.genSaltSync(10);
-    let hash = bcrypt.hashSync(password, salt);
-    let UserDoc = new User({email,hash,userId,mobileNumber,name,signupType})
+    let salt = bcrypt.genSaltSync(10)
+    let hash = bcrypt.hashSync(password, salt)
+    let UserDoc = new User({email,hash,userId,mobileNumber,name,signupType,verified: false})
     // save user
     UserDoc.save()
     .then(data => {
@@ -35,6 +36,16 @@ const signup = async (req, res, next) => {
         }
         let token = jwt.sign(userForToken,process.env.SECRET,{ expiresIn: 60*60*6 })
         res.status(200).send({token})
+        // send mail
+        /*
+        transporter.sendMail(createMailOption(email,'Verify your account',htmlBodyTemplates.verifyTemplate(userId)), (error, info) => {
+            if (error) {
+                return console.log(error);
+            }
+            console.log('Message sent: %s', info.messageId);
+            // Preview URL: %s', nodemailer.getTestMessageUrl(info));
+        });
+        */
     })
     .catch(err=>{
         // save error: send error message
@@ -64,6 +75,11 @@ const login = async (req,res,next) => {
     
     const token = jwt.sign(userForToken, process.env.SECRET)
     return res.status(200).send({ token })    
+}
+
+const verifyEmail = async (req,res) => {
+    let id = req.params.id;
+
 }
 
 

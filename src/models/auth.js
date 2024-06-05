@@ -6,7 +6,8 @@ let userSchema = new mongoose.Schema({
     signupType: String,
     mobileNumber: String,
     name: String,
-    userId: String
+    userId: String,
+    verified: Boolean
 })
 
 let userModel = mongoose.model('User', userSchema)

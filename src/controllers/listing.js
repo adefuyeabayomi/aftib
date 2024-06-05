@@ -106,7 +106,7 @@ const createNew = async (request,response) =>{
             sectionDataModel.updateOne({name: `section${totalSections}`},{ $inc: { active: 1 },$push: { listings: listingId }}).then(res=>{console.log("updated section")})
         })
         .then(res=>{
-            response.status(201).send({message: "created: listing added successfully"})
+            response.status(201).send({message: "listing added successfully"})
         })
         .catch(err=>{
             if (err instanceof mongoose.Error.ValidationError) {
@@ -145,10 +145,10 @@ const updateListing = async (req,res) => {
         })
 
         if (!updatedListing) {
-            return res.status(404).json({ message: 'Listing not found' });
+            return res.status(404).json({ message: 'Listing not found' })
         }
+        res.status(200).json({message: 'Listing updated successfully'})
 
-        res.status(200).json(updatedListing);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -163,7 +163,7 @@ const getListingById = async (req, res) => {
         if (!listing) {
             return res.status(404).json({ message: 'Listing not found' });
         }
-        res.status(200).json(listing);
+        res.status(200).json({listing});
     } catch (error) {
         if (error instanceof mongoose.Error.CastError) {
             return res.status(400).json({ message: 'Invalid ID format' });
@@ -205,7 +205,7 @@ const getListings = async (request,response) => {
 }
 
 const searchListings = async (request,response) => {
-    const { location, priceRange } = request.query;
+    const { location, priceRange, saleType, monthlyPaymentRange, bedrooms, bathrooms } = request.query;
 
     try {
         let query = {};
@@ -224,6 +224,26 @@ const searchListings = async (request,response) => {
         if (priceRange) {
             const [minPrice, maxPrice] = priceRange.split('-').map(Number);
             query.price = { $gte: minPrice, $lte: maxPrice };
+        }
+          // Sale type filter
+          if (saleType) {
+            query.saleType = saleType;
+        }
+
+        // Monthly payment range filter for rentals
+        if (monthlyPaymentRange) {
+            const [minMonthlyPayment, maxMonthlyPayment] = monthlyPaymentRange.split('-').map(Number);
+            query.monthlyRentPayment = { $gte: minMonthlyPayment, $lte: maxMonthlyPayment };
+        }
+
+        // Bedrooms filter
+        if (bedrooms) {
+            query.bedrooms = Number(bedrooms);
+        }
+
+        // Bathrooms filter
+        if (bathrooms) {
+            query.bathrooms = Number(bathrooms);
         }
 
         // Find listings matching the query

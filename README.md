@@ -76,7 +76,7 @@ The Listing API allows users to create, read, update, and delete real estate lis
 ## Endpoints Documentation
 
 ### 1. Add a New Listing
-- **Endpoint**: `/api/addListing`
+- **Endpoint**: `/listing/addListing`
 - **Method**: POST
 - **Body**:
     ```json
@@ -89,6 +89,7 @@ The Listing API allows users to create, read, update, and delete real estate lis
         "state": "Lagos",
         "LGA": "Ifako-Ijaiye",
         "saleType": "Rent",
+        "monthlyRentPayment": 200000, 
         "title": "3-Bedroom Apartment in Abule Egba",
         "bedrooms": 3,
         "bathrooms": 2,
@@ -126,8 +127,7 @@ The Listing API allows users to create, read, update, and delete real estate lis
 - **Response**:
     ```json
     {
-        "message": "Listing added successfully",
-        "listing": { ... }
+        "message": "Listing added successfully"
     }
     ```
 
@@ -146,8 +146,7 @@ The Listing API allows users to create, read, update, and delete real estate lis
 - **Response**:
     ```json
     {
-        "message": "Listing updated successfully",
-        "listing": { ... }
+        "message": "Listing updated successfully"
     }
     ```
 
@@ -163,7 +162,7 @@ The Listing API allows users to create, read, update, and delete real estate lis
     }
     ```
 
-### 4. Get All Listings
+### 4. Get Listings
 - **Endpoint**: `/listing/getListings/:sectionNo`
 - **Method**: GET
 - **Params**: 
@@ -191,8 +190,18 @@ The Listing API allows users to create, read, update, and delete real estate lis
 - **Endpoint**: `/listing/searchListings?query=value`
 - **Method**: GET
 - **Queries**:
-    - `location` (String) - Keywords to search in the location field (e.g., "abule-egba").
-    - `priceRange` (String) - Price range to filter listings (e.g., "100000-200000").
+  - `location` (String) - Keywords to search in the location field (e.g. "abule-egba"). Multiple keywords should be separated by hyphens.
+  - `priceRange` (String) - Price range to filter listings (e.g., "100000-200000").
+  - `salesType` (String) - Type of sale (e.g., "sale", "rental").
+  - `monthlyPaymentRange` (String) - Monthly payment range for rentals (e.g., "5000-10000").
+  - `bedRooms` (Number) - Number of bedrooms.
+  - `bathRooms` (Number) - Number of bathrooms.
+
+```bash
+/listing/searchListings?location=abule-egba&priceRange=100000-200000&saleType=sale&bedrooms=3&bathrooms=2
+```
+for rentals you can search with monthlyPaymentRange instead of priceRange. teh response gives an array of listings that match the search queries.
+
 - **Response**:
     ```json
     {
