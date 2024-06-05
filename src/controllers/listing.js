@@ -209,12 +209,16 @@ const searchListings = async (request,response) => {
 
     try {
         let query = {};
-        // Add location filter if provided
-        if (location) {
-            // Create a regex pattern to match any location containing a word of the location
-            const locationRegex = new RegExp(`(abule|egba)`, 'i');
-            query.location = locationRegex;
-        }
+       // Add location filter if provided
+       if (location) {
+        // Split the location string by dashes and create regex patterns for each keyword
+        const keywords = location.split('-');
+        console.log({keywords})
+        const locationRegexArray = keywords.map(keyword => ({ location: { $regex: keyword, $options: 'i' } }));
+
+        // Create a $or condition for each regex pattern
+        query.$or = locationRegexArray;
+    }
 
         // Add price range filter if provided
         if (priceRange) {
