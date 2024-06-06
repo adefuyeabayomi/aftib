@@ -58,7 +58,7 @@ app.use(cors())
 app.use(express.json())
 app.use("/",mockRoute)
 app.use("/auth",authRoute)
-app.use(verifyToken)
+//app.use(verifyToken)
 app.use("/listing",listingRoute)
 
 // listen
