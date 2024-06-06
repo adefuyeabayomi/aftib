@@ -4,6 +4,7 @@ const express = require("express");
 const cors = require("cors");
 const connectDB = require("./utils/dbConnect");
 const {sectionDataModel} = require("./models/listing")
+const verifyToken = require("./utils/verifyToken")
 
 //import routes
 const mockRoute =  require("./routes/mock")
@@ -27,7 +28,6 @@ else {
   DB = running_db;
 }
 
-console.log({ port, runningEnvironment, DB })
 
 //connect to database
 connectDB(DB)
@@ -48,7 +48,7 @@ connectDB(DB)
       })
     }
   })
-  .catch((err) => console.error("Error in connecting to database : ", err));
+  .catch((err) => console.error("Error in connecting to database : ", err))
 
 // create express app
 const app = express();
@@ -58,6 +58,7 @@ app.use(cors())
 app.use(express.json())
 app.use("/",mockRoute)
 app.use("/auth",authRoute)
+app.use(verifyToken)
 app.use("/listing",listingRoute)
 
 // listen

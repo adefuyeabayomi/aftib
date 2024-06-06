@@ -1,24 +1,23 @@
-const nodemailer = require('nodemailer')
-const G_USER = process.env.G_USER
-const G_PASSWORD = process.env.G_PASSWORD
-var ElasticEmail = require('@elasticemail/elasticemail-client');
+const MAILER_SEND_API_KEY = process.env.MAILER_SEND_API_KEY
+const { MailerSend, EmailParams, Sender, Recipient } = require("mailersend");
 
-let transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: G_USER,
-        pass: G_PASSWORD
-    }
-});
+const mailerSend = new MailerSend({
+    apiKey: MAILER_SEND_API_KEY,
+})
+  
+const sentFrom = new Sender("support@trial-z3m5jgry0zx4dpyo.mlsender.net", "Aftib")
 
-
-function createMailOption (reciever,mailSubject,htmlBody){
-    return {
-        from: `"Aftib" <${G_USER}>`, // sender address
-        to: reciever, // list of receivers
-        subject: mailSubject, // Subject line
-        html: htmlBody // html body
-    }
+async function mailerSendImplementation(clientEmail,clientName,subject,htmlTemplate){
+    const recipients = [
+        new Recipient(clientEmail, clientName)
+      ];
+      const emailParams = new EmailParams()
+      .setFrom(sentFrom)
+      .setTo(recipients)
+      .setReplyTo(sentFrom)
+      .setSubject(subject)
+      .setHtml(htmlTemplate)
+      return await mailerSend.email.send(emailParams)
 }
 
 function verifyTemplate(userID){
@@ -80,7 +79,7 @@ function verifyTemplate(userID){
                 <div class="email-content">
                     <p>Hi there,</p>
                     <p>Thank you for signing up. Please click the button below to verify your email address:</p>
-                    <a href="http://localhost:8080/verify-email/${userID}" class="verification-button">Verify Email</a>
+                    <a href="http://localhost:8080/auth/verify-email/${userID}" class="verification-button">Verify Email</a>
                     <p>If you did not sign up for this account, you can ignore this email.</p>
                 </div>
                 <div class="email-footer">
@@ -96,6 +95,6 @@ let htmlBodyTemplates = {
     verifyTemplate
 }
 
-module.exports = {transporter,createMailOption,htmlBodyTemplates}
+module.exports = {htmlBodyTemplates,mailerSendImplementation}
 
 

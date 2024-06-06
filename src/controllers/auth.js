@@ -3,12 +3,10 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 const generateID = require('../utils/generateID')
 const validateEmail = require('../utils/validate')
-const {transporter,createMailOption,htmlBodyTemplates} = require('../utils/sendMail')
+const {htmlBodyTemplates,mailerSendImplementation} = require('../utils/sendMail')
 
 const signup = async (req, res, next) => {
     let {email,password,mobileNumber,name,signupType} = req.body
-    console.log("request body",req.body)
-    console.log({email,password})
     //validate email and password
     if(!validateEmail(email)){
         return res.status(400).send({error: 'Email is not valid',status: 400,message: 'Bad Request'})
@@ -37,15 +35,7 @@ const signup = async (req, res, next) => {
         let token = jwt.sign(userForToken,process.env.SECRET,{ expiresIn: 60*60*6 })
         res.status(200).send({token})
         // send mail
-        /*
-        transporter.sendMail(createMailOption(email,'Verify your account',htmlBodyTemplates.verifyTemplate(userId)), (error, info) => {
-            if (error) {
-                return console.log(error);
-            }
-            console.log('Message sent: %s', info.messageId);
-            // Preview URL: %s', nodemailer.getTestMessageUrl(info));
-        });
-        */
+         mailerSendImplementation(email,name,"Verify Account",htmlBodyTemplates.verifyTemplate(userId)).then(res=>console.log(res)).catch(err=>console.log({err}))
     })
     .catch(err=>{
         // save error: send error message
@@ -78,12 +68,23 @@ const login = async (req,res,next) => {
 }
 
 const verifyEmail = async (req,res) => {
-    let id = req.params.id;
-
+    let id = req.params.id
+    User.updateOne({userId: id},{verified: true})
+    .then(result=>{
+        return res.status(200).redirect("http://localhost:3000")
+    })
+    .catch(err=>{
+        return res.status(400).json({
+            error: err.message
+          })
+    })
 }
 
 
 module.exports = {
     signup,
-    login
+    login,
+    verifyEmail
 }
+
+
