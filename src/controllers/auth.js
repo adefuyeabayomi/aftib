@@ -11,9 +11,6 @@ const signup = async (req, res, next) => {
     if(!validateEmail(email)){
         return res.status(400).send({error: 'Email is not valid',status: 400,message: 'Bad Request'})
     }
-    if(password.length < 8 ){
-        return res.status(400).send({error: 'Password should be 8 characters or more',status: 400,message: 'Bad Request'})
-    }
     // check if user with that email does not exist
     let userExists = await User.find({email})
     if(userExists.length > 0){
