@@ -7,7 +7,8 @@ let userSchema = new mongoose.Schema({
     mobileNumber: String,
     name: String,
     userId: String,
-    verified: Boolean
+    verified: Boolean,
+    accountType: String
 })
 
 let userModel = mongoose.model('User', userSchema)

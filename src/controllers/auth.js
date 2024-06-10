@@ -6,7 +6,7 @@ const validateEmail = require('../utils/validate')
 const {htmlBodyTemplates,mailerSendImplementation} = require('../utils/sendMail')
 
 const signup = async (req, res, next) => {
-    let {email,password,mobileNumber,name,signupType} = req.body
+    let {email,password,mobileNumber,name,signupType,accountType} = req.body
     //validate email and password
     if(!validateEmail(email)){
         return res.status(400).send({error: 'Email is not valid',status: 400,message: 'Bad Request'})
@@ -43,7 +43,7 @@ const signup = async (req, res, next) => {
     })
 }
 
-const login = async (req,res,next) => {
+const login = async (req,res) => {
     let {email,password} = req.body
     let user = await User.findOne({email})
     const passwordCorrect = user === null ? false: await bcrypt.compare(password, user.hash)

@@ -44,7 +44,7 @@ function verifyTemplate(userID){
                     box-shadow: 0 2px 3px rgba(0,0,0,0.1);
                 }
                 .email-header {
-                    background-color: #4CAF50;
+                    background-color: #4517FB;
                     padding: 10px;
                     text-align: center;
                     color: white;
@@ -64,7 +64,7 @@ function verifyTemplate(userID){
                     display: inline-block;
                     padding: 10px 20px;
                     margin-top: 20px;
-                    background-color: #4CAF50;
+                    background-color: #4517FB;
                     color: white;
                     text-decoration: none;
                     border-radius: 5px;
