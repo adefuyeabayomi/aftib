@@ -1,27 +1,33 @@
-const MAILER_SEND_API_KEY = process.env.MAILER_SEND_API_KEY
+const MAILER_SEND_API_KEY = process.env.MAILER_SEND_API_KEY;
 const { MailerSend, EmailParams, Sender, Recipient } = require("mailersend");
 
 const mailerSend = new MailerSend({
-    apiKey: MAILER_SEND_API_KEY,
-})
-  
-const sentFrom = new Sender("support@trial-z3m5jgry0zx4dpyo.mlsender.net", "Aftib")
+  apiKey: MAILER_SEND_API_KEY,
+});
 
-async function mailerSendImplementation(clientEmail,clientName,subject,htmlTemplate){
-    const recipients = [
-        new Recipient(clientEmail, clientName)
-      ];
-      const emailParams = new EmailParams()
-      .setFrom(sentFrom)
-      .setTo(recipients)
-      .setReplyTo(sentFrom)
-      .setSubject(subject)
-      .setHtml(htmlTemplate)
-      return await mailerSend.email.send(emailParams)
+const sentFrom = new Sender(
+  "support@trial-z3m5jgry0zx4dpyo.mlsender.net",
+  "Aftib",
+);
+
+async function mailerSendImplementation(
+  clientEmail,
+  clientName,
+  subject,
+  htmlTemplate,
+) {
+  const recipients = [new Recipient(clientEmail, clientName)];
+  const emailParams = new EmailParams()
+    .setFrom(sentFrom)
+    .setTo(recipients)
+    .setReplyTo(sentFrom)
+    .setSubject(subject)
+    .setHtml(htmlTemplate);
+  return await mailerSend.email.send(emailParams);
 }
 
-function verifyTemplate(userID){
-    return `
+function verifyTemplate(userID) {
+  return `
     <!DOCTYPE html>
     <html lang="en">
         <head>
@@ -88,13 +94,11 @@ function verifyTemplate(userID){
             </div>
         </body>
     </html>
-`
+`;
 }
 
 let htmlBodyTemplates = {
-    verifyTemplate
-}
+  verifyTemplate,
+};
 
-module.exports = {htmlBodyTemplates,mailerSendImplementation}
-
-
+module.exports = { htmlBodyTemplates, mailerSendImplementation };
