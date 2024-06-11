@@ -17,6 +17,22 @@ Production Mode
 npm run start
 ```
 
+### Ping Request
+Once the server is running, you can send a ping request to the server. 
+```javascript 
+axios.get('http://localhost:8080/')
+    .then(response => {
+        console.log('Ping successful:', response.data);
+    })
+    .catch(error => {
+        console.error('There was an error making the request:', error);
+    });
+```
+Response
+```bash
+    'awake'
+```
+
 ## Testing
 The project's test covers integration tests. The testing utilizes Jest and Supertest to run tests. To start the testing, use the command: 
 
@@ -32,22 +48,62 @@ After getting the server running[dev], it would be running on port 8080, then yo
 
 ## Endpoint Documentation
 
-Signup
-```bash
-curl -X POST http://localhost:8080/auth/signup \
--H "Content-Type: application/json" \
--d '{"email": "your_email_value", "password": "your_password_value","mobileNumber": "mobileNumberValue","name": "nameValue","signupType": "emailAndPassword"}'
-```
-
 Login
-```bash
-curl -X POST http://localhost:8080/auth/login \
--H "Content-Type: application/json" \
--d '{"email": "your_email_value", "password": "your_password_value"}'
+```javascript
+const axios = require('axios')
+
+const requestBody = {
+    email: "your_email_value",
+    password: "your_password_value"
+}
+
+axios.post('http://localhost:8080/auth/login', requestBody, {
+    headers: {
+        'Content-Type': 'application/json'
+    }
+})
+.then(response => {
+    console.log(response.data);
+})
+.catch(error => {
+    console.error('There was an error making the request:', error);
+});
+
 ```
 Response if successful 
 ```bash
-response {token: 'tokenString'}
+200 OK - body => {token: 'tokenString'}
+```
+
+Sign Up. For the signup there are different account types, ADMIN, SELLER, BUYER, AGENT
+```javascript
+const axios = require('axios');
+
+const signupRequestBody = {
+    email: "newuser@example.com",
+    password: "NewUserP@ssw0rd",
+    signupType: "emailAndPassword",
+    mobileNumber: "5551234567",
+    name: "Adeola Adebayo",
+    accountType: "buyer"  // or "agent", "admin", "seller"
+};
+
+axios.post('http://localhost:8080/auth/signup', signupRequestBody, {
+    headers: {
+        'Content-Type': 'application/json'
+    }
+})
+.then(response => {
+    console.log(response.data);
+})
+.catch(error => {
+    console.error('There was an error making the request:', error);
+});
+
+```
+Response if successful 
+```bash
+201 CREATED - body => {token: 'tokenString'}
 ```
 
 
@@ -55,15 +111,70 @@ Response if there is an error. An error could occur for two reasons
 
 1. An unexpected technical error in the server. In this case a 500 Internal Server Error is sent as a response.
 
-2. During if invalid credentials are sent, then a 400 or 401 status is sent as a response.
+2. if invalid credentials are sent, then a 400 or 401 status is sent as a response.
+
+3. if you try to sign up an existing user, then a 409 conflict status code is sent.
 
 ```bash
-response {error: 'errorMessage'}
+400 | 409 | 404 {error: 'errorMessage'}
 ```
 
 ## Listing Management
 
 The Listing API allows users to create, read, update, and delete real estate listings. It provides endpoints for managing listings, including adding new listings, updating existing ones, fetching listings by various criteria, and deleting listings. 
+
+### The Listing Object 
+``` javascript 
+let listingObj = {
+    // Existing Properties
+    title: String,            // Title of the listing
+    description: String,      // Detailed description of the property
+    propertyType: String,     // Type of property (e.g., apartment, house, condo)
+    location: String,         // General location or address
+    estate: String,           // Name of the estate, if applicable
+    price: Number,            // Price of the property
+    monthlyRentPayment: Number, // Amount to be paid if it is a rental on a monthly basis
+    state: String,            // State where the property is located
+    LGA: String,              // Local Government Area
+    saleType: String,         // Type of sale (e.g., for sale, for rent)
+
+    // Additional Properties
+    bedrooms: Number,         // Number of bedrooms
+    bathrooms: Number,        // Number of bathrooms
+    size: Number,             // Size of the property in square feet or meters
+    yearBuilt: Number,        // Year the property was built
+    amenities: [String],      // List of amenities (e.g., pool, gym, parking)
+    images: [String],         // URLs to images of the property
+    ownersContact: {                // Owners Contact Details
+        name: String,
+        phone: String,
+        email: String
+    },
+    availableFrom: Number,      // Date when the property is available [new Date.getTime()]
+    listingDate: Number,        // Date when the listing was created [new Date.getTime()]
+    furnished: Boolean,       // Indicates if the property is furnished
+    petsAllowed: Boolean,     // Indicates if pets are allowed
+    energyRating: String,     // Energy efficiency rating
+    nearbySchools: [String],  // List of nearby schools
+    transportation: String,   // Information about nearby public transportation
+    garage: Boolean,          // Indicates if there is a garage
+    garden: Boolean,          // Indicates if there is a garden
+    balcony: Boolean,         // Indicates if there is a balcony
+    floorNumber: Number,      // The floor number if it's an apartment
+    propertyStatus: String,   // Current status (e.g., available, under contract, sold)
+    neighborhood: String,     // Additional details about the neighborhood
+    virtualTour: String,      // URL to a virtual tour of the property
+    agentContact: {           // Agent Details if created from agent account.
+        name: String,
+        phone: String,
+        email: String,
+    },
+    createdBy: String,        // userId that created the listing
+    listingId: String,        // generated by the server
+    sid: String               // generated by the server
+}
+```
+### Note: props availableFrom and ListingDate should be a number which can be gotten from new Date().getTime() .Passing a Date object would throw an error.
 
 ## Available Endpoints
 - **POST** `/listing/addListing`
@@ -74,56 +185,70 @@ The Listing API allows users to create, read, update, and delete real estate lis
 - **GET** `/listing/searchListings`
 
 ## Endpoints Documentation
-
 ### 1. Add a New Listing
 - **Endpoint**: `/listing/addListing`
 - **Method**: POST
-- **Body**:
-    ```json
-    {
-        "description": "A beautiful 3-bedroom apartment located in the heart of Lagos.",
-        "propertyType": "Apartment",
-        "location": "Abule Egba, Lagos",
-        "estate": "Sunshine Estate",
-        "price": 150000,
-        "state": "Lagos",
-        "LGA": "Ifako-Ijaiye",
-        "saleType": "Rent",
-        "monthlyRentPayment": 200000, 
-        "title": "3-Bedroom Apartment in Abule Egba",
-        "bedrooms": 3,
-        "bathrooms": 2,
-        "size": 120,
-        "yearBuilt": 2015,
-        "amenities": ["Parking", "Gym", "Swimming Pool"],
-        "images": ["http://example.com/image1.jpg", "http://example.com/image2.jpg"],
-        "contact": {
-            "name": "Adeyemi Adebayo",
-            "phone": "08012345678",
-            "email": "adeyemi.adebayo@example.com"
-        },
-        "availableFrom": 1719792000000,
-        "listingDate": 1717440000000,
-        "furnished": true,
-        "petsAllowed": false,
-        "energyRating": "A",
-        "nearbySchools": ["Sunshine Primary School", "Bright Future High School"],
-        "transportation": "Near main bus route",
-        "garage": true,
-        "garden": true,
-        "balcony": true,
-        "floorNumber": 2,
-        "propertyStatus": "Available",
-        "neighborhood": "Safe and quiet neighborhood",
-        "virtualTour": "http://example.com/virtualtour",
-        "listingAgent": {
-            "name": "Oluwaseun Johnson",
-            "phone": "08087654321",
-            "email": "oluwaseun.johnson@example.com"
-        }
+
+```javascript
+
+const axios = require('axios');
+
+const listingObj = {
+    title: "Spacious 3 Bedroom Apartment in Lekki",
+    description: "A beautiful and spacious 3 bedroom apartment located in a serene environment in Lekki. The apartment comes with modern amenities and is close to essential services.",
+    propertyType: "apartment",
+    location: "Lekki Phase 1",
+    estate: "Peace Estate",
+    price: 50000000,
+    monthlyRentPayment: 250000,
+    state: "Lagos",
+    LGA: "Eti-Osa",
+    saleType: "for sale",
+    bedrooms: 3,
+    bathrooms: 2,
+    size: 150,
+    yearBuilt: 2018,
+    amenities: ["pool", "gym", "parking"],
+    ownersContact: {
+        name: "Adeyemi Balogun",
+        phone: "08012345678",
+        email: "adeyemi.balogun@example.com"
+    },
+    availableFrom: 1689010800000,
+    listingDate: 1689010800000,
+    furnished: true,
+    petsAllowed: true,
+    energyRating: "A",
+    nearbySchools: ["Lekki British School", "Greensprings School"],
+    transportation: "Close to Lekki Toll Gate",
+    garage: true,
+    garden: true,
+    balcony: true,
+    floorNumber: 2,
+    propertyStatus: "available",
+    neighborhood: "Safe and secure with 24/7 security",
+    virtualTour: "http://example.com/virtualtour",
+    agentContact: {
+        name: "Olufunmi Ajayi",
+        phone: "08098765432",
+        email: "olufunmi.ajayi@example.com"
     }
-    ```
-    # Note: props availableFrom and ListingDate should be a number which can be gotten from new Date().getTime() .Passing a Date object would throw an error.
+}
+
+axios.post('http://localhost:8080/api/addListing', JSON.stringify(listingData), {
+    headers: {
+        'Content-Type': 'application/json'
+    }
+})
+.then(response => {
+    console.log('Listing created successfully:', response.data);
+})
+.catch(error => {
+    console.error('There was an error creating the listing:', error);
+});
+
+```
+
 - **Response**:
     ```json
     {

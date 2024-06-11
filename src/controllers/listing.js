@@ -20,7 +20,7 @@ const createNew = async (request,response) =>{
         yearBuilt,
         amenities,
         images,
-        contact,
+        ownersContact,
         availableFrom,
         listingDate,
         furnished,
@@ -35,7 +35,7 @@ const createNew = async (request,response) =>{
         propertyStatus,
         neighborhood,
         virtualTour,
-        createdBy
+        agentContact
     } = request.body;
 
     // save to the database.
@@ -79,7 +79,7 @@ const createNew = async (request,response) =>{
             yearBuilt,
             amenities,
             images,
-            contact,
+            ownersContact,
             availableFrom,
             listingDate,
             furnished,
@@ -94,19 +94,20 @@ const createNew = async (request,response) =>{
             propertyStatus,
             neighborhood,
             virtualTour,
-            createdBy,
+            agentContact,
+            createdBy: undefined,
             listingId,
-            sid: String(totalSections)
+            sid: String(totalSections)            
         })
         // you can now update the new section object.
         await newListing.save()
         .then(res=>{
-            console.log('new listing added',res._id)
+            console.log('added',res._id)
             sectionDataModel.updateOne({name: 'main'},{$inc: {totalListings: 1,count: 1}}).then(res=>{console.log("updated main")})
             sectionDataModel.updateOne({name: `section${totalSections}`},{ $inc: { active: 1 },$push: { listings: listingId }}).then(res=>{console.log("updated section")})
         })
         .then(res=>{
-            response.status(201).send({message: "listing added successfully"})
+            response.status(201).send({message: "listing added successfully",listingId})
         })
         .catch(err=>{
             if (err instanceof mongoose.Error.ValidationError) {
@@ -158,15 +159,14 @@ const getListingById = async (req, res) => {
     const listingId = req.params.id;
 
     try {
-        const listing = await Listing.findOne({listingId});
-
+        const listing = await Listing.findOne({listingId})
         if (!listing) {
-            return res.status(404).json({ message: 'Listing not found' });
+            return res.status(404).json({ message: 'Listing not found' })
         }
-        res.status(200).json({listing});
+        res.status(200).json({listing})
     } catch (error) {
         if (error instanceof mongoose.Error.CastError) {
-            return res.status(400).json({ message: 'Invalid ID format' });
+            return res.status(400).json({ message: 'Invalid ID format' })
         }
         res.status(500).json({ message: error.message });
     }
@@ -180,12 +180,12 @@ const deleteListingById = async (req, res) => {
         const deletedListing = await Listing.findOneAndDelete({listingId})
 
         if (!deletedListing) {
-            return res.status(404).json({ message: 'Listing not found' });
+            return res.status(404).json({ message: 'Listing not found' })
         }
 
-        res.status(200).json({ message: 'Listing deleted successfully' });
+        res.status(200).json({ message: 'Listing deleted successfully' })
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: error.message })
     }
 };
 
@@ -195,63 +195,63 @@ const getListings = async (request,response) => {
         let sectionData = await sectionDataModel.findOne({name: `section${sectionNo}`})
         let sectionListingIds = sectionData.listings
         // Find listings by IDs
-        const foundListings = await listingModel.find({ listingId: { $in: sectionListingIds } });
+        const foundListings = await listingModel.find({ listingId: { $in: sectionListingIds } })
         
-        response.status(200).json({ listingsArray: sectionListingIds, listings: foundListings });
+        response.status(200).json({ listingsArray: sectionListingIds, listings: foundListings })
     }
     catch(error){
-        response.status(500).json({ message: error.message });
+        response.status(500).json({ message: error.message })
     }
 }
 
 const searchListings = async (request,response) => {
-    const { location, priceRange, saleType, monthlyPaymentRange, bedrooms, bathrooms } = request.query;
+    const { location, priceRange, saleType, monthlyPaymentRange, bedrooms, bathrooms } = request.query
 
     try {
         let query = {};
        // Add location filter if provided
        if (location) {
         // Split the location string by dashes and create regex patterns for each keyword
-        const keywords = location.split('-');
+        const keywords = location.split('-')
         console.log({keywords})
-        const locationRegexArray = keywords.map(keyword => ({ location: { $regex: keyword, $options: 'i' } }));
+        const locationRegexArray = keywords.map(keyword => ({ location: { $regex: keyword, $options: 'i' } }))
 
         // Create a $or condition for each regex pattern
-        query.$or = locationRegexArray;
+        query.$or = locationRegexArray
     }
 
         // Add price range filter if provided
         if (priceRange) {
-            const [minPrice, maxPrice] = priceRange.split('-').map(Number);
-            query.price = { $gte: minPrice, $lte: maxPrice };
+            const [minPrice, maxPrice] = priceRange.split('-').map(Number)
+            query.price = { $gte: minPrice, $lte: maxPrice }
         }
           // Sale type filter
           if (saleType) {
-            query.saleType = saleType;
+            query.saleType = saleType
         }
 
         // Monthly payment range filter for rentals
         if (monthlyPaymentRange) {
-            const [minMonthlyPayment, maxMonthlyPayment] = monthlyPaymentRange.split('-').map(Number);
-            query.monthlyRentPayment = { $gte: minMonthlyPayment, $lte: maxMonthlyPayment };
+            const [minMonthlyPayment, maxMonthlyPayment] = monthlyPaymentRange.split('-').map(Number)
+            query.monthlyRentPayment = { $gte: minMonthlyPayment, $lte: maxMonthlyPayment }
         }
 
         // Bedrooms filter
         if (bedrooms) {
-            query.bedrooms = Number(bedrooms);
+            query.bedrooms = Number(bedrooms)
         }
 
         // Bathrooms filter
         if (bathrooms) {
-            query.bathrooms = Number(bathrooms);
+            query.bathrooms = Number(bathrooms)
         }
 
         // Find listings matching the query
-        const foundListings = await Listing.find(query);
-
-        response.status(200).json(foundListings);
+        const foundListings = await Listing.find(query)
+        response.status(200).json(foundListings)
+        
     } catch (error) {
-        response.status(500).json({ message: error.message });
+        response.status(500).json({ message: error.message })
     }
 }
 

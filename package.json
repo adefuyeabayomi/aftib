@@ -1,12 +1,12 @@
 {
-  "name": "fst-site-back-end",
+  "name": "aftib-site-back-end",
   "version": "0.0.0",
-  "description": "FST site server",
+  "description": "AFTIB site server",
   "main": "src/server.js",
   "scripts": {
     "dev": "cd src && set NODE_ENV=development && nodemon server.js",
     "start": "cd src && set NODE_ENV=production && node server.js",
-    "test": "set NODE_ENV=test && jest --verbose",
+    "test": "set NODE_ENV=test && jest --verbose --detectOpenHandles",
     "lint": "eslint .",
     "format": "prettier . --write",
     "build": "vite build"
@@ -15,7 +15,6 @@
   "license": "MIT",
   "dependencies": {
     "@elasticemail/elasticemail-client": "^4.0.23",
-    "@types/react-burger-menu": "^2.8.7",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.1",
@@ -35,7 +34,6 @@
     "prettier": "^3.1.1",
     "supertest": "^6.3.3",
     "vite": "^5.0.12",
-    "vite-node": "^1.2.2",
-    "vitest": "^1.2.2"
+    "vite-node": "^1.2.2"
   }
 }

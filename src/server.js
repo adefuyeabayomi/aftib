@@ -1,36 +1,21 @@
 //import dependencies
-require("dotenv").config(); 
-const express = require("express");
-const cors = require("cors");
-const connectDB = require("./utils/dbConnect");
+require("dotenv").config()
+const express = require("express")
+const cors = require("cors")
+const connectDB = require("./utils/dbConnect")
 const {sectionDataModel} = require("./models/listing")
-const verifyToken = require("./utils/verifyToken")
+const verifyToken = require("./functions/verifyToken.middleware")
 
 //import routes
-const mockRoute =  require("./routes/mock")
+const ping =  require("./routes/ping")
 const authRoute = require("./routes/auth")
-const listingRoute = require("./routes/listing")
+const {readListing,writeListing} = require("./routes/listing")
 
 // define constants
 let port = 8080 | process.env.PORT;
-let runningEnvironment = process.env.NODE_ENV;
-let DB = undefined
-if(runningEnvironment == "production"){
-  let running_db = process.env.PROD_DB
-  DB = running_db;
-}
-else if(runningEnvironment == 'development'){
-  let running_db = process.env.DEV_DB
-  DB = running_db;
-}
-else {
-  let running_db = "mongodb+srv://adefuyeabayomi:omolewa9@cluster0.ppt7z.mongodb.net/aftibdb?retryWrites=true&w=majority&appName=Cluster0"
-  DB = running_db;
-}
-
 
 //connect to database
-connectDB(DB)
+connectDB()
   .then(async () =>{
     console.log("Success : connected to database")
     let sectionData = await sectionDataModel.findOne({name: 'main'})
@@ -53,18 +38,18 @@ connectDB(DB)
 // create express app
 const app = express();
 
-// install middlewares
+// middlewares install 
 app.use(cors())
 app.use(express.json())
-app.use("/",mockRoute)
+app.use("/",ping)
 app.use("/auth",authRoute)
-//app.use(verifyToken)
-app.use("/listing",listingRoute)
+app.use("/listing",readListing)
+app.use(verifyToken)
+app.use("/listing",writeListing)
 
 // listen
 app.listen(port, () => {
-
-  console.log("server running on localhost, port", port);
+  console.log(`server running at http://localhost:${port}`);
 })
 
 module.exports = app;

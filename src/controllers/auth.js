@@ -20,17 +20,19 @@ const signup = async (req, res, next) => {
     let userId = generateID()
     let salt = bcrypt.genSaltSync(10)
     let hash = bcrypt.hashSync(password, salt)
-    let UserDoc = new User({email,hash,userId,mobileNumber,name,signupType,verified: false})
+    let UserDoc = new User({email,hash,userId,mobileNumber,name,signupType,accountType,verified: false})
     // save user
     UserDoc.save()
     .then(data => {
         // save success: generate and send JWT
         let userForToken = {
-            email: email,
-            id : userId
+            email,
+            userId,
+            accountType,
+            name
         }
         let token = jwt.sign(userForToken,process.env.SECRET,{ expiresIn: 60*60*6 })
-        res.status(200).send({token})
+        res.status(201).send({token})
         // send mail
          mailerSendImplementation(email,name,"Verify Account",htmlBodyTemplates.verifyTemplate(userId)).then(res=>console.log(res)).catch(err=>console.log({err}))
     })
@@ -45,7 +47,7 @@ const login = async (req,res) => {
     let user = await User.findOne({email})
     const passwordCorrect = user === null ? false: await bcrypt.compare(password, user.hash)
     if(!user){
-        return res.status(401).json({
+        return res.status(404).json({
             error: 'Email has not been Registered.'
           })
     }
@@ -57,7 +59,9 @@ const login = async (req,res) => {
 
     const userForToken = {
         email: user.email,
-        id: user.userId,
+        userId: user.userId,
+        accountType: user.accountType,
+        name: user.name
     }
     
     const token = jwt.sign(userForToken, process.env.SECRET)
@@ -73,10 +77,9 @@ const verifyEmail = async (req,res) => {
     .catch(err=>{
         return res.status(400).json({
             error: err.message
-          })
+        })
     })
 }
-
 
 module.exports = {
     signup,
