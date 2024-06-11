@@ -2,10 +2,10 @@
   "name": "aftib-site-back-end",
   "version": "0.0.0",
   "description": "AFTIB site server",
-  "main": "server.js",
+  "main": "src/server.js",
   "scripts": {
-    "dev": "set NODE_ENV=development && nodemon server.js",
-    "start": "set NODE_ENV=production && node server.js",
+    "dev": "cd src && set NODE_ENV=development && nodemon server.js",
+    "start": "cd src && set NODE_ENV=production && node server.js",
     "test": "set NODE_ENV=test && jest --verbose --detectOpenHandles",
     "lint": "eslint .",
     "format": "prettier . --write",
