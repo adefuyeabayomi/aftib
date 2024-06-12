@@ -2,14 +2,24 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const morgan = require('morgan');
+const fs = require('fs');
+const path = require('path');
 const connectDB = require("./utils/dbConnect");
 const { sectionDataModel } = require("./models/listing");
 const verifyToken = require("./functions/verifyToken.middleware");
+
+// import upload
+const upload = require('./functions/fileupload.middleware')
+
+// Create a write stream (in append mode)
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 
 //import routes
 const ping = require("./routes/ping");
 const authRoute = require("./routes/auth");
 const { readListing, writeListing } = require("./routes/listing");
+const uploadRoute = require('./routes/uploads')
 
 // define constants
 let port = 8080 | process.env.PORT;
@@ -42,13 +52,19 @@ connectDB()
 const app = express();
 
 // middlewares install
-app.use(cors());
-app.use(express.json());
-app.use("/", ping);
-app.use("/auth", authRoute);
-app.use("/listing", readListing);
-app.use(verifyToken);
-app.use("/listing", writeListing);
+app.use(cors())
+app.use(express.json())
+// Route to get the access log file
+// Setup the logger
+app.use(morgan('combined', { stream: accessLogStream }));
+app.use("/", ping)
+app.use("/auth", authRoute)
+app.use("/listing", readListing)
+app.use("/listing", uploadRoute)
+app.use(verifyToken)
+app.use("/listing", writeListing)
+
+
 
 // listen
 app.listen(port, () => {

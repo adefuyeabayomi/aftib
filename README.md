@@ -264,6 +264,7 @@ axios
   .post("http://localhost:8080/api/addListing", JSON.stringify(listingData), {
     headers: {
       "Content-Type": "application/json",
+      "Authorization": "Bearer YOUR_ACCESS_TOKEN_HERE",
     },
   })
   .then((response) => {
@@ -272,6 +273,7 @@ axios
   .catch((error) => {
     console.error("There was an error creating the listing:", error);
   });
+
 ```
 
 - **Response**:
@@ -288,12 +290,29 @@ axios
 - **Params**:
   - `id` (String) - The ID of the listing to update.
 - **Body**:
-  ```json
-  {
-    "description": "Updated description",
-    "price": 160000
-  }
-  ```
+```javascript
+lelt listingUpdateData = {
+  price: 30000000,
+    agentContact: {
+    name: "Olufunmi Zainab",
+    phone: "08098765432",
+    email: "olufunmi.zainab@example.com",
+  },
+}
+axios
+  .put(`http://localhost:8080/listing/updateListing/${listingId}`, JSON.stringify(listingUpdateData), {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer YOUR_ACCESS_TOKEN_HERE",
+    },
+  })
+  .then((response) => {
+    console.log("Listing updated successfully:", response.data);
+  })
+  .catch((error) => {
+    console.error("There was an error updating the listing:", error);
+  });
+```
 - **Response**:
   ```json
   {
@@ -333,12 +352,28 @@ axios
 - **Method**: DELETE
 - **Params**:
   - `id` (String) - The ID of the listing to delete.
+```js
+const listingId = "your_listing_id"; // Replace with the actual listing ID
+
+axios
+  .delete(`http://localhost:8080/listing/deleteListingById/${listingId}`, {
+    headers: {
+      "Authorization": "Bearer YOUR_ACCESS_TOKEN_HERE",
+    },
+  })
+  .then((response) => {
+    console.log("Listing deleted successfully:", response.data);
+  })
+  .catch((error) => {
+    console.error("There was an error deleting the listing:", error);
+  });
+```
 - **Response**:
-  ```json
+```json
   {
     "message": "Listing deleted successfully"
   }
-  ```
+```
 
 ### 6. Search Listings
 
