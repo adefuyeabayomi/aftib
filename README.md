@@ -386,9 +386,38 @@ axios
   - `monthlyPaymentRange` (String) - Monthly payment range for rentals (e.g., "5000-10000").
   - `bedRooms` (Number) - Number of bedrooms.
   - `bathRooms` (Number) - Number of bathrooms.
-
+How the request url would look like.
 ```bash
 /listing/searchListings?location=abule-egba&priceRange=100000-200000&saleType=sale&bedrooms=3&bathrooms=2
+```
+
+How to search with axios
+```javascript 
+function searchRequest ({location,priceRangeMin,priceRangeMax,monthlyPaymentMin,monthlyPaymentMax,bedRooms,bathRooms}){
+  const endpoint = 'http://localhost:8080/listing/searchListings'
+  // Create query parameters
+  const createQuery = (option, value) => value ? `${option}=${value}` : ''
+  let queryParams = []
+  queryParams.push(createQuery('location', location))
+  queryParams.push(createQuery('priceRange', `${priceRangeMin}-${priceRangeMax}`))
+  queryParams.push(createQuery('salesType', salesType));
+  queryParams.push(createQuery('monthlyPaymentRange', `${monthlyPaymentMin}-${monthlyPaymentMax}`))
+  queryParams.push(createQuery('bedRooms', bedRooms))
+  queryParams.push(createQuery('bathRooms', bathRooms))
+  //filter unused queries
+  queryParams = queryParams.filter(param => param !== '')
+
+  // Build the full query string
+  const queryString = queryParams.length ? `?${queryParams.join('&')}` : '';
+      // Send the request with axios
+  axios.get(`${endpoint}${queryString}`)
+  .then(response => {
+    console.log('Search results:', response.data);
+  })
+  .catch(error => {
+    console.error('There was an error with the search request:', error);
+  })
+}
 ```
 
 for rentals you can search with monthlyPaymentRange instead of priceRange. teh response gives an array of listings that match the search queries.
