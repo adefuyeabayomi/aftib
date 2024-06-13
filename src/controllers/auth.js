@@ -33,9 +33,9 @@ const signup = async (req, res, next) => {
       });
   }
   // create user
-  let userId = generateID();
-  let salt = bcrypt.genSaltSync(10);
-  let hash = bcrypt.hashSync(password, salt);
+  let userId = generateID()
+  let salt = bcrypt.genSaltSync(10)
+  let hash = bcrypt.hashSync(password, salt)
   let UserDoc = new User({
     email,
     hash,
@@ -45,7 +45,7 @@ const signup = async (req, res, next) => {
     signupType,
     accountType,
     verified: false,
-  });
+  })
   // save user
   UserDoc.save()
     .then((data) => {
@@ -55,11 +55,12 @@ const signup = async (req, res, next) => {
         userId,
         accountType,
         name,
-      };
+        mobileNumber
+      }
       let token = jwt.sign(userForToken, process.env.SECRET, {
         expiresIn: 60 * 60 * 6,
-      });
-      res.status(201).send({ token, user: userForToken });
+      })
+      res.status(201).send({ token, user: userForToken })
       // send mail
       mailerSendImplementation(
         email,
@@ -68,13 +69,13 @@ const signup = async (req, res, next) => {
         htmlBodyTemplates.verifyTemplate(userId),
       )
         .then((res) => console.log(res))
-        .catch((err) => console.log({ err }));
+        .catch((err) => console.log({ err }))
     })
     .catch((err) => {
       // save error: send error message
-      res.status(500).send({ error: err.message });
-    });
-};
+      res.status(500).send({ error: err.message })
+    })
+}
 
 const login = async (req, res) => {
   let { email, password } = req.body;
@@ -97,6 +98,7 @@ const login = async (req, res) => {
     userId: user.userId,
     accountType: user.accountType,
     name: user.name,
+    mobileNumber: user.mobileNumber
   };
 
   const token = jwt.sign(userForToken, process.env.SECRET);
