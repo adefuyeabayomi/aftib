@@ -59,7 +59,7 @@ const signup = async (req, res, next) => {
       let token = jwt.sign(userForToken, process.env.SECRET, {
         expiresIn: 60 * 60 * 6,
       });
-      res.status(201).send({ token });
+      res.status(201).send({ token, user: userForToken });
       // send mail
       mailerSendImplementation(
         email,
@@ -100,7 +100,7 @@ const login = async (req, res) => {
   };
 
   const token = jwt.sign(userForToken, process.env.SECRET);
-  return res.status(200).send({ token });
+  return res.status(200).send({ token, user: userForToken  });
 };
 
 const verifyEmail = async (req, res) => {
