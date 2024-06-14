@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+
 let listingObj = {
   // Existing Properties
   title: String, // Title of the listing

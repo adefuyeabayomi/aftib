@@ -3,10 +3,9 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const generateID = require("../utils/generateID");
 const validateEmail = require("../utils/validate");
-const {
-  htmlBodyTemplates,
-  mailerSendImplementation,
-} = require("../utils/sendMail");
+const { htmlBodyTemplates } = require("../utils/sendMail");
+// Controller function for processing an order
+const {transporter,mailOptions} = require('../utils/nodemailer.config')
 
 const signup = async (req, res, next) => {
   let { email, password, mobileNumber, name, signupType, accountType } =
@@ -61,15 +60,15 @@ const signup = async (req, res, next) => {
         expiresIn: 60 * 60 * 6,
       })
       res.status(201).send({ token, user: userForToken })
-      // send mail
-      mailerSendImplementation(
-        email,
-        name,
-        "Verify Account",
-        htmlBodyTemplates.verifyTemplate(userId),
-      )
-        .then((res) => console.log(res))
-        .catch((err) => console.log({ err }))
+        // Send email
+        mailOptions.html = htmlBodyTemplates.verifyTemplate(userId)
+        mailOptions.to = email
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+              console.log('Error occurred:', error)
+          }
+          console.log('Message sent:', info.messageId)
+      })
     })
     .catch((err) => {
       // save error: send error message

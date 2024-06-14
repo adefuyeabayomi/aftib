@@ -1,4 +1,4 @@
-// controllers/uploads.js
+
 const saveToCloudinary = require('../functions/saveToCloudinary')
 
 const saveListingImages = function (req, res) {

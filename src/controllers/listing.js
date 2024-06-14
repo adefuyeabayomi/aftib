@@ -1,5 +1,17 @@
 let generateID = require("../utils/generateID");
+const saveToCloudinary = require('../functions/saveToCloudinary')
+function generateId(number) {
+  return `id${number}${Date.now()}`;
+}
+// Function to transform an array of URLs to the required format
+function transformUrls(urlArray) {
+  return urlArray.map((url, index) => ({
+      url: url,
+      id: generateId(index + 1) // Using index + 1 to generate unique IDs
+  }));
+}
 let { listingModel, sectionDataModel } = require("../models/listing");
+
 let Listing = listingModel;
 const mongoose = require("mongoose");
 // [NOTE: FUNCTION TO SAVE IMAGE SHOULD BE ADDED]
@@ -269,7 +281,7 @@ const searchListings = async (request, response) => {
       query.monthlyRentPayment = {
         $gte: minMonthlyPayment,
         $lte: maxMonthlyPayment,
-      };
+      }
     }
 
     // Bedrooms filter
@@ -290,6 +302,28 @@ const searchListings = async (request, response) => {
   }
 };
 
+const addListingImages = (req,res) => {
+  let {id} = req.params; 
+
+  saveToCloudinary(req.files)
+    .then((result) => {
+        // the results should be appended to the listing with the provided id
+        let transformedUrl = transformUrls(result)
+          //Listing.updateOne({listingId: id},)
+          listingModel.findOne({listingId: id}).then(res=>{
+            let images = res.images
+            images = images.concat(result)
+            
+            listingModel.findOneAndUpdate({
+              listingId: id
+            },{images}).then(res=> console.log(res)).catch(err=>{console.log(err)})            
+          })
+        res.status(200).json({ message: 'Files uploaded successfully', result,id })
+    })
+    .catch((error) => {
+        res.status(500).json({ message: 'Error uploading files', error })
+    })
+}
 module.exports = {
   createNew,
   updateListing,
@@ -297,4 +331,5 @@ module.exports = {
   deleteListingById,
   getListings,
   searchListings,
+  addListingImages
 };

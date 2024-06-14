@@ -268,11 +268,11 @@ axios
     },
   })
   .then((response) => {
-    console.log("Listing created successfully:", response.data);
+    console.log("Listing created successfully:", response.data)
   })
   .catch((error) => {
-    console.error("There was an error creating the listing:", error);
-  });
+    console.error("There was an error creating the listing:", error)
+  })
 
 ```
 
@@ -428,3 +428,77 @@ for rentals you can search with monthlyPaymentRange instead of priceRange. teh r
       "listings": [ ... ]
   }
   ```
+
+Here's a quick guide and illustration for using the endpoint to add images to a listing.
+
+## Adding Images to a Listing
+
+### Endpoint
+**Method**: POST  
+**URL**: `/listing/addListingImages/:id`
+
+### Request Parameters
+- `id` (URL parameter): The ID of the listing to which you want to add images.
+
+### Request Body
+- `files` (form-data): Multiple image files to be uploaded.
+
+### Example HTML Form
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Images</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <h1>Upload Images to Listing</h1>
+    <form id="uploadForm">
+        <input type="file" id="files" name="files" multiple><br><br>
+        <button type="button" onclick="uploadImages()">Upload</button>
+    </form>
+
+    <script>
+        function uploadImages() {
+            const listingId = 'YOUR_LISTING_ID'; // Replace with your actual listing ID
+            const formData = new FormData();
+            const files = document.getElementById('files').files;
+
+            for (let i = 0; i < files.length; i++) {
+                formData.append('files', files[i]);
+            }
+
+            axios.post(`http://localhost:8080/listing/addListingImages/${listingId}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'authorization': 'Bearer tokenString',
+                }
+            })
+            .then(response => {
+                console.log('Images uploaded successfully:', response.data);
+            })
+            .catch(error => {
+                console.error('Error uploading images:', error);
+            });
+        }
+    </script>
+</body>
+</html>
+```
+
+### Explanation
+1. **HTML Form**: This simple form contains a file input allowing multiple file selection and a button to trigger the upload.
+2. **JavaScript with Axios**:
+    - **Form Data**: Collects the files from the input and appends them to a `FormData` object.
+    - **Axios POST Request**: Sends a POST request to the endpoint with the `FormData` containing the files.
+3. **Listing ID**: Replace `YOUR_LISTING_ID` with the actual ID of the listing you want to update.
+
+### Using the Endpoint
+1. Open the HTML file in your browser.
+2. Select the image files you want to upload.
+3. Click the "Upload" button.
+4. The selected images will be sent to your server and added to the specified listing.
+
+This setup allows you to easily upload multiple images to a specific listing by making a POST request with the files as form-data using Axios.

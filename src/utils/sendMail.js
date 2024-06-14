@@ -25,7 +25,16 @@ async function mailerSendImplementation(
     .setHtml(htmlTemplate);
   return await mailerSend.email.send(emailParams);
 }
-
+      // send mail
+      /*
+      mailerSendImplementation(
+        email,
+        name,
+        "Verify Account",
+        htmlBodyTemplates.verifyTemplate(userId),
+      ).then((res) => console.log(res))
+        .catch((err) => console.log({ err }))
+        */
 function verifyTemplate(userID) {
   return `
     <!DOCTYPE html>
