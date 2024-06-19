@@ -30,7 +30,7 @@ router.get("/getListings/:sectionNo", getListings);
 router.get("/searchListings", searchListings);
 
 // [/listing/]   200 Okay | 400 bad request
-router.post(
+router.put(
   "/addListingImages/:id",
   verifyToken,
   uploadImages,

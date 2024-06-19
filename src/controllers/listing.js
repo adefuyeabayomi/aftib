@@ -7,11 +7,11 @@ let User = require("../models/user");
 // [NOTE: FUNCTION TO SAVE IMAGE SHOULD BE ADDED]
 const createNew = async (req, res) => {
   try {
-    req.body.createdBy = new mongoose.Types.ObjectId(req.user.userId);
-    let newListing = new Listing(req.body);
-    console.log({ newListing });
-    let savedListing = await newListing.save();
-    console.log("added", savedListing._id);
+    req.body.createdBy = new mongoose.Types.ObjectId(req.user.userId)
+    let newListing = new Listing(req.body)
+    console.log({ newListing })
+    let savedListing = await newListing.save()
+    console.log("added", savedListing._id)
 
     await User.updateOne(
       { _id: req.user.userId },
@@ -26,7 +26,7 @@ const createNew = async (req, res) => {
       .send({
         message: "Listing added successfully",
         listingId: savedListing._id,
-      });
+      })
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
       // Handle validation error
@@ -34,7 +34,7 @@ const createNew = async (req, res) => {
         error: "ValidationError",
         message: err.message,
         errors: err.errors, // This will provide details of each validation error
-      });
+      })
     } else if (err instanceof mongoose.Error.CastError) {
       // Handle cast error
       res.status(400).json({
@@ -42,36 +42,36 @@ const createNew = async (req, res) => {
         message: err.message,
         path: err.path, // The path of the field that caused the error
         value: err.value, // The value that caused the cast error
-      });
+      })
     } else {
       // Handle other types of errors
       res.status(500).json({
         error: "InternalServerError",
         message: err.message,
-      });
+      })
     }
   }
-};
+}
 
 const updateListing = async (req, res) => {
-  const id = new mongoose.Types.ObjectId(req.params.id);
-  console.log({ updateID: id });
-  const updateData = req.body;
+  const id = new mongoose.Types.ObjectId(req.params.id)
+  console.log({ updateID: id })
+  const updateData = req.body
   try {
     // Find the listing by ID and update it
     const updatedListing = await Listing.findByIdAndUpdate(id, updateData, {
       new: true, // Return the updated document
       runValidators: true, // Ensure the update adheres to the schema's validators
-    });
+    })
 
     if (!updatedListing) {
-      return res.status(404).json({ message: "Listing not found" });
+      return res.status(404).json({ message: "Listing not found" })
     }
-    res.status(200).json({ message: "Listing updated successfully" });
+    res.status(200).json({ message: "Listing updated successfully" })
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ message: error.message })
   }
-};
+}
 
 const getListingById = async (req, res) => {
   const listingId = req.params.id;
@@ -160,7 +160,7 @@ const searchListings = async (request, response) => {
       query.price = { $gte: minPrice, $lte: maxPrice };
     }
     // Sale type filter
-    if (saleType) {
+    if (saleType == 'rent' || saleType== 'sale') {
       query.saleType = saleType;
     }
 
@@ -176,12 +176,12 @@ const searchListings = async (request, response) => {
     }
 
     // Bedrooms filter
-    if (bedrooms) {
+    if (bedrooms && bedrooms !== 'any') {
       query.bedrooms = Number(bedrooms);
     }
 
     // Bathrooms filter
-    if (bathrooms) {
+    if (bathrooms && bathrooms !== 'any') {
       query.bathrooms = Number(bathrooms);
     }
 
