@@ -33,12 +33,20 @@ const transactionSchema = new Schema({
     enum: ["pending", "paid", "failed"], // Example payment statuses, adjust as needed
   },
   date: {
-    type: Number,
+    type: Number, // new Date.now to get the time stamp.
   },
   propertyId: {
     type: String,
     ref: "Property", // Assuming there is a Property model
-  }
+  },
+  bookingDetails: {
+    room: Object,
+    startDate: Date,
+    endDate: Date,
+    totalNights: Number,
+    price: Number
+  },
+  narration : String
 })
 
 const Transaction = mongoose.model("Transaction", transactionSchema)

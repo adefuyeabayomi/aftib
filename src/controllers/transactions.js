@@ -5,7 +5,6 @@ const Hotel = require("../models/Transaction");
 const generateId = require("../utils/generateID");
 const axios = require('axios')
 
-//
 const createTransaction = async (req, res) => {
   let transactionId = generateId(40);
   let propertyId = req.body.propertyId;
@@ -17,6 +16,8 @@ const createTransaction = async (req, res) => {
     // Fetch the product based on the transaction type
     if (transactionType === "hotelBooking") {
       product = await Hotel.findById(propertyId);
+      let room = product.filter(x=> x.roomType == bookingDetails.room.roomType)
+      req.body.bookingDetails.price = bookingDetails.totalNights * room.price
     } else {
       product = await Listing.findById(propertyId);
     }

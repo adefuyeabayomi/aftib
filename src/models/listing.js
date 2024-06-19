@@ -11,7 +11,7 @@ let listingObj = {
   monthlyRentPayment: Number, // Amount to be paid if it is a rental on a monthly basis
   state: String, // State where the property is located
   LGA: String, // Local Government Area
-  saleType: String, // Type of sale (e.g., for sale, for rent)
+  saleType: String, // Type of sale (e.g., sale, rent)
 
   // Additional Properties
   bedrooms: Number, // Number of bedrooms
