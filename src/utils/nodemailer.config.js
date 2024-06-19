@@ -1,10 +1,10 @@
-const nodemailer = require('nodemailer');
+const nodemailer = require("nodemailer");
 
-let BREVO_USER = process.env.BREVO_USER
-let BREVO_PASSWORD = process.env.BREVO_PASSWORD
+let BREVO_USER = process.env.BREVO_USER;
+let BREVO_PASSWORD = process.env.BREVO_PASSWORD;
 // Create a Nodemailer transporter using the Mailbit SMTP server details
 const transporter = nodemailer.createTransport({
-  host: 'smtp-relay.brevo.com', // Replace with Mailbit SMTP server
+  host: "smtp-relay.brevo.com", // Replace with Mailbit SMTP server
   port: 587, // Typically, SMTP uses port 587 for TLS
   secure: false, // Set to true if using port 465, otherwise false for port 587
   auth: {
@@ -17,10 +17,8 @@ const transporter = nodemailer.createTransport({
 const mailOptions = {
   from: '"Aftib Real Estate" <adefuyeabayomi16@gmail.com>', // Sender address
   to: undefined, // List of receivers
-  subject: 'Verification', // Subject line
-  html: undefined
+  subject: "Verification", // Subject line
+  html: undefined,
 };
 
-
-
-module.exports = {transporter,mailOptions}
+module.exports = { transporter, mailOptions };

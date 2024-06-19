@@ -25,8 +25,8 @@ async function mailerSendImplementation(
     .setHtml(htmlTemplate);
   return await mailerSend.email.send(emailParams);
 }
-      // send mail
-      /*
+// send mail
+/*
       mailerSendImplementation(
         email,
         name,

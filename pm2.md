@@ -4,20 +4,20 @@ Sure, here's a simple PM2 configuration file (`ecosystem.config.js`) for your re
 module.exports = {
   apps: [
     {
-      name: 'real-estate-app',
-      script: 'server.js',
-      instances: 'max', // Use maximum available CPU cores
+      name: "real-estate-app",
+      script: "server.js",
+      instances: "max", // Use maximum available CPU cores
       autorestart: true,
       watch: false,
-      max_memory_restart: '1G',
+      max_memory_restart: "1G",
       env: {
-        NODE_ENV: 'production'
+        NODE_ENV: "production",
       },
       env_production: {
-        NODE_ENV: 'production'
-      }
-    }
-  ]
+        NODE_ENV: "production",
+      },
+    },
+  ],
 };
 ```
 

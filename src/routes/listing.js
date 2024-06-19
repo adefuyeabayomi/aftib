@@ -1,5 +1,4 @@
-const readListing = require("express").Router()
-const writeListing = require("express").Router()
+const router = require("express").Router();
 const {
   createNew,
   updateListing,
@@ -7,30 +6,35 @@ const {
   deleteListingById,
   getListings,
   searchListings,
-  addListingImages
+  addListingImages,
 } = require("../controllers/listing");
-const uploadImages = require('../functions/fileupload.middleware') 
+const uploadImages = require("../functions/fileupload.middleware");
+const verifyToken = require("../functions/verifyToken.middleware");
 
 // [/listing/createNew] POST 201 Created | 400 bad request | 500 Internal Server Error
-writeListing.post("/addListing", createNew)
+router.post("/addListing", verifyToken, createNew);
 
 // [/listing/updateListing/:id] PUT 200 | 400 bad request
-writeListing.put("/updateListing/:id", updateListing)
+router.put("/updateListing/:id", verifyToken, updateListing);
 
 // [/listing/getListingsById/:id]   200 Okay | 400 bad request
-readListing.get("/getListingById/:id", getListingById)
+router.get("/getListingById/:id", getListingById);
 
 // [/listing/deleteListingsById/:id]   200 Okay | 400 bad request
-writeListing.delete("/deleteListingById/:id", deleteListingById)
+router.delete("/deleteListingById/:id", verifyToken, deleteListingById);
 
 // [/listing/getListings/:sectionNo]   200 Okay | 400 bad request
-readListing.get("/getListings/:sectionNo", getListings)
+router.get("/getListings/:sectionNo", getListings);
 
 // [/listing/searchListings]   200 Okay | 400 bad request
-readListing.get("/searchListings", searchListings)
+router.get("/searchListings", searchListings);
 
 // [/listing/]   200 Okay | 400 bad request
-writeListing.post("/addListingImages/:id",uploadImages,addListingImages)
+router.post(
+  "/addListingImages/:id",
+  verifyToken,
+  uploadImages,
+  addListingImages,
+);
 
-//
-module.exports = { writeListing, readListing };
+module.exports = router;

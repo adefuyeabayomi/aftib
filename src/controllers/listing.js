@@ -1,176 +1,65 @@
-let generateID = require("../utils/generateID");
-const saveToCloudinary = require('../functions/saveToCloudinary')
-function generateId(number) {
-  return `id${number}${Date.now()}`;
-}
-// Function to transform an array of URLs to the required format
-function transformUrls(urlArray) {
-  return urlArray.map((url, index) => ({
-      url: url,
-      id: generateId(index + 1) // Using index + 1 to generate unique IDs
-  }));
-}
-let { listingModel, sectionDataModel } = require("../models/listing");
-
-let Listing = listingModel;
 const mongoose = require("mongoose");
+const saveToCloudinary = require("../functions/saveToCloudinary");
+
+let Listing = require("../models/listing");
+let User = require("../models/user");
+
 // [NOTE: FUNCTION TO SAVE IMAGE SHOULD BE ADDED]
-const createNew = async (request, response) => {
-  const {
-    description,
-    propertyType,
-    location,
-    estate,
-    price,
-    state,
-    LGA,
-    saleType,
-    title,
-    bedrooms,
-    bathrooms,
-    size,
-    yearBuilt,
-    amenities,
-    images,
-    ownersContact,
-    availableFrom,
-    listingDate,
-    furnished,
-    petsAllowed,
-    energyRating,
-    nearbySchools,
-    transportation,
-    garage,
-    garden,
-    balcony,
-    floorNumber,
-    propertyStatus,
-    neighborhood,
-    virtualTour,
-    agentContact,
-  } = request.body;
+const createNew = async (req, res) => {
+  try {
+    req.body.createdBy = new mongoose.Types.ObjectId(req.user.userId);
+    let newListing = new Listing(req.body);
+    console.log({ newListing });
+    let savedListing = await newListing.save();
+    console.log("added", savedListing._id);
 
-  // save to the database.
-  let listingId = generateID(30);
-  // determine last section available
-  let sectionData = await sectionDataModel.findOne({ name: "main" });
-  let { totalSections, count } = sectionData;
-  if (totalSections === 0 || count === 30) {
-    // Initialize new section
-    console.log("in the new section creation");
-    totalSections = totalSections + 1;
-    await new sectionDataModel({
-      name: `section${totalSections}`,
-      listings: [],
-      active: 0,
-      inactive: [],
-    })
-      .save()
-      .then((res) => {
-        console.log({ "saved new section": res });
-      })
-      .catch((err) => {
-        console.error({ error: err.message });
-      });
-    // reset count to zero
-    await sectionDataModel.updateOne(
-      { name: "main" },
-      { count: 0, totalSections },
+    await User.updateOne(
+      { _id: req.user.userId },
+      {
+        $push: {
+          myListings: savedListing._id,
+        },
+      },
     );
+    res
+      .status(201)
+      .send({
+        message: "Listing added successfully",
+        listingId: savedListing._id,
+      });
+  } catch (err) {
+    if (err instanceof mongoose.Error.ValidationError) {
+      // Handle validation error
+      res.status(400).json({
+        error: "ValidationError",
+        message: err.message,
+        errors: err.errors, // This will provide details of each validation error
+      });
+    } else if (err instanceof mongoose.Error.CastError) {
+      // Handle cast error
+      res.status(400).json({
+        error: "CastError",
+        message: err.message,
+        path: err.path, // The path of the field that caused the error
+        value: err.value, // The value that caused the cast error
+      });
+    } else {
+      // Handle other types of errors
+      res.status(500).json({
+        error: "InternalServerError",
+        message: err.message,
+      });
+    }
   }
-
-  let newListing = new Listing({
-    description,
-    propertyType,
-    location,
-    estate,
-    price,
-    state,
-    LGA,
-    saleType,
-    title,
-    bedrooms,
-    bathrooms,
-    size,
-    yearBuilt,
-    amenities,
-    images,
-    ownersContact,
-    availableFrom,
-    listingDate,
-    furnished,
-    petsAllowed,
-    energyRating,
-    nearbySchools,
-    transportation,
-    garage,
-    garden,
-    balcony,
-    floorNumber,
-    propertyStatus,
-    neighborhood,
-    virtualTour,
-    agentContact,
-    createdBy: undefined,
-    listingId,
-    sid: String(totalSections),
-  });
-  // you can now update the new section object.
-  await newListing
-    .save()
-    .then((res) => {
-      console.log("added", res._id);
-      sectionDataModel
-        .updateOne({ name: "main" }, { $inc: { totalListings: 1, count: 1 } })
-        .then((res) => {
-          console.log("updated main");
-        });
-      sectionDataModel
-        .updateOne(
-          { name: `section${totalSections}` },
-          { $inc: { active: 1 }, $push: { listings: listingId } },
-        )
-        .then((res) => {
-          console.log("updated section");
-        });
-    })
-    .then((res) => {
-      response
-        .status(201)
-        .send({ message: "listing added successfully", listingId });
-    })
-    .catch((err) => {
-      if (err instanceof mongoose.Error.ValidationError) {
-        // Handle validation error
-        response.status(400).json({
-          error: "ValidationError",
-          message: err.message,
-          errors: err.errors, // This will provide details of each validation error
-        });
-      } else if (err instanceof mongoose.Error.CastError) {
-        // Handle cast error
-        response.status(400).json({
-          error: "CastError",
-          message: err.message,
-          path: err.path, // The path of the field that caused the error
-          value: err.value, // The value that caused the cast error
-        });
-      } else {
-        // Handle other types of errors
-        response.status(500).json({
-          error: "InternalServerError",
-          message: err.message,
-        });
-      }
-    });
 };
 
 const updateListing = async (req, res) => {
-  const listingId = req.params.id;
+  const id = new mongoose.Types.ObjectId(req.params.id);
+  console.log({ updateID: id });
   const updateData = req.body;
   try {
     // Find the listing by ID and update it
-    const updatedListing = await Listing.updateOne({ listingId }, updateData, {
+    const updatedListing = await Listing.findByIdAndUpdate(id, updateData, {
       new: true, // Return the updated document
       runValidators: true, // Ensure the update adheres to the schema's validators
     });
@@ -188,7 +77,7 @@ const getListingById = async (req, res) => {
   const listingId = req.params.id;
 
   try {
-    const listing = await Listing.findOne({ listingId });
+    const listing = await Listing.findByIdAndUpdate(listingId);
     if (!listing) {
       return res.status(404).json({ message: "Listing not found" });
     }
@@ -203,14 +92,19 @@ const getListingById = async (req, res) => {
 
 const deleteListingById = async (req, res) => {
   const listingId = req.params.id;
-  // i still need to update the section data
+
   try {
     // Find and delete the listing by ID
-    const deletedListing = await Listing.findOneAndDelete({ listingId });
-
+    const deletedListing = await Listing.findByIdAndDelete(listingId);
     if (!deletedListing) {
       return res.status(404).json({ message: "Listing not found" });
     }
+
+    // Remove the listingId from the user's myListings array
+    await User.updateOne(
+      { _id: deletedListing.createdBy },
+      { $pull: { myListings: listingId } },
+    );
 
     res.status(200).json({ message: "Listing deleted successfully" });
   } catch (error) {
@@ -218,23 +112,20 @@ const deleteListingById = async (req, res) => {
   }
 };
 
-const getListings = async (request, response) => {
-  let sectionNo = request.params.sectionNo;
+const getListings = async (req, res) => {
+  let sectionNo = req.params.sectionNo;
   try {
-    let sectionData = await sectionDataModel.findOne({
-      name: `section${sectionNo}`,
-    });
-    let sectionListingIds = sectionData.listings;
-    // Find listings by IDs
-    const foundListings = await listingModel.find({
-      listingId: { $in: sectionListingIds },
-    });
+    const batch = parseInt(sectionNo) || 1; // Default to batch 1 if not specified
+    const limit = 15; // Default to 20 documents per batch
 
-    response
+    const skip = (batch - 1) * limit; // Calculate the number of documents to skip
+
+    const listings = await Listing.find().skip(skip).limit(limit);
+    res
       .status(200)
-      .json({ listingsArray: sectionListingIds, listings: foundListings });
+      .json({ listings, listingsArray: listings.map((x) => x._id) });
   } catch (error) {
-    response.status(500).json({ message: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -281,7 +172,7 @@ const searchListings = async (request, response) => {
       query.monthlyRentPayment = {
         $gte: minMonthlyPayment,
         $lte: maxMonthlyPayment,
-      }
+      };
     }
 
     // Bedrooms filter
@@ -302,28 +193,30 @@ const searchListings = async (request, response) => {
   }
 };
 
-const addListingImages = (req,res) => {
-  let {id} = req.params; 
+const addListingImages = (req, res) => {
+  let { id } = req.params;
 
   saveToCloudinary(req.files)
     .then((result) => {
-        // the results should be appended to the listing with the provided id
-        let transformedUrl = transformUrls(result)
-          //Listing.updateOne({listingId: id},)
-          listingModel.findOne({listingId: id}).then(res=>{
-            let images = res.images
-            images = images.concat(result)
-            
-            listingModel.findOneAndUpdate({
-              listingId: id
-            },{images}).then(res=> console.log(res)).catch(err=>{console.log(err)})            
-          })
-        res.status(200).json({ message: 'Files uploaded successfully', result,id })
+      //Listing.updateOne({listingId: id},)
+      Listing.findById(id).then((res) => {
+        let images = res.images;
+        images = images.concat(result);
+        Listing.findByIdAndUpdate(id, { images })
+          .then((res) => console.log(res))
+          .catch((err) => {
+            console.log(err);
+          });
+      });
+      res
+        .status(200)
+        .json({ message: "Files uploaded successfully", result, id });
     })
     .catch((error) => {
-        res.status(500).json({ message: 'Error uploading files', error })
-    })
-}
+      res.status(500).json({ message: "Error uploading files", error });
+    });
+};
+
 module.exports = {
   createNew,
   updateListing,
@@ -331,5 +224,5 @@ module.exports = {
   deleteListingById,
   getListings,
   searchListings,
-  addListingImages
+  addListingImages,
 };

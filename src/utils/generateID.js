@@ -1,6 +1,6 @@
 function generateID(length = 10) {
   var chars =
-    "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz".split("");
+    "0123456789".split("");
 
   if (!length) {
     length = Math.floor(Math.random() * chars.length);

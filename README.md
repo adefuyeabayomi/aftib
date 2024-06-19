@@ -264,16 +264,15 @@ axios
   .post("http://localhost:8080/api/addListing", JSON.stringify(listingData), {
     headers: {
       "Content-Type": "application/json",
-      "Authorization": "Bearer YOUR_ACCESS_TOKEN_HERE",
+      Authorization: "Bearer YOUR_ACCESS_TOKEN_HERE",
     },
   })
   .then((response) => {
-    console.log("Listing created successfully:", response.data)
+    console.log("Listing created successfully:", response.data);
   })
   .catch((error) => {
-    console.error("There was an error creating the listing:", error)
-  })
-
+    console.error("There was an error creating the listing:", error);
+  });
 ```
 
 - **Response**:
@@ -290,6 +289,7 @@ axios
 - **Params**:
   - `id` (String) - The ID of the listing to update.
 - **Body**:
+
 ```javascript
 lelt listingUpdateData = {
   price: 30000000,
@@ -313,6 +313,7 @@ axios
     console.error("There was an error updating the listing:", error);
   });
 ```
+
 - **Response**:
   ```json
   {
@@ -352,13 +353,14 @@ axios
 - **Method**: DELETE
 - **Params**:
   - `id` (String) - The ID of the listing to delete.
+
 ```js
 const listingId = "your_listing_id"; // Replace with the actual listing ID
 
 axios
   .delete(`http://localhost:8080/listing/deleteListingById/${listingId}`, {
     headers: {
-      "Authorization": "Bearer YOUR_ACCESS_TOKEN_HERE",
+      Authorization: "Bearer YOUR_ACCESS_TOKEN_HERE",
     },
   })
   .then((response) => {
@@ -368,11 +370,13 @@ axios
     console.error("There was an error deleting the listing:", error);
   });
 ```
+
 - **Response**:
+
 ```json
-  {
-    "message": "Listing deleted successfully"
-  }
+{
+  "message": "Listing deleted successfully"
+}
 ```
 
 ### 6. Search Listings
@@ -386,37 +390,55 @@ axios
   - `monthlyPaymentRange` (String) - Monthly payment range for rentals (e.g., "5000-10000").
   - `bedRooms` (Number) - Number of bedrooms.
   - `bathRooms` (Number) - Number of bathrooms.
-How the request url would look like.
+    How the request url would look like.
+
 ```bash
 /listing/searchListings?location=abule-egba&priceRange=100000-200000&saleType=sale&bedrooms=3&bathrooms=2
 ```
 
 How to search with axios
-```javascript 
-function searchRequest ({location,priceRangeMin,priceRangeMax,monthlyPaymentMin,monthlyPaymentMax,bedRooms,bathRooms}){
-  const endpoint = 'http://localhost:8080/listing/searchListings'
+
+```javascript
+function searchRequest({
+  location,
+  priceRangeMin,
+  priceRangeMax,
+  monthlyPaymentMin,
+  monthlyPaymentMax,
+  bedRooms,
+  bathRooms,
+}) {
+  const endpoint = "http://localhost:8080/listing/searchListings";
   // Create query parameters
-  const createQuery = (option, value) => value ? `${option}=${value}` : ''
-  let queryParams = []
-  queryParams.push(createQuery('location', location))
-  queryParams.push(createQuery('priceRange', `${priceRangeMin}-${priceRangeMax}`))
-  queryParams.push(createQuery('salesType', salesType));
-  queryParams.push(createQuery('monthlyPaymentRange', `${monthlyPaymentMin}-${monthlyPaymentMax}`))
-  queryParams.push(createQuery('bedRooms', bedRooms))
-  queryParams.push(createQuery('bathRooms', bathRooms))
+  const createQuery = (option, value) => (value ? `${option}=${value}` : "");
+  let queryParams = [];
+  queryParams.push(createQuery("location", location));
+  queryParams.push(
+    createQuery("priceRange", `${priceRangeMin}-${priceRangeMax}`),
+  );
+  queryParams.push(createQuery("salesType", salesType));
+  queryParams.push(
+    createQuery(
+      "monthlyPaymentRange",
+      `${monthlyPaymentMin}-${monthlyPaymentMax}`,
+    ),
+  );
+  queryParams.push(createQuery("bedRooms", bedRooms));
+  queryParams.push(createQuery("bathRooms", bathRooms));
   //filter unused queries
-  queryParams = queryParams.filter(param => param !== '')
+  queryParams = queryParams.filter((param) => param !== "");
 
   // Build the full query string
-  const queryString = queryParams.length ? `?${queryParams.join('&')}` : '';
-      // Send the request with axios
-  axios.get(`${endpoint}${queryString}`)
-  .then(response => {
-    console.log('Search results:', response.data);
-  })
-  .catch(error => {
-    console.error('There was an error with the search request:', error);
-  })
+  const queryString = queryParams.length ? `?${queryParams.join("&")}` : "";
+  // Send the request with axios
+  axios
+    .get(`${endpoint}${queryString}`)
+    .then((response) => {
+      console.log("Search results:", response.data);
+    })
+    .catch((error) => {
+      console.error("There was an error with the search request:", error);
+    });
 }
 ```
 
@@ -434,68 +456,79 @@ Here's a quick guide and illustration for using the endpoint to add images to a 
 ## Adding Images to a Listing
 
 ### Endpoint
+
 **Method**: POST  
 **URL**: `/listing/addListingImages/:id`
 
 ### Request Parameters
+
 - `id` (URL parameter): The ID of the listing to which you want to add images.
 
 ### Request Body
+
 - `files` (form-data): Multiple image files to be uploaded.
 
 ### Example HTML Form
+
 ```html
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Upload Images</title>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Upload Images to Listing</h1>
     <form id="uploadForm">
-        <input type="file" id="files" name="files" multiple><br><br>
-        <button type="button" onclick="uploadImages()">Upload</button>
+      <input type="file" id="files" name="files" multiple /><br /><br />
+      <button type="button" onclick="uploadImages()">Upload</button>
     </form>
 
     <script>
-        function uploadImages() {
-            const listingId = 'YOUR_LISTING_ID'; // Replace with your actual listing ID
-            const formData = new FormData();
-            const files = document.getElementById('files').files;
+      function uploadImages() {
+        const listingId = "YOUR_LISTING_ID"; // Replace with your actual listing ID
+        const formData = new FormData();
+        const files = document.getElementById("files").files;
 
-            for (let i = 0; i < files.length; i++) {
-                formData.append('files', files[i]);
-            }
-
-            axios.post(`http://localhost:8080/listing/addListingImages/${listingId}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'authorization': 'Bearer tokenString',
-                }
-            })
-            .then(response => {
-                console.log('Images uploaded successfully:', response.data);
-            })
-            .catch(error => {
-                console.error('Error uploading images:', error);
-            });
+        for (let i = 0; i < files.length; i++) {
+          formData.append("files", files[i]);
         }
+
+        axios
+          .post(
+            `http://localhost:8080/listing/addListingImages/${listingId}`,
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+                authorization: "Bearer tokenString",
+              },
+            },
+          )
+          .then((response) => {
+            console.log("Images uploaded successfully:", response.data);
+          })
+          .catch((error) => {
+            console.error("Error uploading images:", error);
+          });
+      }
     </script>
-</body>
+  </body>
 </html>
 ```
 
 ### Explanation
+
 1. **HTML Form**: This simple form contains a file input allowing multiple file selection and a button to trigger the upload.
 2. **JavaScript with Axios**:
-    - **Form Data**: Collects the files from the input and appends them to a `FormData` object.
-    - **Axios POST Request**: Sends a POST request to the endpoint with the `FormData` containing the files.
+   - **Form Data**: Collects the files from the input and appends them to a `FormData` object.
+   - **Axios POST Request**: Sends a POST request to the endpoint with the `FormData` containing the files.
 3. **Listing ID**: Replace `YOUR_LISTING_ID` with the actual ID of the listing you want to update.
 
 ### Using the Endpoint
+
 1. Open the HTML file in your browser.
 2. Select the image files you want to upload.
 3. Click the "Upload" button.
