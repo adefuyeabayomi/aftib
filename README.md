@@ -991,7 +991,7 @@ module.exports = Transaction;
 ---
 Here are the available transaction endpoints in our application:
 ---
-- **POST /create-transaction**
+- **POST /transactions/create-transaction**
   - Endpoint to create a new transaction.
   - Requires authentication using JWT token.
   - Body parameters:
@@ -1002,7 +1002,7 @@ Here are the available transaction endpoints in our application:
     - `transactionType` (String, required): Type of transaction (`propertyPurchase`, `propertyRental`, `hotelBooking`).
   - Example:
     ```javascript
-    axios.post('http://localhost:8080/create-transaction', {
+    axios.post('http://localhost:8080/transactions/create-transaction', {
       propertyId: '607f1f77bcf86cd799439011',
       transactionType: 'propertyPurchase',
     }, {
@@ -1016,14 +1016,14 @@ Here are the available transaction endpoints in our application:
     });
     ```
 ---
-- **POST /initialize-payment**
+- **POST /transactions/initialize-payment**
   - Endpoint to initialize a payment for a transaction.
   - Requires authentication using JWT token.
   - Body parameters:
     - `transactionId` (String, required): ID of the transaction to initiate payment for.
   - Example:
     ```javascript
-    axios.post('http://localhost:8080/initialize-payment', {
+    axios.post('http://localhost:8080/transactions/initialize-payment', {
       transactionId: '6095ce3f1ab2b118cc3ef8e2'
     }, {
       headers: {
@@ -1036,14 +1036,14 @@ Here are the available transaction endpoints in our application:
     });
     ```
 ---
-- **POST /check-payment-status**
+- **POST /transactions/check-payment-status**
   - Endpoint to check the payment status of a transaction.
   - Requires authentication using JWT token.
   - Body parameters:
     - `transactionId` (String, required): ID of the transaction to check.
   - Example:
     ```javascript
-    axios.post('http://localhost:8080/check-payment-status', {
+    axios.post('http://localhost:8080/transactions/check-payment-status', {
       transactionId: '6095ce3f1ab2b118cc3ef8e2'
     }, {
       headers: {
@@ -1056,14 +1056,14 @@ Here are the available transaction endpoints in our application:
     });
     ```
 ---
-- **POST /check-rrr-payment-status**
+- **POST /transactions/check-rrr-payment-status**
   - Endpoint to check the Remita RRR payment status of a transaction.
   - Requires authentication using JWT token.
   - Body parameters:
     - `transactionId` (String, required): ID of the transaction to check.
   - Example:
     ```javascript
-    axios.post('http://localhost:8080/check-rrr-payment-status', {
+    axios.post('http://localhost:8080/transactions/check-rrr-payment-status', {
       transactionId: '6095ce3f1ab2b118cc3ef8e2'
     }, {
       headers: {
