@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 // Middleware to check token-based authentication
 function verifyToken(req, res, next) {
+  console.log(req.headers)
   const token = req.headers["authorization"].split(" ")[1];
   if (token) {
     jwt.verify(token, process.env.SECRET, (err, decoded) => {

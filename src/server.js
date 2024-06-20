@@ -14,10 +14,11 @@ const accessLogStream = fs.createWriteStream(
 );
 
 //import routes
-const ping = require("./routes/ping");
-const authRoute = require("./routes/auth");
-const listingRoute = require("./routes/listing");
-const hotelRoute = require("./routes/hotels");
+const ping = require("./routes/ping")
+const authRoute = require("./routes/auth")
+const listingRoute = require("./routes/listing")
+const hotelRoute = require("./routes/hotels")
+const transactionRoute = require("./routes/transactions")
 
 // define constants
 let port = 8080 | process.env.PORT;
@@ -41,6 +42,7 @@ app.use(morgan("combined", { stream: accessLogStream }));
 app.use("/", ping);
 app.use("/auth", authRoute);
 app.use("/listing", listingRoute);
+app.use("/transactions",transactionRoute)
 app.use("/", hotelRoute);
 
 // listen

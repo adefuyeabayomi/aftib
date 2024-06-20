@@ -535,3 +535,545 @@ Here's a quick guide and illustration for using the endpoint to add images to a 
 4. The selected images will be sent to your server and added to the specified listing.
 
 This setup allows you to easily upload multiple images to a specific listing by making a POST request with the files as form-data using Axios.
+
+Sure! Below is the comprehensive Markdown documentation for the Hotel CRUD operations, including the example Axios requests and the additional provided information.
+
+# Hotel Operations
+
+## Introduction
+
+This documentation covers the CRUD (Create, Read, Update, Delete) operations for managing hotel data. The endpoints allow clients to create new hotels, retrieve hotel information, update hotel details, and delete hotels from the database.
+
+## Hotel Object
+
+The hotel object represents the data structure used to store hotel information in the database. The schema is defined as follows:
+
+```javascript
+const HotelSchema = new mongoose.Schema({
+    name: { type: String }, // Hotel name
+    description: { type: String }, // Detailed description of the hotel
+    address: { type: String }, // Full address
+    location: { 
+        city: { type: String }, // City
+        state: { type: String }, // State
+        country: { type: String }, // Country
+        zipCode: { type: String }, // Zip code
+        latitude: { type: Number }, // Latitude for geolocation
+        longitude: { type: Number } // Longitude for geolocation
+    },
+    contact: { 
+        phone: { type: String }, // Contact phone number
+        email: { type: String }, // Contact email
+        website: { type: String } // Website URL
+    },
+    amenities: [String], // List of amenities (e.g., pool, gym, spa)
+    rooms: [{
+        roomType: { type: String }, // Type of room (e.g., single, double, suite)
+        description: { type: String }, // Description of the room
+        price: { type: Number }, // Price per night
+        amenities: [String], // List of room-specific amenities
+        images: [String], // URLs to images of the room
+        maxOccupancy: { type: Number }, // Maximum number of occupants
+        availability: { type: Boolean, default: true } // Availability status
+    }],
+    images: [String], // URLs to images of the hotel
+    ratings: [{
+        user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // Reference to the user who gave the rating
+        rating: { type: Number, min: 1, max: 5 }, // Rating value
+        comment: { type: String } // Comment from the user
+    }],
+    averageRating: { type: Number, default: 0 }, // Average rating of the hotel
+    policies: { 
+        checkIn: { type: String }, // Check-in time
+        checkOut: { type: String }, // Check-out time
+        cancellation: { type: String } // Cancellation policy
+    },
+    nearbyAttractions: [String], // List of nearby attractions
+    createdDate: { type: Date, default: Date.now }, // Date when the hotel was added
+    updatedDate: { type: Date, default: Date.now }, // Date when the hotel details were last updated
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true } // userId that created the listing
+});
+```
+
+## Available Endpoints
+
+### Create a New Hotel
+
+**Endpoint:** 
+- `POST /hotels`
+- `POST http://localhost:8080/hotels`
+- `GET http://localhost:8080/hotels/getAll/:sectionNo`
+- `GET http://localhost:8080/hotels/:id`
+- `PUT http://localhost:8080/hotels/:id`
+- `DELETE http://localhost:8080/hotels/:id`
+- `PUT http://localhost:8080/hotels/addImages/:id`
+
+
+
+.
+# Add New Hotel
+
+## Endpoint
+**POST** `http://localhost:8080/hotels`
+
+## Description
+This endpoint allows you to add a new hotel.
+
+## Request Body
+The body of the request should contain the hotel details. Example:
+
+```json
+{
+  "name": "Hotel California",
+  "location": "Los Angeles, CA",
+  "rooms": [
+    {
+      "roomType": "Deluxe",
+      "price": 150,
+      "amenities": ["Wi-Fi", "TV", "Mini Bar"]
+    },
+    {
+      "roomType": "Suite",
+      "price": 300,
+      "amenities": ["Wi-Fi", "TV", "Mini Bar", "Jacuzzi"]
+    }
+  ],
+  "images": [],
+  "description": "A lovely place where you can relax and enjoy.",
+  "createdBy": "60d0fe4f5311236168a109ca"
+}
+```
+
+## Example Axios Request
+
+```javascript
+const axios = require('axios');
+
+const addHotel = async () => {
+  const hotelData = {
+    name: "Hotel California",
+    location: "Los Angeles, CA",
+    rooms: [
+      {
+        roomType: "Deluxe",
+        price: 150,
+        amenities: ["Wi-Fi", "TV", "Mini Bar"]
+      },
+      {
+        roomType: "Suite",
+        price: 300,
+        amenities: ["Wi-Fi", "TV", "Mini Bar", "Jacuzzi"]
+      }
+    ],
+    images: [],
+    description: "A lovely place where you can relax and enjoy."
+  };
+
+  try {
+    const response = await axios.post('http://localhost:8080/hotels', hotelData, {
+      headers: {
+        Authorization: `Bearer YOUR_ACCESS_TOKEN`
+      }
+    });
+    console.log(response);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+addHotel();
+```
+.
+
+# Get All Hotels
+
+## Endpoint
+**GET** `http://localhost:8080/hotels/getAll/:sectionNo`
+
+## Description
+This endpoint allows you to retrieve a list of all hotels, paginated by sections.
+
+## Parameters
+- `sectionNo`: The page number to retrieve. For example, `1` for the first page.
+
+## Example Axios Request
+
+```javascript
+const axios = require('axios');
+
+const getAllHotels = async (sectionNo) => {
+  try {
+    const response = await axios.get(`http://localhost:8080/hotels/getAll/${sectionNo}`);
+    console.log(response);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+getAllHotels(1); // Replace 1 with the desired section number
+
+```
+
+.
+# Get Hotel By ID
+
+## Endpoint
+**GET** `http://localhost:8080/hotels/:id`
+
+## Description
+This endpoint allows you to retrieve a hotel by its ID.
+
+## Parameters
+- `id`: The ID of the hotel to retrieve.
+
+## Example Axios Request
+
+```javascript
+const axios = require('axios');
+
+const getHotelById = async (hotelId) => {
+  try {
+    const response = await axios.get(`http://localhost:8080/hotels/${hotelId}`);
+    console.log(response);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+getHotelById('your-hotel-id-here'); // Replace 'your-hotel-id-here' with the actual hotel ID
+
+```
+
+.
+# Update Hotel By ID
+
+## Endpoint
+**PUT** `http://localhost:8080/hotels/:id`
+
+## Description
+This endpoint allows you to update a hotel by its ID.
+
+## Parameters
+- `id`: The ID of the hotel to update.
+
+## Request Body
+- The request body should contain JSON data with the fields you want to update for the hotel.
+
+## Example Axios Request
+
+```javascript
+const axios = require('axios');
+
+const updateHotelById = async (hotelId, updatedData, authToken) => {
+  try {
+    const response = await axios.put(`http://localhost:8080/hotels/${hotelId}`, updatedData, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+    console.log(response);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const hotelIdToUpdate = 'your-hotel-id-here'; // Replace 'your-hotel-id-here' with the actual hotel ID
+const updatedData = {
+  name: 'Updated Hotel Name',
+  address: 'Updated Hotel Address',
+  rating: 4.5,
+  rooms: [
+    {
+      type: 'Single Room',
+      price: 100,
+    },
+    {
+      type: 'Double Room',
+      price: 150,
+    },
+  ],
+};
+const authToken = 'your-auth-token'; // Replace 'your-auth-token' with a valid JWT token
+
+updateHotelById(hotelIdToUpdate, updatedData, authToken);
+```
+
+.
+# Delete Hotel By ID
+
+## Endpoint
+**DELETE** `http://localhost:8080/hotels/:id`
+
+## Description
+This endpoint allows you to delete a hotel by its ID.
+
+## Parameters
+- `id`: The ID of the hotel to delete.
+
+## Authorization
+- This endpoint requires authentication. Ensure you include the Authorization header with a valid JWT token.
+
+## Example Axios Request
+
+```javascript
+const axios = require('axios');
+
+const deleteHotelById = async (hotelId, authToken) => {
+  try {
+    const response = await axios.delete(`http://localhost:8080/hotels/${hotelId}`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+    console.log(response);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const hotelIdToDelete = 'your-hotel-id-here'; // Replace 'your-hotel-id-here' with the actual hotel ID
+const authToken = 'your-auth-token'; // Replace 'your-auth-token' with a valid JWT token
+
+deleteHotelById(hotelIdToDelete, authToken);
+```
+
+
+.
+
+
+# Update Room Images By ID
+
+## Endpoint
+**PUT** `http://localhost:8080/hotels/addRoomImages/:hotelId/:roomId`
+
+## Description
+This endpoint allows you to update images for a specific room within a hotel by its IDs.
+
+## Parameters
+- `hotelId`: The ID of the hotel containing the room.
+- `roomId`: The ID of the room to update.
+
+## Authorization
+- This endpoint requires authentication. Ensure you include the Authorization header with a valid JWT token.
+
+## Request Body
+- Use `multipart/form-data` format for uploading images.
+
+## HTML Form Example
+```html
+<form action="http://localhost:8080/hotels/addRoomImages/:hotelId/:roomId" method="POST" enctype="multipart/form-data">
+  <input type="file" name="images" multiple>
+  <input type="submit" value="Upload Images">
+</form>
+```
+
+## Example Axios Request
+To perform this request programmatically with Axios, use `FormData` to handle the file input.
+
+```javascript
+const axios = require('axios');
+
+const updateRoomImages = async (hotelId, roomId, imagesFormData, authToken) => {
+  try {
+    const response = await axios.put(`http://localhost:8080/hotels/addRoomImages/${hotelId}/${roomId}`, imagesFormData, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    console.log(response);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const hotelIdToUpdate = 'your-hotel-id-here'; // Replace 'your-hotel-id-here' with the actual hotel ID
+const roomIdToUpdate = 'your-room-id-here'; // Replace 'your-room-id-here' with the actual room ID
+const imagesFormData = new FormData();
+imagesFormData.append('images', fileInputElement.files[0]); // Assuming fileInputElement is your file input element
+const authToken = 'your-auth-token'; // Replace 'your-auth-token' with a valid JWT token
+
+updateRoomImages(hotelIdToUpdate, roomIdToUpdate, imagesFormData, authToken);
+```
+
+Replace `'your-hotel-id-here'`, `'your-room-id-here'`, and `'your-auth-token'` with actual values specific to your application.
+
+.
+
+# Transactions APIs
+
+Transactions in our application represent various financial activities performed by users, including property purchases, rentals, and hotel bookings. Each transaction captures essential details such as transaction type, status, payment information, and associated user IDs. This documentation outlines the structure of our transaction schema and provides insights into how transactions are managed within our system.
+
+---
+
+### Transaction Object
+
+The transaction object in our system adheres to the following schema:
+
+```javascript
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+
+const transactionSchema = new Schema({
+  transactionId: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  clientId: {
+    type: String,
+    required: true,
+    ref: "User",
+  },
+  providerId: {
+    type: String,
+    required: true,
+    ref: "User",
+  },
+  transactionType: {
+    type: String,
+    required: true,
+    enum: ["propertyPurchase", "propertyRental", "hotelBooking"], 
+  },
+  transactionStatus: {
+    type: String,
+    required: true,
+    enum: ["pending", "success", "cancelled"],
+  },
+  paymentStatus: {
+    type: String,
+    required: true,
+    enum: ["pending", "paid", "failed"],
+  },
+  date: {
+    type: Number,
+    required: true,
+  },
+  propertyId: {
+    type: String,
+    ref: "Listing", // Reference to the Property model if applicable
+  },
+  hotelId: {
+    type: String,
+    ref: "Hotel", // Reference to the Hotel model if applicable
+  },
+  bookingDetails: {
+    room: Object,
+    startDate: Date,
+    endDate: Date,
+    totalNights: Number,
+    price: Number,
+  },
+  rentDetails: {
+    startDate: Date,
+    endDate: Date,
+    totalMonths: Number,
+    price: Number,
+  },
+  purchaseDetails: {
+    price: Number,
+  },
+  narration: {
+    type: String,
+  },
+  RRR: {
+    type: String,
+  },
+  RemitaOneTimeID: {
+    type: String,
+  },
+});
+
+const Transaction = mongoose.model("Transaction", transactionSchema);
+
+module.exports = Transaction;
+```
+---
+Here are the available transaction endpoints in our application:
+---
+- **POST /create-transaction**
+  - Endpoint to create a new transaction.
+  - Requires authentication using JWT token.
+  - Body parameters:
+    - `propertyId` (String, optional): ID of the property involved in the transaction.
+    - `hotelId` (String, optional): ID of the hotel involved in the transaction.
+    - `bookingDetails` (Object, optional): Details related to hotel bookings, including room type, dates, and pricing.
+    - `rentDetails` (Object, optional): Details related to property rentals, including start date, end date, duration, and pricing.
+    - `transactionType` (String, required): Type of transaction (`propertyPurchase`, `propertyRental`, `hotelBooking`).
+  - Example:
+    ```javascript
+    axios.post('http://localhost:8080/create-transaction', {
+      propertyId: '607f1f77bcf86cd799439011',
+      transactionType: 'propertyPurchase',
+    }, {
+      headers: {
+        Authorization: `Bearer <JWT_TOKEN>`
+      }
+    }).then(response => {
+      console.log(response);
+    }).catch(error => {
+      console.error(error);
+    });
+    ```
+---
+- **POST /initialize-payment**
+  - Endpoint to initialize a payment for a transaction.
+  - Requires authentication using JWT token.
+  - Body parameters:
+    - `transactionId` (String, required): ID of the transaction to initiate payment for.
+  - Example:
+    ```javascript
+    axios.post('http://localhost:8080/initialize-payment', {
+      transactionId: '6095ce3f1ab2b118cc3ef8e2'
+    }, {
+      headers: {
+        Authorization: `Bearer <JWT_TOKEN>`
+      }
+    }).then(response => {
+      console.log(response);
+    }).catch(error => {
+      console.error(error);
+    });
+    ```
+---
+- **POST /check-payment-status**
+  - Endpoint to check the payment status of a transaction.
+  - Requires authentication using JWT token.
+  - Body parameters:
+    - `transactionId` (String, required): ID of the transaction to check.
+  - Example:
+    ```javascript
+    axios.post('http://localhost:8080/check-payment-status', {
+      transactionId: '6095ce3f1ab2b118cc3ef8e2'
+    }, {
+      headers: {
+        Authorization: `Bearer <JWT_TOKEN>`
+      }
+    }).then(response => {
+      console.log(response);
+    }).catch(error => {
+      console.error(error);
+    });
+    ```
+---
+- **POST /check-rrr-payment-status**
+  - Endpoint to check the Remita RRR payment status of a transaction.
+  - Requires authentication using JWT token.
+  - Body parameters:
+    - `transactionId` (String, required): ID of the transaction to check.
+  - Example:
+    ```javascript
+    axios.post('http://localhost:8080/check-rrr-payment-status', {
+      transactionId: '6095ce3f1ab2b118cc3ef8e2'
+    }, {
+      headers: {
+        Authorization: `Bearer <JWT_TOKEN>`
+      }
+    }).then(response => {
+      console.log(response);
+    }).catch(error => {
+      console.error(error);
+    });
+    ```
+---
+These endpoints allow interaction with transaction-related functionalities in our application, facilitating creation, payment initiation, and status checking for various types of transactions such as property purchases, rentals, and hotel bookings. Each endpoint requires authentication using a JWT token for security and authorization purposes.
