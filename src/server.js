@@ -47,7 +47,8 @@ app.use("/", hotelRoute);
 
 // listen
 app.listen(port, () => {
-  console.log(`server running at http://localhost:${port}`);
+  console.log(`server running at http://${process.env.host}:${port}`);
 });
 
 module.exports = app;
+app.listen()

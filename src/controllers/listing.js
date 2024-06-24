@@ -4,7 +4,6 @@ const saveToCloudinary = require("../functions/saveToCloudinary");
 let Listing = require("../models/listing");
 let User = require("../models/user");
 
-// [NOTE: FUNCTION TO SAVE IMAGE SHOULD BE ADDED]
 const createNew = async (req, res) => {
   try {
     req.body.createdBy = new mongoose.Types.ObjectId(req.user.userId)
@@ -132,61 +131,59 @@ const getListings = async (req, res) => {
 const searchListings = async (request, response) => {
   const {
     location,
-    priceRange,
+    minPrice,
+    maxPrice,
     saleType,
-    monthlyPaymentRange,
-    bedrooms,
-    bathrooms,
+    minMonthlyPayment,
+    maxMonthlyPayment,
+    bedroom,
+    bathroom,
   } = request.query;
-
+console.log('queries', request.query)
   try {
     let query = {};
     // Add location filter if provided
     if (location) {
       // Split the location string by dashes and create regex patterns for each keyword
       const keywords = location.split("-");
-      console.log({ keywords });
+      console.log({keywords})
       const locationRegexArray = keywords.map((keyword) => ({
         location: { $regex: keyword, $options: "i" },
       }));
-
       // Create a $or condition for each regex pattern
       query.$or = locationRegexArray;
     }
 
     // Add price range filter if provided
-    if (priceRange) {
-      const [minPrice, maxPrice] = priceRange.split("-").map(Number);
-      query.price = { $gte: minPrice, $lte: maxPrice };
+    if (minPrice && maxPrice) {
+      query.price = { $gte: Number(minPrice), $lte: Number(maxPrice) };
     }
     // Sale type filter
+    // let saleTypeType = ['rent','sale','shortlet']
     if (saleType == 'rent' || saleType== 'sale') {
-      query.saleType = saleType;
+      query.saleType = { $regex: saleType, $options: "i" };
     }
 
     // Monthly payment range filter for rentals
-    if (monthlyPaymentRange) {
-      const [minMonthlyPayment, maxMonthlyPayment] = monthlyPaymentRange
-        .split("-")
-        .map(Number);
+    if (minMonthlyPayment && maxMonthlyPayment) {
       query.monthlyRentPayment = {
-        $gte: minMonthlyPayment,
-        $lte: maxMonthlyPayment,
+        $gte: Number(minMonthlyPayment),
+        $lte: Number(maxMonthlyPayment),
       };
     }
 
     // Bedrooms filter
-    if (bedrooms && bedrooms !== 'any') {
-      query.bedrooms = Number(bedrooms);
+    if (bedroom && bedroom !== 'any') {
+      query.bedrooms = {$gte: Number(bedroom)};
     }
 
     // Bathrooms filter
-    if (bathrooms && bathrooms !== 'any') {
-      query.bathrooms = Number(bathrooms);
+    if (bathroom && bathroom !== 'any') {
+    query.bathrooms = {$gte: Number(bathroom)};
     }
-
+    console.log({query})
     // Find listings matching the query
-    const foundListings = await Listing.find(query);
+    const foundListings = await Listing.find(query)
     response.status(200).json(foundListings);
   } catch (error) {
     response.status(500).json({ message: error.message });

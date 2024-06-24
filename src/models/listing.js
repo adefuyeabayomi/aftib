@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const defaultUserId = '60d0fe4f5311236168a109ca';
 let listingObj = {
   // Existing Properties
   title: String, // Title of the listing
@@ -11,7 +11,7 @@ let listingObj = {
   monthlyRentPayment: Number, // Amount to be paid if it is a rental on a monthly basis
   state: String, // State where the property is located
   LGA: String, // Local Government Area
-  saleType: String, // Type of sale (e.g., sale, rent)
+  saleType: String, // Type of sale (e.g., sale, rent, shortlet)
 
   // Additional Properties
   bedrooms: Number, // Number of bedrooms
@@ -49,10 +49,11 @@ let listingObj = {
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true,
+    required: false,
+    default: new mongoose.Types.ObjectId(defaultUserId)
   }, // userId that created the listing
 };
 const listingSchema = mongoose.Schema(listingObj);
 const listingModel = mongoose.model("Listing", listingSchema);
-
+ 
 module.exports = listingModel;

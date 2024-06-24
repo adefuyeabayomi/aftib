@@ -40,9 +40,29 @@ const clearListings = async (req, res) => {
   }
 }
 
+async function populateListings () {
+  let data = fs.readFileSync(path.join(__dirname,'lekki.json')).toString()
+  data = JSON.parse(data)
+  data = data.map(x=>{
+    delete x.createdBy
+    return x
+  })
+  console.log({listings: data})
+  try {
+    await Listing.insertMany(data)
+    console.log({success: 'populated listings'})
+    res.status(200).send({success: 'populated listings'})
+  }
+  catch(err){
+    console.log({error: err.message})
+    res.status(500).send({error: err.message})
+  }
+}
+
 module.exports = {
   ping,
   getAccessLog,
   clearUsers,
-  clearListings
+  clearListings,
+  populateListings
 }
