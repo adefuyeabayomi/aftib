@@ -106,8 +106,68 @@ function verifyTemplate(userID) {
 `;
 }
 
+function otpForgotPassword (otp) {
+  return `
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP - Aftib</title>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: center;
+        }
+        .heading-main{
+            padding: 20px 20px;
+            font-size: 30px;
+            font-weight: bold;
+            background-color: rgb(72, 72, 255);
+            color: white;
+            margin-bottom: 20px;
+        }
+        .footer {
+            padding: 25px 5px;
+            font-size: 0.75rem;
+        }
+        .otp-container, .otp-heading{
+            padding: 25px 10px;
+        }
+        .otp-container p span {
+            display: inline-block;
+            border: 1px solid;
+            padding: 15px;
+            margin-left: 5px;
+            border-radius: 5px;
+            border-color: bisque;
+        }
+    </style>
+</head>
+<body>
+    <div class="heading-main">Aftib Real Estate</div>
+    <div>
+        <h4 class="otp-heading"> YOUR OTP </h4>
+        <div>
+            Use this otp on our website to open the password reset function.
+        </div>
+        <div class="otp-container">
+            <p><span>${otp[0]}</span><span>${otp[1]}</span><span>${otp[2]}</span><span>${otp[3]}</span></p>
+        </div>
+        <div class="footer">If you did not request for this mail, kindly ignore it. To report suspicious activities, kindly contact support on +2348136879589</div>
+        <div class="footer">Aftib Real Estate</div>
+    </div>
+</body>
+</html>`
+}
+
 let htmlBodyTemplates = {
   verifyTemplate,
+  otpForgotPassword
 };
 
 module.exports = { htmlBodyTemplates, mailerSendImplementation };

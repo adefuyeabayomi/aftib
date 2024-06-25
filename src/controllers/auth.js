@@ -1,8 +1,10 @@
 const User = require("../models/user");
+const otpModel = require('../models/otp')
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const validateEmail = require("../utils/validate");
 const { htmlBodyTemplates } = require("../utils/sendMail");
+const generateId = require('../utils/generateID')
 // Controller function for processing an order
 const { transporter, mailOptions } = require("../utils/nodemailer.config");
 
@@ -17,7 +19,7 @@ const signup = async (req, res) => {
       error: "Email is not valid",
       status: 400,
       message: "Bad Request",
-    });
+    })
   }
 
   // Check if user with that email already exists
@@ -115,11 +117,83 @@ const verifyEmail = async (req, res) => {
       return res.status(400).json({
         error: err.message,
       });
+    })
+}
+
+const getUser = async (req,res) => {
+  try {
+    let user = await User.findById(req.user.userId)
+    delete user.hash
+    res.status(200).json(user)
+  }
+  catch(err){
+    console.error(err.message)
+    res.status(500).json({error: err.message})
+  }
+}
+
+const sendOTPForgotPassword = async (req,res) => {
+  let {email} = req.params
+  let otp = generateId(4);
+  try {
+    let user = await User.findOne({email})
+    if(!user){
+      res.status(404).json({error: 'user not found'})
+      return;
+    }
+    let otpDoc = new otpModel({
+      otp,
+      user: user._id
+    })
+    let saved = otpDoc.save()
+    mailOptions.html = htmlBodyTemplates.otpForgotPassword(otp)
+    mailOptions.to = email
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log("Error occurred:", error);
+      }
+      console.log("Message sent:", info.messageId);
     });
-};
+    res.status(200).json({success: 'email sent'})
+  }
+  catch(err){
+    console.error(err.message)
+    res.status(500).json({error: err.message})
+  }
+}
+
+const verifyOtp = async (req,res) => {
+  let {email,otp} = req.params
+  try {
+    let user = await User.findOne({email})
+    if(!user){
+      res.status(404).json({error: 'user not found'})
+      return
+    }
+    let retrieved = await otpModel.findOne({user: user._id})
+    if(!otp){
+      res.status(404).json({error: 'otp not found. click the resend verification'})
+      return
+    }
+    let bool = retrieved.otp === otp
+    if(bool){
+      res.status(200).json({success: 'otp verified'})
+    }
+    else {
+      res.status(401).json({error: 'Invalid OTP'})
+    }   
+  }
+  catch(err){
+    console.error(err.message)
+    res.status(500).json({error: err.message})
+  }
+}
 
 module.exports = {
   signup,
   login,
   verifyEmail,
+  getUser,
+  sendOTPForgotPassword,
+  verifyOtp
 };
