@@ -1,12 +1,15 @@
 const mongoose = require("mongoose");
 const saveToCloudinary = require("../functions/saveToCloudinary");
-
+const getAddressLocationData = require('../functions/getAddressLocationData')
 let Listing = require("../models/listing");
 let User = require("../models/user");
 
 const createNew = async (req, res) => {
   try {
     req.body.createdBy = new mongoose.Types.ObjectId(req.user.userId)
+    let locationData = await Promise.resolve(getAddressLocationData(req.body.location))
+    console.log({locationData})
+    req.body.locationData = locationData
     let newListing = new Listing(req.body)
     let savedListing = await newListing.save()
     await User.updateOne(
@@ -22,6 +25,7 @@ const createNew = async (req, res) => {
       .send({
         message: "Listing added successfully",
         listingId: savedListing._id,
+        listing: savedListing
       })
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {

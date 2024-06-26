@@ -2167,3 +2167,8 @@
 ::ffff:127.0.0.1 - - [26/Jun/2024:14:57:13 +0000] "GET /listing/unApprovedListings HTTP/1.1" 404 165 "-" "PostmanRuntime/7.39.1"
 ::ffff:127.0.0.1 - - [26/Jun/2024:14:57:38 +0000] "GET /listing/unApprovedListings/ HTTP/1.1" 404 166 "-" "PostmanRuntime/7.39.1"
 ::ffff:127.0.0.1 - - [26/Jun/2024:14:58:02 +0000] "GET /listing/unApprovedListings/1 HTTP/1.1" 200 18196 "-" "PostmanRuntime/7.39.1"
+::ffff:127.0.0.1 - - [26/Jun/2024:18:40:24 +0000] "POST /auth/login HTTP/1.1" 200 453 "-" "PostmanRuntime/7.39.1"
+::ffff:127.0.0.1 - - [26/Jun/2024:18:40:48 +0000] "POST /listing/addListing HTTP/1.1" 201 79 "-" "PostmanRuntime/7.39.1"
+::ffff:127.0.0.1 - - [26/Jun/2024:18:46:34 +0000] "GET /getUserListings/6672bc0fd625bee7b506860d HTTP/1.1" 500 1427 "-" "PostmanRuntime/7.39.1"
+::ffff:127.0.0.1 - - [26/Jun/2024:18:47:11 +0000] "GET /getUserListings/6672bc0fd625bee7b506860d HTTP/1.1" 200 244 "-" "PostmanRuntime/7.39.1"
+::ffff:127.0.0.1 - - [26/Jun/2024:18:49:51 +0000] "GET /getUserReservations/6672bc0fd625bee7b506860d HTTP/1.1" 200 2 "-" "PostmanRuntime/7.39.1"

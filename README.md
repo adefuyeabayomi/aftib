@@ -1077,3 +1077,291 @@ Here are the available transaction endpoints in our application:
     ```
 ---
 These endpoints allow interaction with transaction-related functionalities in our application, facilitating creation, payment initiation, and status checking for various types of transactions such as property purchases, rentals, and hotel bookings. Each endpoint requires authentication using a JWT token for security and authorization purposes.
+
+
+.
+---
+# User Account Operations API Documentation
+
+This documentation describes the available endpoints for user account operations, including how to retrieve user listings, reservations, sales, hotels, transactions, and rentals.
+
+## Base URL
+
+```
+http://localhost:8080
+```
+
+## Authorization Headers for these requests
+
+All endpoints require authorization. The `Authorization` header must be included in each request with a valid JWT token.
+
+## Endpoints
+
+### 1. Get User Listings
+
+**Endpoint:** `GET /getUserListings/:id`
+
+**Description:** Retrieve the listings associated with a specific user.
+
+#### Example Request with Axios
+
+```javascript
+const axios = require('axios');
+
+const getUserListings = async (userId, token) => {
+  try {
+    const response = await axios.get(`http://localhost:8080/getUserListings/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(response.data);
+    //
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+// Usage
+const userId = 'your_user_id';
+const token = 'your_jwt_token';
+getUserListings(userId, token);
+```
+##### This endpoint returns the an array of listings Ids that the user has authored eg 
+```javascript
+ [
+    "6672bc56d625bee7b506860f",
+    "6672bd85d625bee7b5068613",
+    "6672bdc3d625bee7b5068616",
+    "6672bde9d625bee7b5068619",
+    "6672bdf6d625bee7b506861c",
+    "6672be55d625bee7b506861f",
+    "6672be7ed625bee7b5068622",
+    "6672bee04c671db6fefd490e",
+    "667c60b0223cce574991d565"
+]
+```
+
+### 2. Get User Reservations
+
+**Endpoint:** `GET /getUserReservations/:id`
+
+**Description:** Retrieve the reservations associated with a specific user.
+
+#### Example Request with Axios
+
+```javascript
+const axios = require('axios');
+
+const getUserReservations = async (userId, token) => {
+  try {
+    const response = await axios.get(`http://localhost:8080/getUserReservations/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+// Usage
+const userId = 'your_user_id';
+const token = 'your_jwt_token';
+getUserReservations(userId, token);
+```
+##### This endpoint returns the an array of hotel reservations ids made by the user
+```javascript
+ [
+    "6672bc56d625bee7b506860f",
+    "6672bd85d625bee7b5068613",
+    "6672bdc3d625bee7b5068616",
+]
+```
+### 3. Get User Sales
+
+**Endpoint:** `GET /getMySales/:id`
+
+**Description:** Retrieve the sales associated with a specific user.
+
+#### Example Request with Axios
+
+```javascript
+const axios = require('axios');
+
+const getMySales = async (userId, token) => {
+  try {
+    const response = await axios.get(`http://localhost:8080/getMySales/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+// Usage
+const userId = 'your_user_id';
+const token = 'your_jwt_token';
+getMySales(userId, token);
+```
+##### This endpoint returns the an array of property Ids that an agent has sold
+```javascript
+ [
+    "6672bc56d625bee7b506860f",
+    "6672bd85d625bee7b5068613",
+    "6672bdc3d625bee7b5068616",
+]
+```
+### 4. Get User Hotels
+
+**Endpoint:** `GET /getMyHotels/:id`
+
+**Description:** Retrieve the hotels associated with a specific user.
+
+#### Example Request with Axios
+
+```javascript
+const axios = require('axios');
+
+const getMyHotels = async (userId, token) => {
+  try {
+    const response = await axios.get(`http://localhost:8080/getMyHotels/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+};
+// Usage
+const userId = 'your_user_id';
+const token = 'your_jwt_token';
+getMyHotels(userId, token);
+```
+
+##### This endpoint returns the an array of hotels properties added by the agent / admin
+```javascript
+ [
+    "6672bc56d625bee7b506860f",
+    "6672bd85d625bee7b5068613",
+    "6672bdc3d625bee7b5068616",
+]
+```
+### 5. Get User Transactions
+
+**Endpoint:** `GET /getMyTransactions/:id`
+
+**Description:** Retrieve the transactions associated with a specific user.
+
+#### Example Request with Axios
+
+```javascript
+const axios = require('axios');
+
+const getMyTransactions = async (userId, token) => {
+  try {
+    const response = await axios.get(`http://localhost:8080/getMyTransactions/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+// Usage
+const userId = 'your_user_id';
+const token = 'your_jwt_token';
+getMyTransactions(userId, token);
+```
+##### This endpoint returns the an array transaction ids made by the user
+```javascript
+ [
+    "6672bc56d625bee7b506860f",
+    "6672bd85d625bee7b5068613",
+    "6672bdc3d625bee7b5068616",
+]
+```
+### 6. Get User Rentals
+
+**Endpoint:** `GET /getMyRentals/:id`
+
+**Description:** Retrieve the rentals associated with a specific user.
+
+#### Example Request with Axios
+
+```javascript
+const axios = require('axios');
+
+const getMyRentals = async (userId, token) => {
+  try {
+    const response = await axios.get(`http://localhost:8080/getMyRentals/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+// Usage
+const userId = 'your_user_id';
+const token = 'your_jwt_token';
+getMyRentals(userId, token);
+```
+##### This endpoint returns the an array of property that has been rented by a user
+```javascript
+ [
+    "6672bc56d625bee7b506860f",
+    "6672bd85d625bee7b5068613",
+    "6672bdc3d625bee7b5068616",
+]
+```
+### 7. Get User Hotel Bookings
+
+**Endpoint:** `GET /getMyHotelBookings/:id`
+
+**Description:** Retrieve the hotel bookings associated with a specific user.
+
+#### Example Request with Axios
+
+```javascript
+const axios = require('axios');
+
+const getMyHotelBookings = async (userId, token) => {
+  try {
+    const response = await axios.get(`http://localhost:8080/getMyHotelBookings/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+};
+// Usage
+const userId = 'your_user_id';
+const token = 'your_jwt_token';
+getMyHotelBookings(userId, token);
+```
+##### This endpoint returns the an array of hotelBookings that an agent has received on an hotel he registered.
+
+```javascript
+ [
+    "6672bc56d625bee7b506860f",
+    "6672bd85d625bee7b5068613",
+    "6672bdc3d625bee7b5068616",
+]
+```
+
