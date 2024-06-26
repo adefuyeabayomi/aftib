@@ -8,10 +8,7 @@ const createNew = async (req, res) => {
   try {
     req.body.createdBy = new mongoose.Types.ObjectId(req.user.userId)
     let newListing = new Listing(req.body)
-    console.log({ newListing })
     let savedListing = await newListing.save()
-    console.log("added", savedListing._id)
-
     await User.updateOne(
       { _id: req.user.userId },
       {
@@ -19,7 +16,7 @@ const createNew = async (req, res) => {
           myListings: savedListing._id,
         },
       },
-    );
+    )
     res
       .status(201)
       .send({
@@ -62,12 +59,11 @@ const updateListing = async (req, res) => {
       new: true, // Return the updated document
       runValidators: true, // Ensure the update adheres to the schema's validators
     })
-
     if (!updatedListing) {
       return res.status(404).json({ message: "Listing not found" })
     }
     res.status(200).json({ message: "Listing updated successfully" })
-  } catch (error) {
+    } catch (error) {
     res.status(400).json({ message: error.message })
   }
 }
@@ -116,17 +112,45 @@ const getListings = async (req, res) => {
   try {
     const batch = parseInt(sectionNo) || 1; // Default to batch 1 if not specified
     const limit = 15; // Default to 20 documents per batch
-
     const skip = (batch - 1) * limit; // Calculate the number of documents to skip
-
-    const listings = await Listing.find().skip(skip).limit(limit);
+    const listings = await Listing.find({approved: true}).skip(skip).limit(limit);
     res
       .status(200)
       .json({ listings, listingsArray: listings.map((x) => x._id) });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-};
+}
+
+const getUnapprovedListing = async (req,res) => {
+  let sectionNo = req.params.sectionNo || 1;
+  try {
+    const batch = parseInt(sectionNo) || 1; // Default to batch 1 if not specified
+    const limit = 15; // Default to 20 documents per batch
+    const skip = (batch - 1) * limit; // Calculate the number of documents to skip
+    const listings = await Listing.find({approved: false}).skip(skip).limit(limit);
+    res
+      .status(200)
+      .json({ listings, listingsArray: listings.map((x) => x._id) });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+const approveListing = async (req,res)=>{
+  let {id} = request.params
+    if(req.user.accountType !== 'admin') {
+      res.status(401).send({message: 'this is not an admin account'})
+      return;
+    }
+    try {
+      await Listing.findByIdAndUpdate(id,{approved: true, approvedBy: req.user.userId})
+      res.status(200).send({approved: true, id, approvedBy: req.user.name})
+    }
+    catch(err){
+      res.status(500).json({error: err.message})
+    }
+}
 
 const searchListings = async (request, response) => {
   const {
@@ -222,4 +246,6 @@ module.exports = {
   getListings,
   searchListings,
   addListingImages,
+  getUnapprovedListing,
+  approveListing
 };

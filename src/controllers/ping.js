@@ -1,5 +1,5 @@
-const fs = require("fs");
-const path = require("path");
+const fs = require("fs")
+const path = require("path")
 const User = require('../models/user')
 const Listing = require('../models/listing')
 const ping = (req, res) => {
@@ -8,7 +8,6 @@ const ping = (req, res) => {
 
 const getAccessLog = (req, res) => {
   const logFilePath = path.join(__dirname, "../access.log");
-
   fs.stat(logFilePath, (err, stats) => {
     if (err) {
       return res.status(404).send("Log file not found")
@@ -18,9 +17,9 @@ const getAccessLog = (req, res) => {
       if (err) {
         res.status(500).send("Error reading log file");
       }
-    });
-  });
-};
+    })
+  })
+}
 
 const clearUsers = async (req, res) => {
   try {
@@ -41,16 +40,14 @@ const clearListings = async (req, res) => {
 }
 
 async function populateListings (req,res) {
-  let data = fs.readFileSync(path.join(__dirname,'magodo.json')).toString()
+  let data = fs.readFileSync(path.join(__dirname,'lekki.json')).toString()
   data = JSON.parse(data)
   data = data.map(x=>{
     delete x.createdBy
     return x
   })
-  console.log({listings: data})
   try {
     await Listing.insertMany(data)
-    console.log({success: 'populated listings'})
     res.status(200).send({success: 'populated listings'})
   }
   catch(err){

@@ -9,10 +9,16 @@ let listingObj = {
   estate: String, // Name of the estate, if applicable
   price: Number, // Price of the property
   monthlyRentPayment: Number, // Amount to be paid if it is a rental on a monthly basis
+  monthlyShortLetPrice: Number, // Amount to be for shortlets on a monthly basis 
   state: String, // State where the property is located
   LGA: String, // Local Government Area
   saleType: String, // Type of sale (e.g., sale, rent, shortlet)
-
+  locationData: Object, // generated from google apis.
+  approved: {
+    type: Boolean,
+    default: false
+  }, // Shows that admin has approved the property
+  approvedBy: String, // the mongo id of the admin account that approved the listing.
   // Additional Properties
   bedrooms: Number, // Number of bedrooms
   bathrooms: Number, // Number of bathrooms
@@ -30,7 +36,6 @@ let listingObj = {
   listingDate: Number, // Date when the listing was created [new Date.getTime()]
   furnished: Boolean, // Indicates if the property is furnished
   petsAllowed: Boolean, // Indicates if pets are allowed
-  energyRating: String, // Energy efficiency rating
   nearbySchools: [String], // List of nearby schools
   transportation: String, // Information about nearby public transportation
   garage: Boolean, // Indicates if there is a garage
@@ -53,7 +58,7 @@ let listingObj = {
     default: new mongoose.Types.ObjectId(defaultUserId)
   }, // userId that created the listing
 };
-const listingSchema = mongoose.Schema(listingObj);
-const listingModel = mongoose.model("Listing", listingSchema);
- 
+const listingSchema = mongoose.Schema(listingObj)
+const listingModel = mongoose.model("Listing", listingSchema)
+
 module.exports = listingModel;
