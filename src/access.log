@@ -2172,3 +2172,4 @@
 ::ffff:127.0.0.1 - - [26/Jun/2024:18:46:34 +0000] "GET /getUserListings/6672bc0fd625bee7b506860d HTTP/1.1" 500 1427 "-" "PostmanRuntime/7.39.1"
 ::ffff:127.0.0.1 - - [26/Jun/2024:18:47:11 +0000] "GET /getUserListings/6672bc0fd625bee7b506860d HTTP/1.1" 200 244 "-" "PostmanRuntime/7.39.1"
 ::ffff:127.0.0.1 - - [26/Jun/2024:18:49:51 +0000] "GET /getUserReservations/6672bc0fd625bee7b506860d HTTP/1.1" 200 2 "-" "PostmanRuntime/7.39.1"
+::ffff:127.0.0.1 - - [26/Jun/2024:19:57:28 +0000] "POST /listing/addListing HTTP/1.1" 201 2287 "-" "PostmanRuntime/7.39.1"

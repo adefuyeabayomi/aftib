@@ -1,5 +1,4 @@
 let apiKey = process.env.GEOCODE_API_KEY
-apiKey = 'AIzaSyCn1601AYguyXO1Im5mVyEiGtBWs5RWkJ4'
 const axios = require('axios');
 
 async function getAddressLocationData(address) {
