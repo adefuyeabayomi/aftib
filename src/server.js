@@ -20,6 +20,7 @@ const listingRoute = require("./routes/listing")
 const hotelRoute = require("./routes/hotels")
 const transactionRoute = require("./routes/transactions")
 const accountOpsRoute = require("./routes/accountOps")
+const adminOpsRoute = require('./routes/adminOps')
 
 // define constants
 let port = 8080 | process.env.PORT;
@@ -46,6 +47,7 @@ app.use("/listing", listingRoute);
 app.use("/transactions",transactionRoute)
 app.use("/", hotelRoute);
 app.use('/',accountOpsRoute);
+app.use('/',adminOpsRoute)
 
 // listen
 app.listen(port, () => {

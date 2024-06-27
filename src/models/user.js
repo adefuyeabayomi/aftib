@@ -52,6 +52,7 @@ let userSchema = new mongoose.Schema({
   name: String,
   verified: Boolean,
   accountType: String,
+  isAgent: Boolean,
   myListings: [String], // ids of the listings
   myHotels: [String], // ids of the hotels
   myTransactions: [

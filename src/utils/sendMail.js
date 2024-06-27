@@ -165,9 +165,122 @@ function otpForgotPassword (otp) {
 </html>`
 }
 
+function agentRequestEmailNotification (name) {
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP - Aftib</title>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: center;
+        }
+        .heading-main{
+            padding: 20px 20px;
+            font-size: 30px;
+            font-weight: bold;
+            background-color: rgb(72, 72, 255);
+            color: white;
+            margin-bottom: 20px;
+        }
+        .footer {
+            padding: 25px 5px;
+            font-size: 0.75rem;
+        }
+        .otp-container, .otp-heading{
+            padding: 25px 10px;
+        }
+        .otp-container p span {
+            display: inline-block;
+            border: 1px solid;
+            padding: 15px;
+            margin-left: 5px;
+            border-radius: 5px;
+            border-color: bisque;
+        }
+    </style>
+</head>
+<body>
+    <div class="heading-main">Aftib Real Estate</div>
+    <div>
+        <h4 class="otp-heading">Hi, ${name} </h4>
+        <div>
+            We have recieved your request to be an agent with Aftib Real Estate. Our admins would review your request and update you. That would take an estimated 1 - 24 hours.
+        </div>
+        <div class="footer">Contact Aftib Support On <a>+23498378273</a></div>
+    </div>
+</body>
+</html>`
+}
+
+
+function agentRequestAdminEmailNotification () {
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP - Aftib</title>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: center;
+        }
+        .heading-main{
+            padding: 20px 20px;
+            font-size: 30px;
+            font-weight: bold;
+            background-color: rgb(72, 72, 255);
+            color: white;
+            margin-bottom: 20px;
+        }
+        .footer {
+            padding: 25px 5px;
+            font-size: 0.75rem;
+        }
+        .otp-container, .otp-heading{
+            padding: 25px 10px;
+        }
+        .otp-container p span {
+            display: inline-block;
+            border: 1px solid;
+            padding: 15px;
+            margin-left: 5px;
+            border-radius: 5px;
+            border-color: bisque;
+        }
+    </style>
+</head>
+<body>
+    <div class="heading-main">Aftib Real Estate</div>
+    <div>
+        <h4 class="otp-heading">Hi, Admin</h4>
+        <div>
+            A prospective agent just made a request to be an Agent at aftib. Login to your dashboard to review the request.
+        </div>
+        <div class="footer">Contact Aftib Support On <a>+23498378273</a></div>
+    </div>
+</body>
+</html>`
+}
+
+
+
 let htmlBodyTemplates = {
-  verifyTemplate,
-  otpForgotPassword
+    verifyTemplate,
+    otpForgotPassword,
+    agentRequestAdminEmailNotification,
+    agentRequestEmailNotification
 };
 
 module.exports = { htmlBodyTemplates, mailerSendImplementation };
