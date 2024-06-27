@@ -141,11 +141,18 @@ const sendOTPForgotPassword = async (req,res) => {
       res.status(404).json({error: 'user not found'})
       return;
     }
-    let otpDoc = new otpModel({
-      otp,
-      user: user._id
-    })
-    let saved = otpDoc.save()
+    let userOtp = await otpModel.findOne({user: user._id})
+    if(userOtp){
+      userOtp.otp = otp;
+      await userOtp.save()
+    }
+    else {
+      let otpDoc = new otpModel({
+        otp,
+        user: user._id
+      })
+      let saved = otpDoc.save()
+    }
     mailOptions.html = htmlBodyTemplates.otpForgotPassword(otp)
     mailOptions.to = email
     transporter.sendMail(mailOptions, (error, info) => {

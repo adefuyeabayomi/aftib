@@ -2196,3 +2196,7 @@
 ::ffff:127.0.0.1 - - [27/Jun/2024:19:59:40 +0000] "GET /populate-listings HTTP/1.1" 200 32 "-" "PostmanRuntime/7.39.1"
 ::ffff:127.0.0.1 - - [27/Jun/2024:20:03:41 +0000] "GET /listing/getListings/1 HTTP/1.1" 200 34 "-" "PostmanRuntime/7.39.1"
 ::ffff:127.0.0.1 - - [27/Jun/2024:20:03:43 +0000] "GET /listing/getListings/1 HTTP/1.1" 200 34 "-" "PostmanRuntime/7.39.1"
+::1 - - [27/Jun/2024:22:14:53 +0000] "GET /auth/send-forgotpassword-otp/adefuyeabayomi16@gmail.com HTTP/1.1" 500 42 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+::1 - - [27/Jun/2024:22:15:35 +0000] "GET /auth/send-forgotpassword-otp/adefuyeabayomi16@gmail.com HTTP/1.1" 200 24 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+::1 - - [27/Jun/2024:22:16:02 +0000] "GET /auth/verify-otp/adefuyeabayomi16@gmail.com/9544 HTTP/1.1" 200 26 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+::1 - - [27/Jun/2024:22:16:11 +0000] "POST /auth/change-password/adefuyeabayomi16@gmail.com HTTP/1.1" 404 187 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
