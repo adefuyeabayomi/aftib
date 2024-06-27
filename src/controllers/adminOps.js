@@ -1,4 +1,4 @@
-const AgentStatusRequest = require('../models/AgentStatusRequest');
+const AgentStatusRequest = require('../models/agentStatusRequest');
 const saveToCloudinary = require('../functions/saveToCloudinary');
 const { transporter, mailOptions } = require("../utils/nodemailer.config");
 const { htmlBodyTemplates } = require("../utils/sendMail");
