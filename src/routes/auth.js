@@ -1,6 +1,6 @@
 const router = require("express").Router();
 
-const { login, signup, verifyEmail, getUser, sendOTPForgotPassword,verifyOtp } = require("../controllers/auth");
+const { login, signup, verifyEmail, getUser, sendOTPForgotPassword,verifyOtp,changePasswordByEmail } = require("../controllers/auth");
 const verifyToken = require('../functions/verifyToken.middleware')
 
 router.post("/login", login);
