@@ -136,6 +136,48 @@ Response if there is an error. An error could occur for two reasons
 ```bash
 400 | 409 | 404 {error: 'errorMessage'}
 ```
+# Change Password
+
+## Endpoint
+
+**POST** `/auth/change-password/:email`
+
+## Description
+
+This endpoint allows a user to change their password by providing a new password. The user must be authenticated to use this endpoint.
+
+## Example Request with Axios
+```js 
+import axios from 'axios';
+
+async function changePassword(email, newPassword) {
+  const url = `http://localhost:8080/auth/change-password/${email}`;
+  
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+
+  const data = {
+    newPassword,
+  };
+
+  try {
+    const response = await axios.post(url, data, config);
+    console.log('Password changed successfully:', response.data);
+  } catch (error) {
+    console.error('Error changing password:', error.response.data);
+  }
+}
+
+// Usage example
+const email = 'user@example.com';
+const newPassword = 'newSecurePassword123';
+
+changePassword(email, newPassword);
+
+```
 
 ## Listing Management
 
