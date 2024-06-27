@@ -40,7 +40,7 @@ const clearListings = async (req, res) => {
 }
 
 async function populateListings (req,res) {
-  let data = fs.readFileSync(path.join(__dirname,'lekki.json')).toString()
+  let data = fs.readFileSync(path.join(__dirname,'magodo.json')).toString()
   data = JSON.parse(data)
   data = data.map(x=>{
     delete x.createdBy

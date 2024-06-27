@@ -147,7 +147,7 @@ Response if there is an error. An error could occur for two reasons
 This endpoint allows a user to change their password by providing a new password. The user must be authenticated to use this endpoint.
 
 ## Example Request with Axios
-```js 
+```javascript
 import axios from 'axios';
 
 async function changePassword(email, newPassword) {

@@ -1,7 +1,7 @@
 [
     {
       "title": "Luxury House in Lekki Phase 1",
-      "_id": "6672bdf6d623bee7b506861c",
+      
       "description": "Spacious and luxurious house located in the upscale Lekki Phase 1 area.",
       "propertyType": "House",
       "location": "Lekki, Lagos",
@@ -43,7 +43,7 @@
       },
       "createdBy": "user_id_123456789"
     },
-    {       "_id": "6652bdf6d625bee7b506861c",
+    {       
       "title": "Cozy Apartment in Lekki Phase 2",
       "description": "Well-maintained apartment with modern amenities in a prime location.",
       "propertyType": "Apartment",
@@ -86,7 +86,7 @@
       },
       "createdBy": "user_id_987654321"
     },
-    {      "_id": "4672bdf6d625bee7b506861c",
+    {      
       "title": "Prime Land in Lekki Free Trade Zone",
       "description": "Strategic piece of land suitable for commercial development near Lekki Free Trade Zone.",
       "propertyType": "Land",
@@ -129,7 +129,7 @@
       },
       "createdBy": "user_id_567890123"
     },
-    {      "_id": "6972bdf6d625bee7b506861c",
+    {      
       "title": "Modern Condo in Lekki Phase 3",
       "description": "Newly built condominium with stunning views and top-notch facilities.",
       "propertyType": "Condo",
@@ -172,7 +172,7 @@
       },
       "createdBy": "user_id_234567890"
     },
-    {      "_id": "6562bdf6d625bee7b506861c",
+    {      
       "title": "Exclusive Short Let Apartment in Lekki",
       "description": "Luxurious short let apartment with all-inclusive amenities.",
       "propertyType": "Apartment",
@@ -215,7 +215,7 @@
       },
       "createdBy": "user_id_345678901"
     },
-    {      "_id": "6562bdf6d625bee7b556861c",
+    {      
       "title": "Spacious 4 Bedroom House in Lekki",
       "description": "A spacious 4 bedroom house with modern amenities and a beautiful garden.",
       "propertyType": "House",
@@ -258,7 +258,7 @@
       },
       "createdBy": "user_id_123456780"
     },
-    {      "_id": "6564bdf6d625bee7b506861c",
+    {      
       "title": "Modern 2 Bedroom Apartment",
       "description": "Modern 2 bedroom apartment with all essential amenities.",
       "propertyType": "Apartment",
@@ -301,7 +301,7 @@
       },
       "createdBy": "user_id_987654321"
     },
-    {      "_id": "6562bdf2d625bee7b506861c",
+    {      
       "title": "Commercial Land in Lekki Phase 1",
       "description": "Prime commercial land ideal for business development in Lekki Phase 1.",
       "propertyType": "Land",
@@ -344,7 +344,7 @@
       },
       "createdBy": "user_id_567890123"
     },
-    {      "_id": "6562bdf6d625bee7b369861c",
+    {      
       "title": "Luxury Condo with Sea View",
       "description": "Luxury condo with breathtaking sea views and modern facilities.",
       "propertyType": "Condo",
@@ -387,7 +387,7 @@
       },
       "createdBy": "user_id_234567890"
     },
-    {      "_id": "6562bdf6d625bee7b506941c",
+    {      
       "title": "Short Let Studio Apartment",
       "description": "Fully furnished studio apartment available for short let in Lekki.",
       "propertyType": "Apartment",
@@ -430,7 +430,7 @@
       },
       "createdBy": "user_id_345678901"
     },
-    {      "_id": "6562bdf6d625bee7b886861c",
+    {      
       "title": "Elegant House in Lekki Phase 2",
       "description": "Elegant and spacious house with modern amenities in Lekki Phase 2.",
       "propertyType": "House",
@@ -473,7 +473,7 @@
       },
       "createdBy": "user_id_678901234"
     },
-    {      "_id": "6562bdf6d625bee7b500861c",
+    {      
       "title": "Contemporary Apartment in Lekki",
       "description": "Contemporary 3 bedroom apartment with stylish interiors.",
       "propertyType": "Apartment",

@@ -8,7 +8,6 @@ const createNew = async (req, res) => {
   try {
     req.body.createdBy = new mongoose.Types.ObjectId(req.user.userId)
     let locationData = await Promise.resolve(getAddressLocationData(req.body.location))
-    console.log({locationData})
     req.body.locationData = locationData
     let newListing = new Listing(req.body)
     let savedListing = await newListing.save()
@@ -55,7 +54,6 @@ const createNew = async (req, res) => {
 
 const updateListing = async (req, res) => {
   const id = new mongoose.Types.ObjectId(req.params.id)
-  console.log({ updateID: id })
   const updateData = req.body
   try {
     // Find the listing by ID and update it
@@ -117,12 +115,12 @@ const getListings = async (req, res) => {
     const batch = parseInt(sectionNo) || 1; // Default to batch 1 if not specified
     const limit = 15; // Default to 20 documents per batch
     const skip = (batch - 1) * limit; // Calculate the number of documents to skip
-    const listings = await Listing.find({approved: true}).skip(skip).limit(limit);
+    const listings = await Listing.find({approved: true}).skip(skip).limit(limit)
     res
       .status(200)
-      .json({ listings, listingsArray: listings.map((x) => x._id) });
+      .json({ listings, listingsArray: listings.map((x) => x._id) })
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error.message })
   }
 }
 
@@ -174,7 +172,6 @@ console.log('queries', request.query)
     if (location) {
       // Split the location string by dashes and create regex patterns for each keyword
       const keywords = location.split("-");
-      console.log({keywords})
       const locationRegexArray = keywords.map((keyword) => ({
         location: { $regex: keyword, $options: "i" },
       }));

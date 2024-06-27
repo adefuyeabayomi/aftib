@@ -207,7 +207,6 @@ const changePasswordByEmail = async (req, res) => {
     // Update the user's password
     user.hash = hashedPassword;
     await user.save();
-
     res.status(200).json({ success: 'Password changed successfully' });
   } catch (error) {
     console.error('Error changing password:', error);
