@@ -15,4 +15,6 @@ router.get('/send-forgotpassword-otp/:email', sendOTPForgotPassword)
 
 router.get('/verify-otp/:email/:otp',verifyOtp)
 
+router.post('/auth/change-password/:email', changePasswordByEmail);
+
 module.exports = router;

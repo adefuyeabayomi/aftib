@@ -189,11 +189,41 @@ const verifyOtp = async (req,res) => {
   }
 }
 
+const changePasswordByEmail = async (req, res) => {
+  const { email } = req.params;
+  const { newPassword } = req.body;
+
+  try {
+    // Find the user by email
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Hash the new password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    // Update the user's password
+    user.hash = hashedPassword;
+    await user.save();
+
+    res.status(200).json({ success: 'Password changed successfully' });
+  } catch (error) {
+    console.error('Error changing password:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+
+
+
 module.exports = {
   signup,
   login,
   verifyEmail,
   getUser,
   sendOTPForgotPassword,
-  verifyOtp
+  verifyOtp,
+  changePasswordByEmail
 };
