@@ -2,10 +2,14 @@ const Hotel = require("../models/hotel");
 const User = require("../models/user");
 const mongoose = require("mongoose");
 const saveToCloudinary = require("../functions/saveToCloudinary");
+const getAddressLocationData = require('../functions/getAddressLocationData')
 const addNewHotel = async (req, res) => {
   try {
     // Extract hotel details from the request body
     req.body.createdBy = new mongoose.Types.ObjectId(req.user.userId);
+    let locationData = await Promise.resolve(getAddressLocationData(req.body.address))
+    console.log({body: req.body})
+    req.body.locationData = locationData
     req.body.createdDate = new Date().getTime();
     const hotelData = req.body;
 

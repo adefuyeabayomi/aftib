@@ -274,13 +274,68 @@ function agentRequestAdminEmailNotification () {
 </html>`
 }
 
-
+function newHotelClientMail(name){
+    return `
+    <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>OTP - Aftib</title>
+            <style>
+                * {
+                    margin: 0px;
+                    padding: 0px;
+                }
+                body {
+                    font-family: Arial, Helvetica, sans-serif;
+                    text-align: center;
+                }
+                .heading-main{
+                    padding: 20px 20px;
+                    font-size: 30px;
+                    font-weight: bold;
+                    background-color: rgb(72, 72, 255);
+                    color: white;
+                    margin-bottom: 20px;
+                }
+                .footer {
+                    padding: 25px 5px;
+                    font-size: 0.75rem;
+                }
+                .otp-container, .otp-heading{
+                    padding: 25px 10px;
+                }
+                .otp-container p span {
+                    display: inline-block;
+                    border: 1px solid;
+                    padding: 15px;
+                    margin-left: 5px;
+                    border-radius: 5px;
+                    border-color: bisque;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="heading-main">Aftib Real Estate</div>
+            <div>
+                <h4 class="otp-heading">Hi, ${name} </h4>
+                <div>
+                    Your hotel has been submitted and would be approved soon should it pass our vetting process. Our admins would review your request and update you. That would take an estimated 1 - 24 hours.
+                </div>
+                <div class="footer">Contact Aftib Support On <a>+23498378273</a></div>
+            </div>
+        </body>
+        </html>
+`
+}
 
 let htmlBodyTemplates = {
     verifyTemplate,
     otpForgotPassword,
     agentRequestAdminEmailNotification,
-    agentRequestEmailNotification
+    agentRequestEmailNotification,
+    newHotelClientMail
 };
 
 module.exports = { htmlBodyTemplates, mailerSendImplementation };

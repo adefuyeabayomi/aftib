@@ -1,24 +1,60 @@
 const mongoose = require("mongoose");
 
 const hotelSchema = new mongoose.Schema({
-  title: { type: String }, // Hotel name
+  name: { type: String }, // Hotel name
   description: { type: String },
   address: { type: String }, // Full address // Detailed description of the hotel
-  location: {
-    city: { type: String }, // City
+  locationData: {
+    LGA: { type: String }, // City
     state: { type: String }, // State
-    country: { type: String }, // Country
-    zipCode: { type: String }, // Zip code
     latitude: { type: Number }, // Latitude for geolocation
-    longitude: { type: Number }, // Longitude for geolocation
+    longitude: { type: Number },
+    googleData: Object // Longitude for geolocation
   },
   contact: {
     phone: { type: String }, // Contact phone number
     email: { type: String }, // Contact email
     website: { type: String }, // Website URL
-  },
-  amenities: [String], // List of amenities (e.g., pool, gym, spa)
-  rooms: [
+  },  
+  approved: {
+    type: Boolean,
+    default: false
+  }, // Shows that admin has approved the property
+  approvedBy: String, // the mongo id of the admin account that approved the listing.
+  amenities: {
+    spa: Boolean,
+    pool: Boolean,
+    gym: Boolean,
+    freeWifi: Boolean,
+    restaurant: Boolean,
+    bar: Boolean,
+    airConditioning: Boolean,
+    parking: Boolean,
+    FrontDesk: Boolean,
+    roomService: Boolean,
+    laundryService: Boolean,
+    shuttleService: Boolean,
+    petFriendly: Boolean,
+    nonSmokingRooms: Boolean,
+    businessCenter: Boolean,
+    meetingRooms: Boolean,
+    familyRooms: Boolean,
+    accessibleRooms: Boolean,
+    breakfastIncluded: Boolean,
+    conciergeService: Boolean,
+    luggageStorage: Boolean,
+    freeToiletries: Boolean,
+    hairDryer: Boolean,
+    tv: Boolean,
+    minibar: Boolean,
+    safe: Boolean,
+    balcony: Boolean,
+    coffeeMaker: Boolean,
+    ironAndIroningBoard: Boolean,
+    telephone: Boolean,
+    heating: Boolean
+  }, // List of amenities (e.g., pool, gym, spa)
+  rooms: [ 
     {
       roomType: { type: String }, // Type of room (e.g., single, double, suite)
       description: { type: String }, // Description of the room

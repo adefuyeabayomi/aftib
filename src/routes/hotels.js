@@ -7,9 +7,9 @@ const {
   deleteHotelById,
   saveHotelImages,
   updateRoomImages,
-} = require("../controllers/hotel");
-const uploadImages = require("../functions/fileupload.middleware");
-const verifyToken = require("../functions/verifyToken.middleware"); // Assuming you have a middleware to verify JWT tokens
+} = require("../controllers/hotel")
+const uploadImages = require("../functions/fileupload.middleware")
+const verifyToken = require("../functions/verifyToken.middleware") // Assuming you have a middleware to verify JWT tokens
 
 router.post("/hotels", verifyToken, addNewHotel);
 router.get("/hotels/getAll/:sectionNo", getAllHotels);
