@@ -93,7 +93,7 @@ const approveAgencyRequest = async (req, res) => {
 
     // Update the fields
     agencyRequest.approved = true;
-    agencyRequest.approvedBy = approvedBy;
+    agencyRequest.approvedBy = req.user.userId;
 
     // Save the updated request
     await agencyRequest.save();
@@ -105,11 +105,46 @@ const approveAgencyRequest = async (req, res) => {
   }
 };
 
+const getAgencyRequestById = async (req, res) => {
+  const { requestId } = req.params
+  try {
+    const agencyRequest = await AgentStatusRequest.findById(requestId)
+
+    if (!agencyRequest) {
+      return res.status(404).json({ error: "Agency request not found" })
+    }
+
+    res.status(200).json(agencyRequest)
+  } catch (error) {
+    console.error(error.message)
+    res.status(500).json({ error: "Server error" })
+  }
+}
+const getAgencyRequests = async (req, res) => {
+  const { page = 1, limit = 20 } = req.query
+  const skip = (page - 1) * limit
+
+  try {
+    const requests = await AgentStatusRequest.find()
+      .skip(skip)
+      .limit(parseInt(limit))
+      .exec();
+
+    res.status(200).json(requests)
+  } catch (error) {
+    console.error(error.message)
+    res.status(500).json({ error: "Server error" })
+  }
+}
+
+
 
 module.exports = {
   requestAgencyStatus,
   updateAgencyStatusPassport,
   updateAgencyStatusIssuedId,
   updateAgencyStatus,
-  approveAgencyRequest
+  approveAgencyRequest,
+  getAgencyRequests,
+  getAgencyRequestById,
 };
