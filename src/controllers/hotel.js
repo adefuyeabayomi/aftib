@@ -8,9 +8,9 @@ const addNewHotel = async (req, res) => {
     // Extract hotel details from the request body
     req.body.createdBy = new mongoose.Types.ObjectId(req.user.userId);
     let locationData = await Promise.resolve(getAddressLocationData(req.body.address))
-    console.log({body: req.body})
-    req.body.locationData = locationData
+    req.body.locationData.googleData = locationData
     req.body.createdDate = new Date().getTime();
+    console.log({body: req.body})
     const hotelData = req.body;
 
     // Create a new hotel document
