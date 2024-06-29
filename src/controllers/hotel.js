@@ -40,7 +40,7 @@ const getAllHotels = async (req, res) => {
   try {
     const count = await Hotel.countDocuments(); // Get total number of hotels
 
-    const hotels = await Hotel.find()
+    const hotels = await Hotel.find({approved: true})
       .skip((batch - 1) * batchSize) // Skip hotels in previous batches
       .limit(batchSize); // Limit number of hotels per batch
 

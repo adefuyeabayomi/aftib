@@ -160,12 +160,20 @@ const searchListings = async (request, response) => {
     maxMonthlyPayment,
     bedroom,
     bathroom,
+    state,
+    developmentStage
   } = request.query;
   
 console.log('queries', request.query)
   try {
     let query = {};
     // Add location filter if provided
+    if(state){
+      query.state = state
+    }
+    if(developmentStage){
+      query.developmentStage = developmentStage
+    }
     if (location) {
       // Split the location string by dashes and create regex patterns for each keyword
       const keywords = location.split("-");

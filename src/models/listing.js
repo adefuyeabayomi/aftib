@@ -19,6 +19,7 @@ let listingObj = {
     default: false
   }, // Shows that admin has approved the property
   approvedBy: String, // the mongo id of the admin account that approved the listing.
+  developmentStage: String,// urban,rural,developing
   // Additional Properties
   bedrooms: Number, // Number of bedrooms
   bathrooms: Number, // Number of bathrooms
