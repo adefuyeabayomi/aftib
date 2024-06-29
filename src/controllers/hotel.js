@@ -204,6 +204,48 @@ const updateRoomImages = async (req, res) => {
   }
 };
 
+const approveHotelById = async (req, res) => {
+  const { id } = req.params;
+  const userId = req.user.userId;
+
+  try {
+    const hotel = await Hotel.findById(id);
+    if (!hotel) {
+      return res.status(404).json({ message: "Hotel not found" });
+    }
+
+    hotel.approved = true;
+    hotel.approvedBy = userId;
+    await hotel.save();
+
+    res.status(200).json({ message: "Hotel approved successfully", hotel });
+  } catch (error) {
+    console.error("Error approving hotel:", error);
+    res.status(500).json({ message: "Internal server error", error });
+  }
+};
+
+const getUnapprovedHotels = async (req, res) => {
+  const batchSize = 20;
+  let batch = req.params.page || 1;
+
+  try {
+    const count = await Hotel.countDocuments({ approved: false });
+    const hotels = await Hotel.find({ approved: false })
+      .skip((batch - 1) * batchSize)
+      .limit(batchSize);
+
+    res.status(200).json({
+      hotels,
+      currentPage: batch,
+      totalPages: Math.ceil(count / batchSize),
+    });
+  } catch (error) {
+    console.error("Error fetching unapproved hotels:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
   addNewHotel,
   getAllHotels,
@@ -212,4 +254,6 @@ module.exports = {
   deleteHotelById,
   saveHotelImages,
   updateRoomImages,
+  getUnapprovedHotels,
+  approveHotelById
 };

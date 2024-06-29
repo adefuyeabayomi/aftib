@@ -161,6 +161,7 @@ const searchListings = async (request, response) => {
     bedroom,
     bathroom,
   } = request.query;
+  
 console.log('queries', request.query)
   try {
     let query = {};
