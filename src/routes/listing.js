@@ -32,7 +32,7 @@ router.get("/getListings/:sectionNo", getListings);
 router.get("/searchListings", searchListings);
 
 // [/listing/searchListings]   200 Okay | 400 bad request
-router.get("/unApprovedListings/:sectionNo", getUnapprovedListing);
+router.get("/unApprovedListings", getUnapprovedListing);
 
 router.put('/approveListing/:id',verifyToken,approveListing)
 
@@ -42,6 +42,6 @@ router.put(
   verifyToken,
   uploadImages,
   addListingImages,
-);
+)
 
 module.exports = router;

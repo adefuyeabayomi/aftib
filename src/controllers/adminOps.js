@@ -81,7 +81,7 @@ const updateAgencyStatusPassport = async (req, res) => {
 
 const approveAgencyRequest = async (req, res) => {
   const { requestId } = req.params; // Assuming you pass requestId in the URL params
-  const { approvedBy } = req.body; // Assuming approvedBy is provided in the request body
+ // Assuming approvedBy is provided in the request body
 
   try {
     // Find the agency status request by ID
@@ -106,9 +106,9 @@ const approveAgencyRequest = async (req, res) => {
 };
 
 const getAgencyRequestById = async (req, res) => {
-  const { requestId } = req.params
+  const { id } = req.params
   try {
-    const agencyRequest = await AgentStatusRequest.findById(requestId)
+    const agencyRequest = await AgentStatusRequest.findById(id)
 
     if (!agencyRequest) {
       return res.status(404).json({ error: "Agency request not found" })
@@ -121,11 +121,12 @@ const getAgencyRequestById = async (req, res) => {
   }
 }
 const getAgencyRequests = async (req, res) => {
-  const { page = 1, limit = 20 } = req.query
+  const { page = 1 } = req.params
+  const limit = 20
   const skip = (page - 1) * limit
 
   try {
-    const requests = await AgentStatusRequest.find()
+    const requests = await AgentStatusRequest.find({approved: false})
       .skip(skip)
       .limit(parseInt(limit))
       .exec();
@@ -136,8 +137,6 @@ const getAgencyRequests = async (req, res) => {
     res.status(500).json({ error: "Server error" })
   }
 }
-
-
 
 module.exports = {
   requestAgencyStatus,

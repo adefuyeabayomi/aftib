@@ -7,7 +7,9 @@ const {
   updateAgencyStatusPassport,
   updateAgencyStatusIssuedId,
   updateAgencyStatus,
-  approveAgencyRequest
+  approveAgencyRequest,
+  getAgencyRequestById,
+  getAgencyRequests
 } = require("../controllers/adminOps");
 
 router.post("/request-agency-status", verifyToken, requestAgencyStatus);
@@ -25,6 +27,9 @@ router.post(
 );
 router.put("/update-agency-status", verifyToken, updateAgencyStatus);
 router.put("/approve-agency-request/:requestId", verifyToken, approveAgencyRequest);
+router.get('/get-agency-request/:id', getAgencyRequestById);
+router.get("/agency-requests", getAgencyRequests);
+
 
 module.exports = router;
 

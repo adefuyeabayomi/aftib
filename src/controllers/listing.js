@@ -125,15 +125,11 @@ const getListings = async (req, res) => {
 }
 
 const getUnapprovedListing = async (req,res) => {
-  let sectionNo = req.params.sectionNo || 1;
   try {
-    const batch = parseInt(sectionNo) || 1; // Default to batch 1 if not specified
-    const limit = 15; // Default to 20 documents per batch
-    const skip = (batch - 1) * limit; // Calculate the number of documents to skip
-    const listings = await Listing.find({approved: false}).skip(skip).limit(limit);
+    const listings = await Listing.find({approved: false})
     res
       .status(200)
-      .json({ listings, listingsArray: listings.map((x) => x._id) });
+      .json({ listingsData: listings, listingsArray: listings.map((x) => x._id) });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
