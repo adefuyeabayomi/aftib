@@ -2427,3 +2427,4 @@
 ::ffff:127.0.0.1 - - [29/Jun/2024:08:17:44 +0000] "GET /listing/unApprovedListings HTTP/1.1" - - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
 ::ffff:127.0.0.1 - - [29/Jun/2024:08:20:13 +0000] "GET /listing/unApprovedListings HTTP/1.1" 200 34714 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
 ::ffff:127.0.0.1 - - [29/Jun/2024:08:20:14 +0000] "GET /listing/unApprovedListings HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+::ffff:127.0.0.1 - - [29/Jun/2024:08:38:33 +0000] "GET /listing/unApprovedListings HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
