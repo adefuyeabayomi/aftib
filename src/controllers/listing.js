@@ -161,7 +161,8 @@ const searchListings = async (request, response) => {
     bedroom,
     bathroom,
     state,
-    developmentStage
+    developmentStage,
+    LGA
   } = request.query;
   
 console.log('queries', request.query)
@@ -170,6 +171,9 @@ console.log('queries', request.query)
     // Add location filter if provided
     if(state){
       query.state = state
+    }
+    if(LGA){
+      query.LGA = LGA
     }
     if(developmentStage){
       query.developmentStage = developmentStage
