@@ -213,6 +213,9 @@ const approveHotelById = async (req, res) => {
     if (!hotel) {
       return res.status(404).json({ message: "Hotel not found" });
     }
+    if(req.user.accountType !== 'admin'){
+      return res.status(401).send({error: 'Only admins can approve.'})
+    }
 
     hotel.approved = true;
     hotel.approvedBy = userId;

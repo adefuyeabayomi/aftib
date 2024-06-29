@@ -90,6 +90,9 @@ const approveAgencyRequest = async (req, res) => {
     if (!agencyRequest) {
       return res.status(404).json({ error: "Agency request not found" });
     }
+    if(req.user.accountType !== 'admin'){
+      return res.status(401).json({error: "Only admins can approve"})
+    }
 
     // Update the fields
     agencyRequest.approved = true;
