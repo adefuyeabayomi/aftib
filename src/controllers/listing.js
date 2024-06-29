@@ -167,7 +167,7 @@ const searchListings = async (request, response) => {
   
 console.log('queries', request.query)
   try {
-    let query = {};
+    let query = {approved: true};
     // Add location filter if provided
     if(state){
       query.state = state
