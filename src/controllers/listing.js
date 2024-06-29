@@ -136,7 +136,7 @@ const getUnapprovedListing = async (req,res) => {
 }
 
 const approveListing = async (req,res)=>{
-  let {id} = request.params
+  let {id} = req.params
     if(req.user.accountType !== 'admin') {
       res.status(401).send({message: 'this is not an admin account'})
       return;
