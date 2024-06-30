@@ -174,11 +174,6 @@ const searchForAgent = async (req,res) => {
       catch(err){
               return res.status(500).send({error: err.message})
       }
-      finally {
-
-      }
-
-
     }
   }
 
@@ -191,4 +186,5 @@ module.exports = {
   getApprovedAgencyRequests,
   getUnapprovedAgencyRequests,
   getAgencyRequestById,
+  searchForAgent
 };
