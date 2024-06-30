@@ -6,13 +6,14 @@ const {
   requestAgencyStatus,
   updateAgencyStatusPassport,
   updateAgencyStatusIssuedId,
-  updateAgencyStatus,
+  updateAgencyStatus, 
   approveAgencyRequest,
   getAgencyRequestById,
-  getAgencyRequests
+  getUnapprovedAgencyRequests,
+  getApprovedAgencyRequests
 } = require("../controllers/adminOps");
 
-router.post("/request-agency-status", verifyToken, requestAgencyStatus);
+router.post("/request-agency-status", verifyToken, requestAgencyStatus)
 router.post(
   "/update-agency-status-passport",
   verifyToken,
@@ -28,7 +29,8 @@ router.post(
 router.put("/update-agency-status", verifyToken, updateAgencyStatus);
 router.put("/approve-agency-request/:requestId", verifyToken, approveAgencyRequest);
 router.get('/get-agency-request/:id', getAgencyRequestById);
-router.get("/agency-requests", getAgencyRequests);
+router.get('/get-unapproved-agency-requests',getUnapprovedAgencyRequests)
+router.get('/get-approved-agency-requests',getApprovedAgencyRequests)
 
 
 module.exports = router;

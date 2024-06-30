@@ -2,7 +2,8 @@ const AgentStatusRequest = require('../models/agentStatusRequest');
 const saveToCloudinary = require('../functions/saveToCloudinary');
 const { transporter, mailOptions } = require("../utils/nodemailer.config");
 const { htmlBodyTemplates } = require("../utils/sendMail");
-const User = require('../models/user')
+const User = require('../models/user');
+const { query } = require('express');
 
 
 // Create a new agent status request
@@ -123,16 +124,22 @@ const getAgencyRequestById = async (req, res) => {
     res.status(500).json({ error: "Server error" })
   }
 }
-const getAgencyRequests = async (req, res) => {
-  const { page = 1 } = req.params
-  const limit = 20
-  const skip = (page - 1) * limit
+const getApprovedAgencyRequests = async (req, res) => {
+
+  try {
+    const requests = await AgentStatusRequest.find({approved: true})
+
+    res.status(200).json(requests)
+  } catch (error) {
+    console.error(error.message)
+    res.status(500).json({ error: "Server error" })
+  }
+}
+ 
+const getUnapprovedAgencyRequests = async (req, res) => {
 
   try {
     const requests = await AgentStatusRequest.find({approved: false})
-      .skip(skip)
-      .limit(parseInt(limit))
-      .exec();
 
     res.status(200).json(requests)
   } catch (error) {
@@ -141,12 +148,47 @@ const getAgencyRequests = async (req, res) => {
   }
 }
 
+const searchForAgent = async (req,res) => {
+  let {state,LGA,location} = req.query
+  let query = {}
+    // Add location filter if provided
+    if(state){
+      query.state = state
+    }
+    if(LGA){
+      query.LGA = LGA
+    }
+    if (location) {
+      // Split the location string by dashes and create regex patterns for each keyword
+      const keywords = location.split("-");
+      const locationRegexArray = keywords.map((keyword) => ({
+        location: { $regex: keyword, $options: "i" },
+      }));
+      // Create a $or condition for each regex pattern
+      query.$or = locationRegexArray;
+      try {
+              let foundAgents = await AgentStatusRequest.find(query)
+              console.log({foundAgents})
+              return res.status(200).json(foundAgents)
+      }
+      catch(err){
+              return res.status(500).send({error: err.message})
+      }
+      finally {
+
+      }
+
+
+    }
+  }
+
 module.exports = {
   requestAgencyStatus,
   updateAgencyStatusPassport,
   updateAgencyStatusIssuedId,
   updateAgencyStatus,
   approveAgencyRequest,
-  getAgencyRequests,
+  getApprovedAgencyRequests,
+  getUnapprovedAgencyRequests,
   getAgencyRequestById,
 };

@@ -20,7 +20,7 @@ const transactionSchema = new Schema({
   transactionType: {
     type: String,
     required: true,
-    enum: ["propertyPurchase", "propertyRental", "hotelBooking"], // Enumerated types for transaction types
+    enum: ["propertyPurchase", "propertyRental", "hotelBooking","propertyShortLet"], // Enumerated types for transaction types
   },
   transactionStatus: {
     type: String,
