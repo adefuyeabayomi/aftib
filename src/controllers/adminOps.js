@@ -162,17 +162,17 @@ const searchForAgent = async (req,res) => {
       // Split the location string by dashes and create regex patterns for each keyword
       const keywords = location.split("-");
       const locationRegexArray = keywords.map((keyword) => ({
-        location: { $regex: keyword, $options: "i" },
+        officeAddress: { $regex: keyword, $options: "i" },
       }));
       // Create a $or condition for each regex pattern
       query.$or = locationRegexArray;
       try {
-              let foundAgents = await AgentStatusRequest.find(query)
-              console.log({foundAgents})
-              return res.status(200).json(foundAgents)
+        let foundAgents = await AgentStatusRequest.find(query)
+        console.log({foundAgents})
+        return res.status(200).json(foundAgents)
       }
       catch(err){
-              return res.status(500).send({error: err.message})
+        return res.status(500).send({error: err.message})
       }
     }
   }
