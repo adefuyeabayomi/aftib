@@ -7,6 +7,7 @@ const { htmlBodyTemplates } = require("../utils/sendMail");
 const generateId = require('../utils/generateID')
 // Controller function for processing an order
 const { transporter, mailOptions } = require("../utils/nodemailer.config");
+let adminEmails = process.env.ADMIN_EMAILS
 
 const signup = async (req, res) => {
   let { email, password, mobileNumber, name, signupType, accountType } =
@@ -19,6 +20,12 @@ const signup = async (req, res) => {
       error: "Email is not valid",
       status: 400,
       message: "Bad Request",
+    })
+  }
+
+  if(!adminEmails.split(',').includes(email)){
+    return res.status(401).json({
+      message: "this signup is restricted to admin designated emails"
     })
   }
 
