@@ -124,6 +124,23 @@ const getAgencyRequestById = async (req, res) => {
     res.status(500).json({ error: "Server error" })
   }
 }
+
+const getAgencyRequestByToken = async (req, res) => {
+  const { id } = req.user.userId
+  try {
+    const agencyRequest = await AgentStatusRequest.findById(id)
+
+    if (!agencyRequest) {
+      return res.status(404).json({ error: "Agency request not found" })
+    }
+
+    res.status(200).json(agencyRequest)
+  } catch (error) {
+    console.error(error.message)
+    res.status(500).json({ error: "Server error" })
+  }
+}
+
 const getApprovedAgencyRequests = async (req, res) => {
 
   try {
@@ -186,5 +203,6 @@ module.exports = {
   getApprovedAgencyRequests,
   getUnapprovedAgencyRequests,
   getAgencyRequestById,
-  searchForAgent
+  searchForAgent,
+  getAgencyRequestByToken
 };
