@@ -22,8 +22,7 @@ const signup = async (req, res) => {
       message: "Bad Request",
     })
   }
-
-  if(!adminEmails.split(',').includes(email)){
+  if(accountType == 'admin' && !adminEmails.split(',').includes(email)){
     return res.status(401).json({
       message: "this signup is restricted to admin designated emails"
     })
