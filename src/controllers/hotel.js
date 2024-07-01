@@ -10,6 +10,7 @@ const addNewHotel = async (req, res) => {
     let locationData = await Promise.resolve(getAddressLocationData(req.body.address))
     req.body.locationData.googleData = locationData
     req.body.createdDate = new Date().getTime();
+    req.body.approvalState = 'pending'
     console.log({body: req.body})
     const hotelData = req.body;
 
@@ -72,6 +73,7 @@ const updateHotelById = async (req, res) => {
   const { id } = req.params;
   const userId = req.user.userId;
   const updateData = req.body;
+  updateData.approvalState = 'pending'
 
   try {
     const hotel = await Hotel.findById(id);
@@ -228,6 +230,22 @@ const approveHotelById = async (req, res) => {
   }
 };
 
+const rejectHotel = async (req,res)=>{
+  let {id} = req.params
+  let {message} = req.query
+    if(req.user.accountType !== 'admin') {
+      res.status(401).send({message: 'this is not an admin account'})
+      return;
+    }
+    try {
+      await Hotel.findByIdAndUpdate(id,{approved: false, approvedBy: req.user.userId,approvalState: 'rejected', rejectionMessage: message })
+      res.status(200).send({rejected: true})
+    }
+    catch(err){
+      res.status(500).json({error: err.message})
+    }
+}
+
 const getUnapprovedHotels = async (req, res) => {
   const batchSize = 20;
   let batch = req.params.page || 1;
@@ -258,5 +276,6 @@ module.exports = {
   saveHotelImages,
   updateRoomImages,
   getUnapprovedHotels,
-  approveHotelById
+  approveHotelById,
+  rejectHotel
 };

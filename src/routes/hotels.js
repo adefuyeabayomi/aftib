@@ -9,6 +9,7 @@ const {
   updateRoomImages,
   getUnapprovedHotels,
   approveHotelById,
+  rejectHotel,
 } = require("../controllers/hotel")
 const uploadImages = require("../functions/fileupload.middleware")
 const verifyToken = require("../functions/verifyToken.middleware") // Assuming you have a middleware to verify JWT tokens
@@ -27,4 +28,5 @@ router.put(
 );
 router.get("/hotels/unapproved/:page", getUnapprovedHotels);
 router.put("/hotels/approve/:id", verifyToken, approveHotelById);
+router.put("/hotels/reject/:id", verifyToken, rejectHotel);
 module.exports = router;

@@ -194,8 +194,8 @@ const rejectListing = async (req,res)=>{
       return;
     }
     try {
-      await Listing.findByIdAndUpdate(id,{approved: true, approvedBy: req.user.userId,approvalState: 'rejected', rejectionMessage: message })
-      res.status(200).send({approved: true, id, approvedBy: req.user.name})
+      await Listing.findByIdAndUpdate(id,{approved: false, approvedBy: req.user.userId,approvalState: 'rejected', rejectionMessage: message })
+      res.status(200).send({rejected:  true})
     }
     catch(err){
       res.status(500).json({error: err.message})
