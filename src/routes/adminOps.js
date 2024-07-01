@@ -31,7 +31,7 @@ router.post(
 router.put("/update-agency-status", verifyToken, updateAgencyStatus);
 router.put("/approve-agency-request/:requestId", verifyToken, approveAgencyRequest);
 router.get('/get-agency-request/:id', getAgencyRequestById);
-router.get('/get-agency-request-by-token',getAgencyRequestByToken)
+router.get('/get-agency-request-by-token',verifyToken,getAgencyRequestByToken)
 router.get('/get-unapproved-agency-requests',getUnapprovedAgencyRequests)
 router.get('/get-approved-agency-requests',getApprovedAgencyRequests)
 router.get('/search-for-agent',searchForAgent)
