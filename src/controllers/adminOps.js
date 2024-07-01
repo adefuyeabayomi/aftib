@@ -128,7 +128,7 @@ const getAgencyRequestById = async (req, res) => {
 const getAgencyRequestByToken = async (req, res) => {
   const { id } = req.user.userId
   try {
-    const agencyRequest = await AgentStatusRequest.findById(id)
+    const agencyRequest = await AgentStatusRequest.findOne({agentId: id})
 
     if (!agencyRequest) {
       return res.status(404).json({ error: "Agency request not found" })
