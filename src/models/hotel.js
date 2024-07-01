@@ -87,6 +87,8 @@ const hotelSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   }, // userId that created the listing
+  approvalState: String, //'pending'  'approved', 'rejected'
+  rejectionMessage: String,
 });
 
 const Hotel = mongoose.model("Hotel", hotelSchema);

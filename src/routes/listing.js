@@ -8,7 +8,9 @@ const {
   searchListings,
   addListingImages,
   getUnapprovedListing,
-  approveListing
+  approveListing,
+  rejectListing,
+  removeListingImages
 } = require("../controllers/listing");
 const uploadImages = require("../functions/fileupload.middleware");
 const verifyToken = require("../functions/verifyToken.middleware");
@@ -18,6 +20,8 @@ router.post("/addListing", verifyToken, createNew);
 
 // [/listing/updateListing/:id] PUT 200 | 400 bad request
 router.put("/updateListing/:id", verifyToken, updateListing);
+
+router.get("/removeUploadedImages",verifyToken)
 
 // [/listing/getListingsById/:id]   200 Okay | 400 bad request
 router.get("/getListingById/:id", getListingById);
@@ -35,6 +39,8 @@ router.get("/searchListings", searchListings);
 router.get("/unApprovedListings", getUnapprovedListing);
 
 router.put('/approveListing/:id',verifyToken,approveListing)
+
+router.put('/rejectListing/:id',verifyToken,rejectListing)
 
 // [/listing/]   200 Okay | 400 bad request
 router.put(

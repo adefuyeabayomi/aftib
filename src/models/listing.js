@@ -58,6 +58,9 @@ let listingObj = {
     required: false,
     default: new mongoose.Types.ObjectId(defaultUserId)
   }, // userId that created the listing
+  approvalState: String, //'pending'  'approved', 'rejected'
+  rejectionMessage: String,
+  agentData: Object
 };
 const listingSchema = mongoose.Schema(listingObj)
 const listingModel = mongoose.model("Listing", listingSchema)

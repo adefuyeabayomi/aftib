@@ -2,13 +2,18 @@ const mongoose = require("mongoose");
 const saveToCloudinary = require("../functions/saveToCloudinary");
 const getAddressLocationData = require('../functions/getAddressLocationData')
 let Listing = require("../models/listing");
+let AgentModel = require('../models/agentStatusRequest')
 let User = require("../models/user");
 
 const createNew = async (req, res) => {
   try {
+    let Agent = await AgentModel.findOne({agentId: req.user.userId})
     req.body.createdBy = new mongoose.Types.ObjectId(req.user.userId)
+    let {name,businessName,phone,whatsappNo,email,officeAddress,state,LGA,agencyType} = Agent
+    req.body.agentData = {name,businessName,phone,whatsappNo,email,officeAddress,state,LGA,agencyType}
     let locationData = await Promise.resolve(getAddressLocationData(req.body.location))
     req.body.locationData = locationData
+    req.body.approvalState = 'pending'
     let newListing = new Listing(req.body)
     let savedListing = await newListing.save()
     await User.updateOne(
@@ -55,6 +60,7 @@ const createNew = async (req, res) => {
 const updateListing = async (req, res) => {
   const id = new mongoose.Types.ObjectId(req.params.id)
   const updateData = req.body
+  updateData.approvalState = 'pending'
   try {
     // Find the listing by ID and update it
     const updatedListing = await Listing.findByIdAndUpdate(id, updateData, {
@@ -69,6 +75,36 @@ const updateListing = async (req, res) => {
     res.status(400).json({ message: error.message })
   }
 }
+
+const removeListingImages = async (req, res) => {
+  const { id } = req.params; // Listing ID
+  const { toBeRemoved } = req.body; // Array of image URLs to be removed
+  const userId = req.user.userId; // Assuming userId is available in req.user
+
+  try {
+    // Find the listing by ID
+    const listing = await Listing.findById(id);
+    if (!listing) {
+      return res.status(404).json({ message: "Listing not found" });
+    }
+
+    // Check if the user is the creator of the listing
+    if (listing.createdBy.toString() !== userId) {
+      return res.status(403).json({ message: "Unauthorized" });
+    }
+
+    // Filter out the images that need to be removed
+    listing.images = listing.images.filter(image => !toBeRemoved.includes(image));
+
+    // Save the updated listing
+    await listing.save();
+
+    res.status(200).json({ message: "Images removed successfully", listing });
+  } catch (error) {
+    console.error("Error removing images:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 const getListingById = async (req, res) => {
   const listingId = req.params.id;
@@ -142,7 +178,23 @@ const approveListing = async (req,res)=>{
       return;
     }
     try {
-      await Listing.findByIdAndUpdate(id,{approved: true, approvedBy: req.user.userId})
+      await Listing.findByIdAndUpdate(id,{approved: true, approvedBy: req.user.userId, approvalState: 'approved'})
+      res.status(200).send({approved: true, id, approvedBy: req.user.name})
+    }
+    catch(err){
+      res.status(500).json({error: err.message})
+    }
+}
+
+const rejectListing = async (req,res)=>{
+  let {id} = req.params
+  let {message} = req.query
+    if(req.user.accountType !== 'admin') {
+      res.status(401).send({message: 'this is not an admin account'})
+      return;
+    }
+    try {
+      await Listing.findByIdAndUpdate(id,{approved: true, approvedBy: req.user.userId,approvalState: 'rejected', rejectionMessage: message })
       res.status(200).send({approved: true, id, approvedBy: req.user.name})
     }
     catch(err){
@@ -257,5 +309,7 @@ module.exports = {
   searchListings,
   addListingImages,
   getUnapprovedListing,
-  approveListing
+  approveListing,
+  rejectListing,
+  removeListingImages
 };

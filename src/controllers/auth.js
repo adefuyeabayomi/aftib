@@ -1,4 +1,6 @@
 const User = require("../models/user");
+const Hotel = require('../models/hotel')
+const Listing = require('../models/listing')
 const otpModel = require('../models/otp')
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
@@ -228,6 +230,25 @@ const changePasswordByEmail = async (req, res) => {
   }
 };
 
+const getAgentDashboardData = async (req,res)=>{
+  // getHotels,getListings
+  try {
+    let user = await User.findById(req.user.userId)
+    delete user.hash
+    let listings =  Listing.find({
+      _id: { $in: user.myListings.map(id => mongoose.Types.ObjectId(id)) }
+    });
+    const hotels = await Hotel.find({
+      _id: { $in: user.myHotels.map(id => mongoose.Types.ObjectId(id)) }
+    });
+    res.status(200).json({listings,hotels})
+  }
+  catch(err){
+    console.error(err.message)
+    res.status(500).json({error: err.message})
+  }
+}
+
 
 
 
@@ -238,5 +259,6 @@ module.exports = {
   getUser,
   sendOTPForgotPassword,
   verifyOtp,
-  changePasswordByEmail
+  changePasswordByEmail,
+  getAgentDashboardData
 };
