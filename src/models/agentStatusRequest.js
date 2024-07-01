@@ -23,7 +23,7 @@ const AgentStatusRequestSchema = new Schema({
   facebookLink: String,
   instagramLink: String,
   twitterLink: String,
-  approvalState: 'pending' // 'approved', 'rejected'
+  approvalState: String //'pending'  'approved', 'rejected'
 });
 
 module.exports = mongoose.model('AgentStatusRequest', AgentStatusRequestSchema);
