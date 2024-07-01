@@ -12,7 +12,8 @@ const {
   getUnapprovedAgencyRequests,
   getApprovedAgencyRequests,
   searchForAgent,
-  getAgencyRequestByToken
+  getAgencyRequestByToken,
+  rejectAgencyRequest
 } = require("../controllers/adminOps");
 
 router.post("/request-agency-status", verifyToken, requestAgencyStatus)
@@ -30,6 +31,7 @@ router.post(
 );
 router.put("/update-agency-status", verifyToken, updateAgencyStatus);
 router.put("/approve-agency-request/:requestId", verifyToken, approveAgencyRequest);
+router.put("/reject-agency-request/:requestId", verifyToken, rejectAgencyRequest);
 router.get('/get-agency-request/:id', getAgencyRequestById);
 router.get('/get-agency-request-by-token',verifyToken,getAgencyRequestByToken)
 router.get('/get-unapproved-agency-requests',getUnapprovedAgencyRequests)

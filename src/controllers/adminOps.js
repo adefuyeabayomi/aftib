@@ -11,6 +11,7 @@ const requestAgencyStatus = async (req, res) => {
   let data = {
         ...req.body,
         approved: false,
+        approvalState: 'pending',
       agentId: req.user.userId, // assuming the agentId is available in req.user
     }
   try {
@@ -39,7 +40,7 @@ const updateAgencyStatus = async (req, res) => {
     const agentStatusRequest = await AgentStatusRequest.findOneAndUpdate(
       { agentId: req.user.userId },
       {
-        ...req.body
+        ...req.body, approvalState: 'pending'
       },
       { new: true }
     );
@@ -98,11 +99,45 @@ const approveAgencyRequest = async (req, res) => {
     // Update the fields
     agencyRequest.approved = true;
     agencyRequest.approvedBy = req.user.userId;
+    agencyRequest.approvalState = 'approved'
 
     // Save the updated request
     await agencyRequest.save();
 
     res.status(200).json({ success: "Agency request approved", agencyRequest });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+const rejectAgencyRequest = async (req, res) => {
+  const { requestId } = req.params; // Assuming you pass requestId in the URL params
+  const {message} = req.query
+  console.log(message)
+ // Assuming approvedBy is provided in the request body
+
+  try {
+    // Find the agency status request by ID
+    const agencyRequest = await AgentStatusRequest.findById(requestId);
+
+    if (!agencyRequest) {
+      return res.status(404).json({ error: "Agency request not found" });
+    }
+    if(req.user.accountType !== 'admin'){
+      return res.status(401).json({error: "Only admins can approve"})
+    }
+
+    // Update the fields
+    agencyRequest.approved = false;
+    agencyRequest.approvalState = 'rejected'
+    agencyRequest.rejectionMessage = message
+    agencyRequest.approvedBy = req.user.userId;
+
+    // Save the updated request
+    await agencyRequest.save();
+
+    res.status(200).json({ success: "Agency request rejected", agencyRequest });
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ error: "Server error" });
@@ -204,5 +239,6 @@ module.exports = {
   getUnapprovedAgencyRequests,
   getAgencyRequestById,
   searchForAgent,
-  getAgencyRequestByToken
+  getAgencyRequestByToken,
+  rejectAgencyRequest
 };
