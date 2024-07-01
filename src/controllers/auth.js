@@ -1,6 +1,7 @@
 const User = require("../models/user");
 const Hotel = require('../models/hotel')
 const Listing = require('../models/listing')
+const mongoose = require('mongoose')
 const otpModel = require('../models/otp')
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
@@ -235,11 +236,30 @@ const getAgentDashboardData = async (req,res)=>{
   try {
     let user = await User.findById(req.user.userId)
     delete user.hash
-    let listings =  Listing.find({
-      _id: { $in: user.myListings.map(id => mongoose.Types.ObjectId(id)) }
+    let listings = await Listing.find({
+      _id: { $in: user.myListings.map(x=> new mongoose.Types.ObjectId(x)) }
+    }).lean()
+    const hotels = await Hotel.find({
+      _id: { $in: user.myHotels.map(x=> new mongoose.Types.ObjectId(x)) }
+    }).lean()
+    res.status(200).json({listings,hotels})
+  }
+  catch(err){
+    console.error(err.message)
+    res.status(500).json({error: err.message})
+  }
+}
+
+const getAdminDashboardData = async (req,res)=>{
+  // getHotels,getListings
+  try {
+    let user = await User.findById(req.user.userId)
+    delete user.hash
+    let listings = await Listing.find({
+      _id: { $in: user.myListings.map(x=> mongoose.Types.ObjectId(x)) }
     });
     const hotels = await Hotel.find({
-      _id: { $in: user.myHotels.map(id => mongoose.Types.ObjectId(id)) }
+      _id: { $in: user.myHotels.map(x=> mongoose.Types.ObjectId(x)) }
     });
     res.status(200).json({listings,hotels})
   }

@@ -7,7 +7,7 @@ router.post("/login", login);
 
 router.post("/signup", signup);
 
-router.get("/verify-email/:id", verifyEmail);
+router.get("/verify-email/:id", verifyEmail)
 
 router.get('/get-user',verifyToken, getUser)
 
