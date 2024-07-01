@@ -126,7 +126,7 @@ const getAgencyRequestById = async (req, res) => {
 }
 
 const getAgencyRequestByToken = async (req, res) => {
-  const { id } = req.user.userId
+  const id = req.user.userId
   try {
     const agencyRequest = await AgentStatusRequest.findOne({agentId: id})
 
