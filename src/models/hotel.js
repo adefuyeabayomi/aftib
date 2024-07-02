@@ -60,9 +60,12 @@ const hotelSchema = new mongoose.Schema({
       description: { type: String }, // Description of the room
       price: { type: Number }, // Price per night
       amenities: [String], // List of room-specific amenities
-      images: [String], // URLs to images of the room
-      maxOccupancy: { type: Number }, // Maximum number of occupants
+      images: {type:[String],default : []}, // URLs to images of the room
+      maxOccupants: { type: Number }, // Maximum number of occupants
       availability: { type: Boolean, default: true }, // Availability status
+      roomCount: {type: Number, default: 1},
+      availability: { type: Boolean, default: true }, // Availability status
+      roomId: String
     },
   ],
   images: [String], // URLs to images of the hotel

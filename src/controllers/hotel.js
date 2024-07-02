@@ -16,7 +16,6 @@ const addNewHotel = async (req, res) => {
     req.body.locationData.googleData = locationData
     req.body.createdDate = new Date().getTime();
     req.body.approvalState = 'pending'
-    console.log({body: req.body})
     const hotelData = req.body;
 
     // Create a new hotel document
@@ -167,10 +166,10 @@ const saveHotelImages = async (req, res) => {
   }
 };
 
+
 const updateRoomImages = async (req, res) => {
   const { hotelId, roomId } = req.params; // MongoDB generated _id for hotel and room
   const userId = req.user.userId; // Assuming userId is available in req.user
-
   try {
     // Check if the hotel exists
     const hotel = await Hotel.findById(hotelId);
@@ -186,9 +185,16 @@ const updateRoomImages = async (req, res) => {
           message: "Unauthorized: You are not authorized to update this hotel",
         });
     }
-
+    let mongoId = '';
+    hotel.rooms.forEach(x=>{
+      let id = x._id
+      if(roomId === x.roomId){
+        mongoId = id
+      }
+    })
     // Find the room within the hotel's rooms array
-    const room = hotel.rooms.id(roomId);
+    const room = hotel.rooms.id(mongoId);
+    console.log({MongoId: mongoId})
     if (!room) {
       return res.status(404).json({ message: "Room not found" });
     }
@@ -198,6 +204,7 @@ const updateRoomImages = async (req, res) => {
 
     // Append the new images to the existing ones
     room.images = room.images.concat(result);
+    console.log({hotel})
 
     // Save the updated hotel document
     await hotel.save();
