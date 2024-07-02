@@ -17,6 +17,7 @@ const addNewHotel = async (req, res) => {
     req.body.createdDate = new Date().getTime();
     req.body.approvalState = 'pending'
     const hotelData = req.body;
+    console.log({body: req.body})
 
     // Create a new hotel document
     const newHotel = new Hotel(hotelData);
