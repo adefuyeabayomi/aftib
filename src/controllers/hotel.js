@@ -1,6 +1,7 @@
 const Hotel = require("../models/hotel");
 const User = require("../models/user");
 const mongoose = require("mongoose");
+let AgentModel = require('../models/agentStatusRequest')
 const saveToCloudinary = require("../functions/saveToCloudinary");
 const getAddressLocationData = require('../functions/getAddressLocationData')
 const addNewHotel = async (req, res) => {
