@@ -4,6 +4,8 @@ const Listing = require('../models/listing')
 const mongoose = require('mongoose')
 const otpModel = require('../models/otp')
 const jwt = require("jsonwebtoken");
+let AgentModel = require('../models/agentStatusRequest')
+let Transaction = require('../models/transactions')
 const bcrypt = require("bcryptjs");
 const validateEmail = require("../utils/validate");
 const { htmlBodyTemplates } = require("../utils/sendMail");
@@ -251,26 +253,28 @@ const getAgentDashboardData = async (req,res)=>{
 }
 
 const getAdminDashboardData = async (req,res)=>{
-  // getHotels,getListings
+  // hotels
+  // listings
+  // agents
+  // client accounts
+  // transactions
+
   try {
     let user = await User.findById(req.user.userId)
     delete user.hash
-    let listings = await Listing.find({
-      _id: { $in: user.myListings.map(x=> mongoose.Types.ObjectId(x)) }
-    });
-    const hotels = await Hotel.find({
-      _id: { $in: user.myHotels.map(x=> mongoose.Types.ObjectId(x)) }
-    });
-    res.status(200).json({listings,hotels})
+    let listings = await Listing.find({});
+    let hotels = await Hotel.find({});
+    let users = await User.find({accountType : 'client'})
+    let transactions = await Transaction.find({})
+    let agents = await AgentModel.find({})
+
+    res.status(200).json({listings,hotels,users,transactions,agents})
   }
   catch(err){
     console.error(err.message)
     res.status(500).json({error: err.message})
   }
 }
-
-
-
 
 module.exports = {
   signup,
@@ -280,5 +284,6 @@ module.exports = {
   sendOTPForgotPassword,
   verifyOtp,
   changePasswordByEmail,
-  getAgentDashboardData
+  getAgentDashboardData,
+  getAdminDashboardData
 };
