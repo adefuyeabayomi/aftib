@@ -5,7 +5,6 @@ const Hotel = require("../models/hotel");
 const generateId = require("../utils/generateID");
 const axios = require('axios')
 const crypto = require('crypto'); 
-
 const createTransaction = async (req, res) => {
   let transactionId = generateId(40);
   let {propertyId,hotelId,bookingDetails,rentDetails} = req.body;
