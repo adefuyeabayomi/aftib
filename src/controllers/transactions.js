@@ -328,10 +328,36 @@ const checkRRRPaymentStatus = async (req, res) => {
   }
 };
 
+const getById =  async (req, res) => {
+  try {
+    const transaction = await Transaction.findOne({transactionId:req.params.id});
+    if (!transaction) {
+      return res.status(404).json({ message: "Transaction not found" });
+    }
+    res.json(transaction);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+}
+
+const getTransactions = async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = 30;
+  const skip = (page - 1) * limit;
+
+  try {
+    const transactions = await Transaction.find().skip(skip).limit(limit);
+    res.json(transactions);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+}
 
 module.exports = {
   createTransaction,
   initializePayment,
   checkPaymentStatus,
-  checkRRRPaymentStatus
+  checkRRRPaymentStatus,
+  getById,
+  getTransactions
 }
