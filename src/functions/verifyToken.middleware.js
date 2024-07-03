@@ -10,7 +10,6 @@ function verifyToken(req, res, next) {
           .json({ message: "Invalid token", error: "Unauthorized" });
       }
       req.user = decoded;
-      console.log({ user: decoded });
       next();
     });
   } else {

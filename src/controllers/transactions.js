@@ -30,7 +30,7 @@ const createTransaction = async (req, res) => {
       }
       else {
         narration = `Rent of ${product.title} for ${rentDetails.totalMonths}`
-        amount = product.monthlyRentPayment * rentDetails.totalMonths
+        amount = product.monthlyRentPayment * 12
         rentDetails.price = amount;
       }
     }
@@ -62,6 +62,7 @@ const createTransaction = async (req, res) => {
       payerPhone: req.user.mobileNumber,
       description: transactionData.narration
     }
+
     let merchantId = process.env.merchantId
     let serviceTypeId = process.env.serviceTypeId
     let orderId = transactionId
@@ -123,7 +124,7 @@ const createTransaction = async (req, res) => {
 
     res
       .status(201)
-      .json({ message: "Transaction created successfully", transaction });
+      .json({ message: "Transaction created successfully", transaction, rrrData });
   } catch (error) {
     console.error("Error creating transaction:", error);
     res
