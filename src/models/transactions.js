@@ -45,16 +45,23 @@ const transactionSchema = new Schema({
   },
   bookingDetails: {
     room: Object, // Detailed information about the booked room
-    startDate: Date, // Start date of the booking
-    endDate: Date, // End date of the booking
+    checkInDate: Date, // Start date of the booking
+    checkOutDate: Date, // End date of the booking
     totalNights: Number, // Total number of nights booked
-    price: Number, // Total price of the booking
+    totalPrice: Number, // Total price of the booking
+    pricePerNight: Number
   },
   rentDetails: {
     startDate: Date, // Start date of the rental
-    endDate: Date, // End date of the rental
     totalMonths: Number, // Total number of months for the rental
-    price: Number, // Total price of the rental
+    monthlyPayment: Number, // Total price of the rental
+    totalPrice: Number
+  },
+  shortLetDetails: {
+    startDate: Date, // Start date of the rental
+    totalMonths: Number, // Total number of months for the rental
+    monthlyPayment: Number, // Total price of the rental
+    totalPrice: Number
   },
   purchaseDetails: {
     price: Number, // Price of the purchase

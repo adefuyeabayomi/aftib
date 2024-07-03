@@ -7,7 +7,7 @@ const axios = require('axios')
 const crypto = require('crypto'); 
 const createTransaction = async (req, res) => {
   let transactionId = generateId(40);
-  let {propertyId,hotelId,bookingDetails,rentDetails} = req.body;
+  let {propertyId,hotelId,bookingDetails,rentDetails,shortLetDetails} = req.body;
   let transactionType = req.body.transactionType;
   let product;
   let providerId;
@@ -18,20 +18,26 @@ const createTransaction = async (req, res) => {
     // Fetch the product based on the transaction type
     if (transactionType === "hotelBooking") {
       product = await Hotel.findById(hotelId);
-      let room = product.filter(x=> x.roomType == bookingDetails.room.roomType)[0]
-      bookingDetails.price = bookingDetails.totalNights * room.price
-      amount = bookingDetails.price;
-      narration = `Booking for a ${room.type} for ${bookingDetails.totalNights} Nights, Starting from ${bookingDetails.startDate} to ${bookingDetails.endDate}`
+      let room = bookingDetails.room
+      bookingDetails = bookingDetails.totalNights * room.price
+      amount = bookingDetails.totalPrice;
+      narration = `Booking for a ${room.type} for ${bookingDetails.totalNights} Nights, Starting from ${bookingDetails.checkInDate} to ${bookingDetails.checkOutDate}`
     } else {
       product = await Listing.findById(propertyId)
       if(transactionType === "propertyPurchase"){
         narration = `Purchase of ${product.title}`
         amount = product.price
+        req.body.purchaseDetails = {price : amount}
+      }
+      else if(transactionType === 'propertyShortLet'){
+        narration = `Short Let of ${product.title}`
+        amount = product.monthlyShortLetPrice * shortLetDetails.totalMonths
+        shortLetDetails.totalPrice = amount
       }
       else {
-        narration = `Rent of ${product.title} for ${rentDetails.totalMonths}`
+        narration = `Rent of ${product.title} for ${rentDetails.totalMonths} Months`
         amount = product.monthlyRentPayment * 12
-        rentDetails.price = amount;
+        rentDetails.totalPrice = amount;
       }
     }
     // If product is not found, return 404
@@ -153,8 +159,11 @@ const initializePayment = async (req, res) => {
         if(transaction.transactionType === "propertyPurchase"){
           amount = product.price
         }
+        else if(transaction.transactionType === "propertyShortLet"){
+          amount = transaction.shortLetDetails.totalPrice
+        }
         else {
-          amount = transaction.rentDetails.totalMonths * product.monthlyRentPayment          
+          amount = transaction.rentDetails.totalPrice         
         }
       }
       let processRRRData = {
