@@ -60,6 +60,8 @@ let userSchema = new mongoose.Schema({
       transactionId: String,
       clientId: String,
       providerId: String,
+      title: String,
+      transactionType: String,
     },
   ],
   myHotelReservations: [HotelReservationSchema], // Array of hotel reservations for clients

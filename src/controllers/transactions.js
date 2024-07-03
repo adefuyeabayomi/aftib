@@ -102,6 +102,8 @@ const createTransaction = async (req, res) => {
         myTransactions: {
           transactionId: transaction.transactionId, // Use the MongoDB-generated _id
           clientId: transaction.clientId,
+          title: product.title || product.name,
+          transactionType,
           providerId: transaction.providerId,
         },
       },
@@ -113,6 +115,8 @@ const createTransaction = async (req, res) => {
         myTransactions: {
           transactionId: transaction.transactionId, // Use the MongoDB-generated _id
           clientId: transaction.clientId,
+          title: product.title || product.name,
+          transactionType,
           providerId: transaction.providerId,
         },
       },
