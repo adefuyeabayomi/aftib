@@ -17,11 +17,12 @@ const createTransaction = async (req, res) => {
   try {
     // Fetch the product based on the transaction type
     if (transactionType === "hotelBooking") {
+      console.log({bookingDetails})
       product = await Hotel.findById(hotelId);
       let room = bookingDetails.room
-      bookingDetails = bookingDetails.totalNights * room.price
-      amount = bookingDetails.totalPrice;
-      narration = `Booking for a ${room.type} for ${bookingDetails.totalNights} Nights, Starting from ${bookingDetails.checkInDate} to ${bookingDetails.checkOutDate}`
+      totalPrice = bookingDetails.totalNights * room.price
+      amount = totalPrice;
+      narration = `Booking for a ${room.roomType} for ${bookingDetails.totalNights} Nights, Starting from ${bookingDetails.checkInDate} to ${bookingDetails.checkOutDate}`
     } else {
       product = await Listing.findById(propertyId)
       if(transactionType === "propertyPurchase"){
@@ -43,7 +44,7 @@ const createTransaction = async (req, res) => {
     // If product is not found, return 404
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
-    }
+    } 
 
     providerId = product.createdBy;
 
@@ -86,8 +87,14 @@ const createTransaction = async (req, res) => {
                       'Authorization': `remitaConsumerKey=2547916,remitaConsumerToken=${hashHex}`
                   }
                 })
-          let jsonpResponse = response.data;
-          let jsonResponse = JSON.parse(jsonpResponse.replace(/^.*\((.*)\)$/, '$1'));
+                
+          console.log(typeof response.data,{responseData: response.data})
+          let jsonResponse = response.data;
+          if(typeof response.data !== 'object'){
+            jsonResponse = JSON.parse(jsonResponse.replace(/^.*\((.*)\)$/, '$1'));
+          }
+          console.log({jsonResponse})
+          
       transactionData = {...transactionData, RRR: jsonResponse.RRR}
     }
     catch(err){
@@ -258,8 +265,11 @@ const checkRRRPaymentStatus = async (req, res) => {
         },
       }
     );
-
-    let responseData = JSON.parse(response.data.replace('jsonp (', '').slice(0, -1));
+    console.log(typeof response.data,{responseData: response.data})
+    let responseData = response.data;
+    if(typeof response.data !== 'object'){
+      responseData = JSON.parse(response.data.replace('jsonp (', '').slice(0, -1));
+    }
 
     if (responseData.message === 'Transaction Pending') {
       return res.status(200).json({ message: 'Transaction is still pending', status: 'pending' });
@@ -273,13 +283,12 @@ const checkRRRPaymentStatus = async (req, res) => {
       let updateData = { status: 'completed' };
       if (transaction.transactionType === 'hotelBooking') {
         updateData = {
-          reservationId: transaction.transactionId,
+          transactionId: transaction.transactionId,
           hotelId: transaction.hotelId,
           bookingDate: transaction.date,
-          checkInDate: transaction.bookingDetails.startDate,
-          checkOutDate: transaction.bookingDetails.endDate,
+          bookingDetails : transaction.bookingDetails,
           status: 'completed',
-        };
+        }
 
         // Update the client's hotel reservations
         await User.findByIdAndUpdate(transaction.clientId, {
@@ -288,11 +297,11 @@ const checkRRRPaymentStatus = async (req, res) => {
 
         // Update the provider's hotel bookings
         await User.findByIdAndUpdate(transaction.providerId, {
-          $push: { myHotelBookings: { ...updateData, bookingId: transaction.transactionId, clientId: transaction.clientId } },
+          $push: { myHotelBookings: { ...updateData, bookingId: transaction.transactionId, clientId: transaction.clientId }},
         });
       } else if (transaction.transactionType === 'propertyPurchase') {
         updateData = {
-          purchaseId: transaction.transactionId,
+          transactionId: transaction.transactionId,
           propertyId: transaction.propertyId,
           purchaseDate: transaction.date,
           status: 'completed',
@@ -309,14 +318,10 @@ const checkRRRPaymentStatus = async (req, res) => {
         });
       } else if (transaction.transactionType === 'propertyRental') {
         updateData = {
-          rentalId: transaction.transactionId,
-          propertyId: transaction.propertyId,
-          rentalDate: transaction.date,
-          startDate: transaction.rentDetails.startDate,
-          endDate: transaction.rentDetails.endDate,
+          transactionId: transaction.transactionId,
+          details: transaction,
           status: 'completed',
         };
-
         // Update the client's rentals
         await User.findByIdAndUpdate(transaction.clientId, {
           $push: { myRentals: updateData },
@@ -327,10 +332,26 @@ const checkRRRPaymentStatus = async (req, res) => {
           $push: { myRentals: { ...updateData, clientId: transaction.clientId } },
         });
       }
+        else if(transaction.transactionType === 'propertyShortLet'){
+          updateData = {
+            transactionId: transaction.transactionId,
+            details : transaction,
+            status: 'completed'
+          }
 
+                  // Update the client's rentals
+        await User.findByIdAndUpdate(transaction.clientId, {
+          $push: { myShortLets: updateData },
+        });
+
+        // Update the provider's rentals
+        await User.findByIdAndUpdate(transaction.providerId, {
+          $push: { myShortLets: { ...updateData, clientId: transaction.clientId } },
+        });
+        }
       return res.status(200).json({ message: 'Transaction completed successfully', status: 'successful' });
     } else {
-      return res.status(400).json({ message: 'Transaction failed', status: 'failed' });
+      return res.status(400).json({ message: 'Transaction failed', status: 'failed' })
     }
   } catch (error) {
     console.error('Error checking RRR payment status:', error);
