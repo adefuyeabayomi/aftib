@@ -117,6 +117,7 @@ const createTransaction = async (req, res) => {
           clientId: transaction.clientId,
           title: product.title || product.name,
           transactionType,
+          status: 'pending',
           providerId: transaction.providerId,
         },
       },
@@ -130,6 +131,7 @@ const createTransaction = async (req, res) => {
           clientId: transaction.clientId,
           title: product.title || product.name,
           transactionType,
+          status: 'pending',
           providerId: transaction.providerId,
         },
       },
@@ -271,22 +273,23 @@ const checkRRRPaymentStatus = async (req, res) => {
       responseData = JSON.parse(response.data.replace('jsonp (', '').slice(0, -1));
     }
 
-    if (responseData.message !== 'Transaction Pending') {
+    if (responseData.message == 'Transaction Pending') {
       return res.status(200).json({ message: 'Transaction is still pending', status: 'pending' });
-    } else if (responseData.message !== 'Successful') {
+    } else if (responseData.message == 'Successful') {
       // Update the transaction status to 'Successful'
-      transaction.paymentStatus = 'successful';
-      transaction.transactionStatus = 'completed';
+      transaction.paymentStatus = 'paid';
+      transaction.transactionStatus = 'success';
       await transaction.save();
 
       // Update the user's data based on the transaction type
-      let updateData = { status: 'completed' };
+      let updateData={};
       if (transaction.transactionType === 'hotelBooking') {
         updateData = {
           transactionId: transaction.transactionId,
           details: transaction,
-          status: 'completed',
+          status: 'success',
         }
+        console.log({updateData})
         // Update the client's hotel reservations
         await User.findByIdAndUpdate(transaction.clientId, {
           $push: { myHotelReservations: updateData },
@@ -300,9 +303,10 @@ const checkRRRPaymentStatus = async (req, res) => {
         updateData = {
           transactionId: transaction.transactionId,
           details: transaction,
-          status: 'completed',
+          status: 'success',
         }
  
+        console.log({updateData})
         // Update the client's purchases
         await User.findByIdAndUpdate(transaction.clientId, {
           $push: { myPurchases: updateData },
@@ -316,8 +320,9 @@ const checkRRRPaymentStatus = async (req, res) => {
         updateData = {
           transactionId: transaction.transactionId,
           details: transaction,
-          status: 'completed',
+          status: 'success',
         }
+        console.log({updateData})
         // Update the client's rentals
         await User.findByIdAndUpdate(transaction.clientId, {
           $push: { myRentals: updateData },
@@ -332,9 +337,10 @@ const checkRRRPaymentStatus = async (req, res) => {
           updateData = {
             transactionId: transaction.transactionId,
             details: transaction,
-            status: 'completed',
+            status: 'success',
           }
-
+          console.log({updateData})
+ 
                   // Update the client's rentals
         await User.findByIdAndUpdate(transaction.clientId, {
           $push: { myShortLets: updateData },
@@ -345,6 +351,31 @@ const checkRRRPaymentStatus = async (req, res) => {
           $push: { myShortLets: updateData },
         });
         }
+        // update the transaction.
+        let client =await User.findById(transaction.clientId)
+        let agent = await User.findById(transaction.providerId)
+        // find the specific transactions id. 
+        let cTID;
+        let aTID;
+        
+        client.myTransactions.forEach(x=>{
+          if(transaction.transactionId === x.transactionId){
+            cTID = x._id
+          }
+        })
+        
+        agent.myTransactions.forEach(x=>{
+          if(transaction.transactionId === x.transactionId){
+            aTID = x._id
+          }
+        })
+        let agentTransaction = agent.myTransactions.id(aTID)
+        let clientTransaction = client.myTransactions.id(cTID)
+        agentTransaction.status = 'success'
+        clientTransaction.status = 'success'
+        await agent.save()
+        await client.save()
+
       return res.status(200).json({ message: 'Transaction completed successfully', status: 'successful' });
     } else {
       return res.status(400).json({ message: 'Transaction failed', status: 'failed' })

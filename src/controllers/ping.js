@@ -2,6 +2,9 @@ const fs = require("fs")
 const path = require("path")
 const User = require('../models/user')
 const Listing = require('../models/listing')
+let Transactions = require('../models/transactions')
+let AgentStatusRequest = require('../models/agentStatusRequest')
+
 const ping = (req, res) => {
   res.status(200).send("awake");
 };
@@ -30,6 +33,24 @@ const clearUsers = async (req, res) => {
   }
 }
 
+const clearTransactions = async (req, res) => {
+  try {
+    await Transactions.deleteMany({});
+    res.status(200).json({ message: 'All transactions have been deleted.' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error clearing transactions', error: error.message });
+  }
+}
+
+const clearAgentRequests = async (req, res) => {
+  try {
+    await AgentStatusRequest.deleteMany({});
+    res.status(200).json({ message: 'All Agent Requests have been deleted.' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error Agent Requests users', error: error.message });
+  }
+}
+
 const clearListings = async (req, res) => {
   try {
     await Listing.deleteMany({});
@@ -39,27 +60,11 @@ const clearListings = async (req, res) => {
   }
 }
 
-async function populateListings (req,res) {
-  let data = fs.readFileSync(path.join(__dirname,'magodo.json')).toString()
-  data = JSON.parse(data)
-  data = data.map(x=>{
-    delete x.createdBy
-    return x
-  })
-  try {
-    await Listing.insertMany(data)
-    res.status(200).send({success: 'populated listings'})
-  }
-  catch(err){
-    console.log({error: err.message})
-    res.status(500).send({error: err.message})
-  }
-}
-
 module.exports = {
   ping,
   getAccessLog,
   clearUsers,
   clearListings,
-  populateListings
+  clearAgentRequests,
+  clearTransactions
 }

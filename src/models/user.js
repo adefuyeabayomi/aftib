@@ -1,52 +1,10 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const HotelReservationSchema = new Schema({
-  reservationId: { type: String, required: true }, // Unique ID for the reservation
-  hotelId: { type: String, required: true }, // ID of the hotel being booked
-  bookingDate: { type: Date, required: true }, // Date of the booking
-  checkInDate: { type: Date, required: true }, // Check-in date
-  checkOutDate: { type: Date, required: true }, // Check-out date
-  status: { type: String, required: true }, // Status of the reservation
+const successfulTransaction = new Schema({
+      transactionId: {type: String, required: true},
+      details: {type: Object, required: true},
+      status: {type: String, required: true},
 });
-
-// Schema for Hotel Bookings (hotel providers)
-const HotelBookingSchema = new Schema({
-  bookingId: { type: String, required: true }, // Unique ID for the booking
-  clientId: { type: String, required: true }, // ID of the client making the reservation
-  bookingDate: { type: Date, required: true }, // Date of the booking
-  checkInDate: { type: Date, required: true }, // Check-in date
-  checkOutDate: { type: Date, required: true }, // Check-out date
-  status: { type: String, required: true }, // Status of the booking
-});
-
-const PurchaseSchema = new Schema({
-  purchaseId: { type: String, required: true }, // Unique ID for the purchase
-  propertyId: { type: String, required: true }, // ID of the property being purchased
-  purchaseDate: { type: Date, required: true }, // Date of the purchase
-  status: { type: String, required: true }, // Status of the purchase
-});
-
-// Schema for Sales (providers/sellers)
-const SaleSchema = new Schema({
-  saleId: { type: String, required: true }, // Unique ID for the sale
-  clientId: { type: String, required: true }, // ID of the client making the purchase
-  saleDate: { type: Date, required: true }, // Date of the sale
-  status: { type: String, required: true }, // Status of the sale
-});
-
-// Schema for Rentals (clients and providers)
-const RentalSchema = new Schema({
-  rentalId: { type: String, required: true }, // Unique ID for the rental
-  propertyId: { type: String, required: true }, // ID of the property being rented
-  rentalDate: { type: Date, required: true }, // Date of the rental agreement
-  startDate: { type: Date, required: true }, // Start date of the rental period
-  endDate: { type: Date, required: true }, // End date of the rental period
-  status: { type: String, required: true }, // Status of the rental
-});
-
-const ShortLetSchema = new Schema({
-  
-})
 
 let userSchema = new mongoose.Schema({
   email: String,
@@ -66,16 +24,25 @@ let userSchema = new mongoose.Schema({
       providerId: String,
       title: String,
       transactionType: String,
+      status: {
+        type: String,
+        enum: ['pending','success']
+      }
     },
   ],
-  myHotelReservations: [HotelReservationSchema], // Array of hotel reservations for clients
-  myHotelBookings: [HotelBookingSchema], // Array of hotel bookings for hotel providers
-  myShortLets: [Object],
-  myPurchases: [PurchaseSchema], // Array of purchases for clients
-  mySales: [SaleSchema], // Array of sales for providers/sellers
-  myRentals: [RentalSchema], // Array of rentals for both clients and providers
+  myHotelReservations: [successfulTransaction], // Array of hotel reservations for clients
+  myHotelBookings: [successfulTransaction], // Array of hotel bookings for hotel providers
+  myShortLets: [successfulTransaction],
+  myPurchases: [successfulTransaction], // Array of purchases for clients
+  mySales: [successfulTransaction], // Array of sales for providers/sellers
+  myRentals: [successfulTransaction], // Array of rentals for both clients and providers
 });
 
 let userModel = mongoose.model("User", userSchema);
 
 module.exports = userModel;
+
+
+
+
+
