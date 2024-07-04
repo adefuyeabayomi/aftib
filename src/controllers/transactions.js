@@ -31,7 +31,7 @@ const createTransaction = async (req, res) => {
         req.body.purchaseDetails = {price : amount}
       }
       else if(transactionType === 'propertyShortLet'){
-        narration = `Short Let of ${product.title} for ${shortLetDetails.totalDays}`
+        narration = `Short Let of ${product.title} for ${shortLetDetails.totalDays} days`
         amount = product.dailyShortLetPrice * shortLetDetails.totalDays
         shortLetDetails.totalPrice = amount
       }
@@ -275,7 +275,8 @@ const checkRRRPaymentStatus = async (req, res) => {
 
     if (responseData.message == 'Transaction Pending') {
       return res.status(200).json({ message: 'Transaction is still pending', status: 'pending' });
-    } else if (responseData.message == 'Successful') {
+    } 
+    else if (responseData.message == 'Successful') {
       // Update the transaction status to 'Successful'
       transaction.paymentStatus = 'paid';
       transaction.transactionStatus = 'success';
