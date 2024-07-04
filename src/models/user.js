@@ -44,6 +44,10 @@ const RentalSchema = new Schema({
   status: { type: String, required: true }, // Status of the rental
 });
 
+const ShortLetSchema = new Schema({
+  
+})
+
 let userSchema = new mongoose.Schema({
   email: String,
   hash: String,
@@ -66,6 +70,7 @@ let userSchema = new mongoose.Schema({
   ],
   myHotelReservations: [HotelReservationSchema], // Array of hotel reservations for clients
   myHotelBookings: [HotelBookingSchema], // Array of hotel bookings for hotel providers
+  myShortLets: [Object],
   myPurchases: [PurchaseSchema], // Array of purchases for clients
   mySales: [SaleSchema], // Array of sales for providers/sellers
   myRentals: [RentalSchema], // Array of rentals for both clients and providers

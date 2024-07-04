@@ -264,16 +264,16 @@ const checkRRRPaymentStatus = async (req, res) => {
           'Content-Type': 'application/json',
         },
       }
-    );
+    )
     console.log(typeof response.data,{responseData: response.data})
     let responseData = response.data;
     if(typeof response.data !== 'object'){
       responseData = JSON.parse(response.data.replace('jsonp (', '').slice(0, -1));
     }
 
-    if (responseData.message === 'Transaction Pending') {
+    if (responseData.message !== 'Transaction Pending') {
       return res.status(200).json({ message: 'Transaction is still pending', status: 'pending' });
-    } else if (responseData.message === 'Successful') {
+    } else if (responseData.message !== 'Successful') {
       // Update the transaction status to 'Successful'
       transaction.paymentStatus = 'successful';
       transaction.transactionStatus = 'completed';
@@ -284,12 +284,9 @@ const checkRRRPaymentStatus = async (req, res) => {
       if (transaction.transactionType === 'hotelBooking') {
         updateData = {
           transactionId: transaction.transactionId,
-          hotelId: transaction.hotelId,
-          bookingDate: transaction.date,
-          bookingDetails : transaction.bookingDetails,
+          details: transaction,
           status: 'completed',
         }
-
         // Update the client's hotel reservations
         await User.findByIdAndUpdate(transaction.clientId, {
           $push: { myHotelReservations: updateData },
@@ -302,11 +299,10 @@ const checkRRRPaymentStatus = async (req, res) => {
       } else if (transaction.transactionType === 'propertyPurchase') {
         updateData = {
           transactionId: transaction.transactionId,
-          propertyId: transaction.propertyId,
-          purchaseDate: transaction.date,
+          details: transaction,
           status: 'completed',
-        };
-
+        }
+ 
         // Update the client's purchases
         await User.findByIdAndUpdate(transaction.clientId, {
           $push: { myPurchases: updateData },
@@ -314,14 +310,14 @@ const checkRRRPaymentStatus = async (req, res) => {
 
         // Update the provider's sales
         await User.findByIdAndUpdate(transaction.providerId, {
-          $push: { mySales: { ...updateData, saleId: transaction.transactionId, clientId: transaction.clientId } },
+          $push: { mySales: updateData },
         });
       } else if (transaction.transactionType === 'propertyRental') {
         updateData = {
           transactionId: transaction.transactionId,
           details: transaction,
           status: 'completed',
-        };
+        }
         // Update the client's rentals
         await User.findByIdAndUpdate(transaction.clientId, {
           $push: { myRentals: updateData },
@@ -329,14 +325,14 @@ const checkRRRPaymentStatus = async (req, res) => {
 
         // Update the provider's rentals
         await User.findByIdAndUpdate(transaction.providerId, {
-          $push: { myRentals: { ...updateData, clientId: transaction.clientId } },
+          $push: { myRentals: updateData },
         });
       }
         else if(transaction.transactionType === 'propertyShortLet'){
           updateData = {
             transactionId: transaction.transactionId,
-            details : transaction,
-            status: 'completed'
+            details: transaction,
+            status: 'completed',
           }
 
                   // Update the client's rentals
@@ -346,7 +342,7 @@ const checkRRRPaymentStatus = async (req, res) => {
 
         // Update the provider's rentals
         await User.findByIdAndUpdate(transaction.providerId, {
-          $push: { myShortLets: { ...updateData, clientId: transaction.clientId } },
+          $push: { myShortLets: updateData },
         });
         }
       return res.status(200).json({ message: 'Transaction completed successfully', status: 'successful' });
@@ -357,7 +353,7 @@ const checkRRRPaymentStatus = async (req, res) => {
     console.error('Error checking RRR payment status:', error);
     res.status(500).json({ message: 'Internal server error', error: error.message });
   }
-};
+}
 
 const getById =  async (req, res) => {
   try {
