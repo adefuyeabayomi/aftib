@@ -31,8 +31,8 @@ const createTransaction = async (req, res) => {
         req.body.purchaseDetails = {price : amount}
       }
       else if(transactionType === 'propertyShortLet'){
-        narration = `Short Let of ${product.title}`
-        amount = product.monthlyShortLetPrice * shortLetDetails.totalMonths
+        narration = `Short Let of ${product.title} for ${shortLetDetails.totalDays}`
+        amount = product.dailyShortLetPrice * shortLetDetails.totalDays
         shortLetDetails.totalPrice = amount
       }
       else {

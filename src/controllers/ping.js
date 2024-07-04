@@ -2,6 +2,7 @@ const fs = require("fs")
 const path = require("path")
 const User = require('../models/user')
 const Listing = require('../models/listing')
+const Hotels = require('../models/hotel')
 let Transactions = require('../models/transactions')
 let AgentStatusRequest = require('../models/agentStatusRequest')
 
@@ -59,6 +60,14 @@ const clearListings = async (req, res) => {
     res.status(500).json({ message: 'Error clearing users', error: error.message });
   }
 }
+const clearHotels = async (req, res) => {
+  try {
+    await Hotels.deleteMany({});
+    res.status(200).json({ message: 'All listings have been deleted.' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error clearing users', error: error.message });
+  }
+}
 
 module.exports = {
   ping,
@@ -66,5 +75,6 @@ module.exports = {
   clearUsers,
   clearListings,
   clearAgentRequests,
-  clearTransactions
+  clearTransactions,
+  clearHotels
 }

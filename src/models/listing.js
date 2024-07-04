@@ -9,7 +9,7 @@ let listingObj = {
   estate: String, // Name of the estate, if applicable
   price: Number, // Price of the property
   monthlyRentPayment: Number, // Amount to be paid if it is a rental on a monthly basis
-  monthlyShortLetPrice: Number, // Amount to be for shortlets on a monthly basis 
+  dailyShortLetPrice: Number, // Amount to be for shortlets on a monthly basis 
   state: String, // State where the property is located
   LGA: String, // Local Government Area
   saleType: String, // Type of sale (e.g., sale, rent, shortlet)
