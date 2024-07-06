@@ -250,6 +250,10 @@ console.log('queries', request.query)
       query.saleType = { $regex: saleType, $options: "i" };
     }
 
+    if(saleType == 'shortlet'){
+      query.saleType = { $regex: 'short', $options: "i" };
+    }
+
     // Monthly payment range filter for rentals
     if (minMonthlyPayment && maxMonthlyPayment) {
       query.monthlyRentPayment = {
