@@ -71,7 +71,7 @@ const signup = async (req, res) => {
     };
 
     let token = jwt.sign(userForToken, process.env.SECRET, {
-      expiresIn: 60 * 60 * 6,
+      expiresIn: 60 * 60 * 48,
     });
 
     res.status(201).send({ token, user: userForToken });
@@ -116,7 +116,7 @@ const login = async (req, res) => {
   };
 
   const token = jwt.sign(userForToken, process.env.SECRET);
-  return res.status(200).send({ token, user: userForToken });
+  return res.status(200).send({ token, user: userForToken , expiresIn: 60 * 60 * 48});
 };
 
 const verifyEmail = async (req, res) => {
@@ -143,6 +143,40 @@ const getUser = async (req,res) => {
     res.status(500).json({error: err.message})
   }
 }
+
+const updateUser = async (req, res) => {
+  try {
+    // Find the user by ID
+    let user = await User.findById(req.user.userId);
+    
+    if (!user) {
+      return res.status(404).json({
+        error: "User not found",
+      });
+    }
+
+    // Update the user with the new data from req.body
+    Object.keys(req.body).forEach(key => {
+      user[key] = req.body[key];
+    });
+    if(req.body.password !== ""){
+        // Create user
+      let salt = bcrypt.genSaltSync(10);
+      let hash = bcrypt.hashSync(req.user.password, salt);
+      user.password = hash
+    }
+
+    // Save the updated user
+    await user.save();
+
+    // Send the updated user back as a response
+    res.status(200).json(user);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: err.message });
+  }
+};
+
 
 const sendOTPForgotPassword = async (req,res) => {
   let {email} = req.params
@@ -285,5 +319,6 @@ module.exports = {
   verifyOtp,
   changePasswordByEmail,
   getAgentDashboardData,
-  getAdminDashboardData
+  getAdminDashboardData,
+  updateUser
 };

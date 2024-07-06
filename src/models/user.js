@@ -36,6 +36,12 @@ let userSchema = new mongoose.Schema({
   myPurchases: [successfulTransaction], // Array of purchases for clients
   mySales: [successfulTransaction], // Array of sales for providers/sellers
   myRentals: [successfulTransaction], // Array of rentals for both clients and providers
+  gender: String,
+  dateOfBirth: Date,
+  address: String,
+  country: String,
+  state: String,
+  language: String,
 });
 
 let userModel = mongoose.model("User", userSchema);

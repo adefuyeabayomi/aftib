@@ -136,6 +136,22 @@ Response if there is an error. An error could occur for two reasons
 ```bash
 400 | 409 | 404 {error: 'errorMessage'}
 ```
+# Update User
+```javascript
+const userUpdateObject = {
+  name: "",
+  email: "",
+  mobileNumber: "",
+  gender: "",
+  dateOfBirth: new Date(),
+  address: "",
+  password: "",
+  country: "",
+  language: "",
+  state: ""
+} 
+```
+
 # Change Password
 
 ## Endpoint
