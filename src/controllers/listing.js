@@ -232,12 +232,16 @@ console.log('queries', request.query)
     }
     if (location) {
       // Split the location string by dashes and create regex patterns for each keyword
-      const keywords = location.split("-");
+      const keywords = location.split('-');
       const locationRegexArray = keywords.map((keyword) => ({
-        location: { $regex: keyword, $options: "i" },
+        $or: [
+          { location: { $regex: keyword, $options: 'i' } },
+          { state: { $regex: keyword, $options: 'i' } },
+          { LGA: { $regex: keyword, $options: 'i' } }
+        ]
       }));
-      // Create a $or condition for each regex pattern
-      query.$or = locationRegexArray;
+      // Combine all regex patterns into a single $and condition
+      query.$and = locationRegexArray;
     }
 
     // Add price range filter if provided
@@ -271,7 +275,6 @@ console.log('queries', request.query)
     if (bathroom && bathroom !== 'any') {
     query.bathrooms = {$gte: Number(bathroom)};
     }
-    console.log({query})
     // Find listings matching the query
     const foundListings = await Listing.find(query)
     response.status(200).json(foundListings);
