@@ -42,6 +42,14 @@ let userSchema = new mongoose.Schema({
   country: String,
   state: String,
   language: String,
+  agentSpecialities: [String],
+  agentLicense: String,
+  licenseNumber: String,
+  licenseExpDate: Date,
+  facebook: String,
+  instagram: String,
+  twitter: String,
+
 });
 
 let userModel = mongoose.model("User", userSchema);
