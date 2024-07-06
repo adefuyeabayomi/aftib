@@ -275,13 +275,14 @@ console.log('queries', request.query)
     if (bathroom && bathroom !== 'any') {
     query.bathrooms = {$gte: Number(bathroom)};
     }
+
     // Find listings matching the query
     const foundListings = await Listing.find(query)
     response.status(200).json(foundListings);
   } catch (error) {
     response.status(500).json({ message: error.message });
   }
-};
+}
 
 const addListingImages = (req, res) => {
   let { id } = req.params;

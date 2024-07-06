@@ -200,34 +200,32 @@ const getUnapprovedAgencyRequests = async (req, res) => {
   }
 }
 
-const searchForAgent = async (req,res) => {
-  let {state,LGA,location} = req.query
-  let query = {}
-    // Add location filter if provided
-    if(state){
-      query.state = state
-    }
-    if(LGA){
-      query.LGA = LGA
-    }
+const searchForAgent = async (req, res) => {
+  try {
+    const { location } = req.query;
+    let query = {}
+
     if (location) {
       // Split the location string by dashes and create regex patterns for each keyword
-      const keywords = location.split("-");
+      const keywords = location.split('-');
       const locationRegexArray = keywords.map((keyword) => ({
-        officeAddress: { $regex: keyword, $options: "i" },
+        $or: [
+          { officeAddress: { $regex: keyword, $options: 'i' } },
+          { state: { $regex: keyword, $options: 'i' } },
+          { LGA: { $regex: keyword, $options: 'i' } }
+        ]
       }));
-      // Create a $or condition for each regex pattern
-      query.$or = locationRegexArray;
-      try {
-        let foundAgents = await AgentStatusRequest.find(query)
-        console.log({foundAgents})
-        return res.status(200).json(foundAgents)
-      }
-      catch(err){
-        return res.status(500).send({error: err.message})
-      }
+      // Combine all regex patterns into a single $and condition
+      query.$and = locationRegexArray;
     }
+
+    // Fetch agent status requests based on the query
+    const agentStatusRequests = await AgentStatusRequest.find(query) // Assuming you want to limit results to 30 per batch
+    res.status(200).json(agentStatusRequests);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
+}
 
 module.exports = {
   requestAgencyStatus,

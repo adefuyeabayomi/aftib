@@ -3440,3 +3440,7 @@
 ::ffff:127.0.0.1 - - [06/Jul/2024:10:54:42 +0000] "GET /listing/searchListings?location=Eti&minPrice&saleType=&bedroom=&bathroom&maxPrice&minMonthlyPayment=&maxMonthlyPayment= HTTP/1.1" 200 13060 "-" "PostmanRuntime/7.39.1"
 ::ffff:127.0.0.1 - - [06/Jul/2024:10:55:04 +0000] "GET /listing/searchListings?location=GRA&minPrice&saleType=&bedroom=&bathroom&maxPrice&minMonthlyPayment=&maxMonthlyPayment= HTTP/1.1" 200 2683 "-" "PostmanRuntime/7.39.1"
 ::ffff:127.0.0.1 - - [06/Jul/2024:10:55:20 +0000] "GET /listing/searchListings?location=Ikeja&minPrice&saleType=&bedroom=&bathroom&maxPrice&minMonthlyPayment=&maxMonthlyPayment= HTTP/1.1" 200 2683 "-" "PostmanRuntime/7.39.1"
+::ffff:127.0.0.1 - - [06/Jul/2024:11:08:20 +0000] "GET /listing/search-for-agent?location=lagos HTTP/1.1" 404 163 "-" "PostmanRuntime/7.39.1"
+::ffff:127.0.0.1 - - [06/Jul/2024:11:08:35 +0000] "GET /search-for-agent?location=lagos HTTP/1.1" 500 55 "-" "PostmanRuntime/7.39.1"
+::ffff:127.0.0.1 - - [06/Jul/2024:11:10:04 +0000] "GET /search-for-agent?location=lagos HTTP/1.1" 200 1724 "-" "PostmanRuntime/7.39.1"
+::ffff:127.0.0.1 - - [06/Jul/2024:11:10:20 +0000] "GET /search-for-agent?location=Island HTTP/1.1" 200 841 "-" "PostmanRuntime/7.39.1"
