@@ -8,10 +8,10 @@ let AgentModel = require('../models/agentStatusRequest')
 let Transaction = require('../models/transactions')
 const bcrypt = require("bcryptjs");
 const validateEmail = require("../utils/validate");
-const { htmlBodyTemplates } = require("../utils/sendMail");
 const generateId = require('../utils/generateID')
 // Controller function for processing an order
 const { transporter, mailOptions } = require("../utils/nodemailer.config");
+const { htmlBodyTemplates } = require("../utils/sendMail");
 let adminEmails = process.env.ADMIN_EMAILS
 
 const signup = async (req, res) => {

@@ -6,6 +6,34 @@ const User = require('../models/user');
 const { query } = require('express');
 
 
+// POST endpoint to handle contact form submission
+const sendContactForm = async (req, res) => {
+    const { name, email, message } = req.body;
+
+    if (!name || !email || !message) {
+        return res.status(400).send({ error: 'All fields are required' });
+    }
+
+    try {
+        // Set email options
+        mailOptions.html = htmlBodyTemplates.contactForm({name, email, message});
+        mailOptions.to = req.user.email; // The email where you want to receive the contact form submissions
+        mailOptions.subject = `New Contact Form Submission from ${name}`;
+
+        // Send email
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log("Error occurred:", error);
+                return res.status(500).send({ error: 'Failed to send email' });
+            }
+            console.log("Message sent:", info.messageId);
+            res.status(200).send({ success: 'Message sent successfully' });
+        });
+    } catch (err) {
+        res.status(500).send({ error: err.message });
+    }
+}
+
 // Create a new agent status request
 const requestAgencyStatus = async (req, res) => {
   let data = {
@@ -238,5 +266,6 @@ module.exports = {
   getAgencyRequestById,
   searchForAgent,
   getAgencyRequestByToken,
-  rejectAgencyRequest
+  rejectAgencyRequest,
+  sendContactForm
 };

@@ -13,7 +13,8 @@ const {
   getApprovedAgencyRequests,
   searchForAgent,
   getAgencyRequestByToken,
-  rejectAgencyRequest
+  rejectAgencyRequest,
+  sendContactForm
 } = require("../controllers/adminOps");
 
 router.post("/request-agency-status", verifyToken, requestAgencyStatus)
@@ -37,7 +38,7 @@ router.get('/get-agency-request-by-token',verifyToken,getAgencyRequestByToken)
 router.get('/get-unapproved-agency-requests',getUnapprovedAgencyRequests)
 router.get('/get-approved-agency-requests',getApprovedAgencyRequests)
 router.get('/search-for-agent',searchForAgent)
-
+router.post('/send-contact-form',verifyToken, sendContactForm)
 
 module.exports = router;
 

@@ -330,12 +330,82 @@ function newHotelClientMail(name){
 `
 }
 
+function contactForm({email,name,message}){
+
+return  `
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #dcdcdc;
+        }
+        .header {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 10px 20px;
+            text-align: center;
+        }
+        .content {
+            padding: 20px;
+        }
+        .content p {
+            line-height: 1.5;
+        }
+        .content h2 {
+            color: #007BFF;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px;
+            font-size: 12px;
+            color: #888;
+        }
+        .footer a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Contact Form Submission</h1>
+        </div>
+        <div class="content">
+            <h2>New Message from ${name}</h2>
+            <p><strong>Sender's Email:</strong> ${email}</p>
+            <p><strong>Message:</strong></p>
+            <p>${message}</p>
+        </div>
+        <div class="footer">
+            <p>&copy; 2024 Real Estate Company. All rights reserved.</p>
+            <p><a href="https://www.realestatecompany.com">www.realestatecompany.com</a></p>
+        </div>
+    </div>
+</body>
+</html>
+`;
+}
+
 let htmlBodyTemplates = {
     verifyTemplate,
     otpForgotPassword,
     agentRequestAdminEmailNotification,
     agentRequestEmailNotification,
-    newHotelClientMail
+    newHotelClientMail,
+    contactForm
 };
 
 module.exports = { htmlBodyTemplates, mailerSendImplementation };
