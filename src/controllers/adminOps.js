@@ -255,6 +255,23 @@ const searchForAgent = async (req, res) => {
   }
 }
 
+const getClientAccounts = async (req, res) => {
+  try {
+    const page = parseInt(req.params.page, 10) || 1;
+    const limit = 30;
+    const skip = (page - 1) * limit;
+
+    const users = await User.find({ accountType: 'client' })
+      .skip(skip)
+      .limit(limit);
+
+    res.status(200).json(users);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: err.message });
+  }
+};
+
 module.exports = {
   requestAgencyStatus,
   updateAgencyStatusPassport,
@@ -262,10 +279,11 @@ module.exports = {
   updateAgencyStatus,
   approveAgencyRequest,
   getApprovedAgencyRequests,
-  getUnapprovedAgencyRequests,
+  getUnapprovedAgencyRequests, 
   getAgencyRequestById,
   searchForAgent,
   getAgencyRequestByToken,
   rejectAgencyRequest,
-  sendContactForm
+  sendContactForm,
+  getClientAccounts
 };
