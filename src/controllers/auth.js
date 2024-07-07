@@ -310,6 +310,42 @@ const getAdminDashboardData = async (req,res)=>{
   }
 }
 
+const getUserById = async (req, res) => {
+  try {
+    // Check if the requesting user is an admin
+    if (req.user.accountType !== 'admin') {
+      return res.status(403).json({ error: 'Access denied. Admins only.' });
+    }
+
+    // Get the user ID from the request parameters
+    const userId = req.params.id;
+
+    // Find the user by ID
+    const user = await User.findById(userId);
+
+    // If the user is not found, return a 404 status code
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Return the user details
+    res.status(200).json(user);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+const getClientCount = async (req, res) => {
+  try {
+    const clientCount = await User.countDocuments({ accountType: 'client' });
+    res.status(200).json({ count: clientCount });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: err.message });
+  }
+};
+
 module.exports = {
   signup,
   login,
@@ -320,5 +356,7 @@ module.exports = {
   changePasswordByEmail,
   getAgentDashboardData,
   getAdminDashboardData,
-  updateUser
+  updateUser,
+  getUserById,
+  getClientCount
 };

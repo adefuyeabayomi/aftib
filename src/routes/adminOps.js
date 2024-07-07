@@ -40,7 +40,7 @@ router.get('/get-unapproved-agency-requests',getUnapprovedAgencyRequests)
 router.get('/get-approved-agency-requests',getApprovedAgencyRequests)
 router.get('/search-for-agent',searchForAgent)
 router.post('/send-contact-form',verifyToken, sendContactForm)
-router.get('/getClientAccounts/:page', verifyToken, getClientAccounts);
+router.get('/getClientAccounts/:page', verifyToken, getClientAccounts)
 
 module.exports = router;
 
