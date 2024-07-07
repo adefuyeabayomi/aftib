@@ -69,6 +69,14 @@ const clearHotels = async (req, res) => {
   }
 }
 
+const checkSession = async (req, res) => {
+  try {
+    res.status(200).json({ message: 'session not expired' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
 module.exports = {
   ping,
   getAccessLog,
@@ -76,5 +84,6 @@ module.exports = {
   clearListings,
   clearAgentRequests,
   clearTransactions,
-  clearHotels
+  clearHotels,
+  checkSession
 }
