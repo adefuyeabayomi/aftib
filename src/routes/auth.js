@@ -4,7 +4,7 @@ const { login, signup, verifyEmail, getUser, sendOTPForgotPassword,verifyOtp,cha
 
 const verifyToken = require('../functions/verifyToken.middleware')
 
-router.post("/login", login);
+router.post("/login", login);  
 
 router.post("/signup", signup);
 
@@ -12,7 +12,7 @@ router.get("/verify-email/:id", verifyEmail)
 
 router.get('/get-user',verifyToken, getUser)
 
-router.get('/get-user/:id', verifyToken, getUserById);
+router.get('/get-user-by-id/:id', verifyToken, getUserById);
 
 router.get('/send-forgotpassword-otp/:email', sendOTPForgotPassword)
 
