@@ -38,8 +38,6 @@ const app = express();
 // middlewares install
 app.use(cors());
 
-
-app.use(cors(corsOptions));
 app.use(express.json());
 // Route to get the access log file
 // Setup the logger
