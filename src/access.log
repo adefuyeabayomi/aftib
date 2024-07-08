@@ -3528,3 +3528,6 @@
 ::ffff:127.0.0.1 - - [06/Jul/2024:18:25:59 +0000] "POST /auth/login HTTP/1.1" 200 486 "-" "PostmanRuntime/7.39.1"
 ::1 - - [06/Jul/2024:18:26:31 +0000] "PUT /auth/update-user HTTP/1.1" 200 5313 "-" "PostmanRuntime/7.39.1"
 ::1 - - [06/Jul/2024:18:26:57 +0000] "PUT /auth/update-user HTTP/1.1" 200 5307 "-" "PostmanRuntime/7.39.1"
+::ffff:127.0.0.1 - - [08/Jul/2024:09:43:48 +0000] "POST /auth/login HTTP/1.1" 200 467 "-" "PostmanRuntime/7.39.1"
+::1 - - [08/Jul/2024:09:57:01 +0000] "GET /auth/get-user-by-id/6686a115c475b7532bcfe04b HTTP/1.1" 200 461 "-" "PostmanRuntime/7.39.1"
+::1 - - [08/Jul/2024:10:05:51 +0000] "GET /auth/client-count HTTP/1.1" 200 11 "-" "PostmanRuntime/7.39.1"

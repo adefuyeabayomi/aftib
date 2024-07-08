@@ -346,6 +346,23 @@ const getClientCount = async (req, res) => {
   }
 };
 
+const getClientAccounts = async (req, res) => {
+  try {
+    const page = parseInt(req.params.page, 10) || 1;
+    const limit = 30;
+    const skip = (page - 1) * limit;
+
+    const users = await User.find({ accountType: 'client' })
+      .skip(skip)
+      .limit(limit);
+
+    res.status(200).json(users);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: err.message });
+  }
+};
+
 module.exports = {
   signup,
   login,
@@ -358,5 +375,6 @@ module.exports = {
   getAdminDashboardData,
   updateUser,
   getUserById,
-  getClientCount
+  getClientCount,
+  getClientAccounts
 };

@@ -1,6 +1,6 @@
 const router = require("express").Router();
 
-const { login, signup, verifyEmail, getUser, sendOTPForgotPassword,verifyOtp,changePasswordByEmail,updateUser,getAgentDashboardData, getAdminDashboardData,getUserById, getClientCount } = require("../controllers/auth");
+const { login, signup, verifyEmail, getUser, sendOTPForgotPassword,verifyOtp,changePasswordByEmail,updateUser,getAgentDashboardData, getAdminDashboardData,getUserById, getClientCount,getClientAccounts } = require("../controllers/auth");
 
 const verifyToken = require('../functions/verifyToken.middleware')
 
@@ -27,5 +27,7 @@ router.get('/get-admin-dashboard-data',verifyToken,getAdminDashboardData)
 router.put('/update-user',verifyToken,updateUser)
 
 router.get('/client-count', verifyToken, getClientCount);
+
+router.get('/getClientAccounts/:page', verifyToken, getClientAccounts);
 
 module.exports = router;
