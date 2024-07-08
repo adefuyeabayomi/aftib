@@ -37,12 +37,7 @@ const app = express();
 
 // middlewares install
 app.use(cors());
-// Optionally, specify more detailed CORS options
-const corsOptions = {
-  origin: 'http://localhost:3000', // specify the frontend URL here
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  allowedHeaders: ['Content-Type', 'Authorization'],
-};
+
 
 app.use(cors(corsOptions));
 app.use(express.json());
