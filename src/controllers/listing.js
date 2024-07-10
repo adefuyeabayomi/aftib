@@ -49,6 +49,7 @@ const createNew = async (req, res) => {
       })
     } else {
       // Handle other types of errors
+      console.log({err})
       res.status(500).json({
         error: "InternalServerError",
         message: err.message,

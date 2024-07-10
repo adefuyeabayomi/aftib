@@ -159,7 +159,7 @@ const updateUser = async (req, res) => {
     Object.keys(req.body).forEach(key => {
       user[key] = req.body[key];
     });
-    if(req.body.password !== "" && req.body.password !== undefined){
+    if(!!req.body.password){
         // Create user
       let salt = bcrypt.genSaltSync(10);
       let hash = bcrypt.hashSync(req.user.password, salt);

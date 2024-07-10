@@ -3534,3 +3534,4 @@
 ::ffff:127.0.0.1 - - [10/Jul/2024:11:00:49 +0000] "PUT /auth/update-user HTTP/1.1" 200 5451 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
 ::ffff:127.0.0.1 - - [10/Jul/2024:11:01:15 +0000] "PUT /auth/update-user HTTP/1.1" 500 48 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
 ::ffff:127.0.0.1 - - [10/Jul/2024:11:01:48 +0000] "PUT /auth/update-user HTTP/1.1" 500 48 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+::ffff:127.0.0.1 - - [10/Jul/2024:11:02:52 +0000] "PUT /auth/update-user HTTP/1.1" 200 5453 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
