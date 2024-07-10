@@ -159,7 +159,7 @@ const updateUser = async (req, res) => {
     Object.keys(req.body).forEach(key => {
       user[key] = req.body[key];
     });
-    if(req.body.password !== ""){
+    if(req.body.password !== "" && req.body.password !== undefined){
         // Create user
       let salt = bcrypt.genSaltSync(10);
       let hash = bcrypt.hashSync(req.user.password, salt);
@@ -172,7 +172,7 @@ const updateUser = async (req, res) => {
     // Send the updated user back as a response
     res.status(200).json(user);
   } catch (err) {
-    console.error(err.message);
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
 };
