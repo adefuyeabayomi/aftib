@@ -9,6 +9,9 @@ const createNew = async (req, res) => {
   try {
     let Agent = await AgentModel.findOne({agentId: req.user.userId})
     req.body.createdBy = new mongoose.Types.ObjectId(req.user.userId)
+    if(!Agent){
+      return res.status(404).json({error: 'Agency Request Details not Found. Re Submit your Agency request.'})
+    }
     console.log({Agent,user: req.user})
     let {name,businessName,phone,whatsappNo,email,officeAddress,state,LGA,agencyType} = Agent
     req.body.agentData = {name,businessName,phone,whatsappNo,email,officeAddress,state,LGA,agencyType}
