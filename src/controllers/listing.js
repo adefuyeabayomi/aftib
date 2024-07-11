@@ -12,6 +12,9 @@ const createNew = async (req, res) => {
     if(!Agent){
       return res.status(404).json({error: 'Agency Request Details not Found. Re Submit your Agency request.'})
     }
+    if(!Agent.approved){
+      return res.status(403).json({error: 'You Cannot add listings now because your agency registration has not been approved by our admins. Kindly wait till you are approved.'})
+    }
     console.log({Agent,user: req.user})
     let {name,businessName,phone,whatsappNo,email,officeAddress,state,LGA,agencyType} = Agent
     req.body.agentData = {name,businessName,phone,whatsappNo,email,officeAddress,state,LGA,agencyType}
