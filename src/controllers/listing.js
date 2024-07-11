@@ -9,6 +9,7 @@ const createNew = async (req, res) => {
   try {
     let Agent = await AgentModel.findOne({agentId: req.user.userId})
     req.body.createdBy = new mongoose.Types.ObjectId(req.user.userId)
+    console.log({Agent})
     let {name,businessName,phone,whatsappNo,email,officeAddress,state,LGA,agencyType} = Agent
     req.body.agentData = {name,businessName,phone,whatsappNo,email,officeAddress,state,LGA,agencyType}
     let locationData = await Promise.resolve(getAddressLocationData(req.body.location))
